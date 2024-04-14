@@ -2,25 +2,13 @@
 FROM node:14-alpine as WEB
 WORKDIR /tmp/build
 
-#  构建缓存
-ADD ../web/package.json .
-RUN npm install
-
-# 前端打包，生成dist文件
 ADD ../web .
-RUN npm run build
+RUN npm install &&  npm run build
 
-# 步骤2 后台打包
+# 步骤2 后端打包
 FROM maven:3-openjdk-8 as java
 WORKDIR /tmp/build
 
-# 构建缓存
-ADD ../pom.xml .
-ADD ../src/main/java/cn/moon/BootApplication.java src/main/java/cn/moon/BootApplication.java
-RUN mvn -DskipTests=true -q  package
-
-
-#  构建
 ADD ../src ./src
 
 #  将WEB界面融合到一起
