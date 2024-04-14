@@ -74,15 +74,6 @@ export default class extends React.Component {
         type: 'group',
         label: '其他',
         children: [
-
-          //
-          // {
-          //   key: 'script',
-          //   label: '脚本',
-          //   icon: <ProfileOutlined style={{color: 'mediumvioletred'}}/>,
-          //   disabled: notPermitted('script:list'),
-          // },
-
           {
             key: 'settings',
             label: '设置',
