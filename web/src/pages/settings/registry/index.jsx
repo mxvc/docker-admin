@@ -4,9 +4,9 @@ import React from 'react';
 import {ProTable} from "@ant-design/pro-components";
 import {getPageableData, post} from "../../../utils/request";
 
-const addTitle = "添加模板"
-const editTitle = '编辑模板'
-const deleteTitle = '删除模板'
+const addTitle = "添加注册中心"
+const editTitle = '编辑注册中心'
+const deleteTitle = '删除注册中心'
 let api = '/api/registry/';
 
 
