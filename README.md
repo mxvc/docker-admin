@@ -6,21 +6,17 @@
 一个仓库存放多个同一地址的镜像， 即 同一url + 不同tag的镜像，如 mysql:5.7 mysql:5.6
 
 
-# 快速开始
-## 安装
+# 安装
+## docker 命令行安装
 
 前置条件：mysql数据库
 
 ```
-docker pull mooncn/docker-admin
 docker run -d -p 7001:7001  -e dbip=127.0.0.1 -dbport=3306 -e dbpwd=123456  -v /var/run/docker.sock:/var/run/docker.sock mooncn/docker-admin
 ```
-启动访问 http://127.0.0.1:7001 账号：admin 密码：123456
 
 
-
-# docker-compose
-## 一键部署， 包含mysql数据库
+## docker-compose 安装， 包含mysql数据库
 ```
 version: '3'
 
@@ -60,6 +56,12 @@ services:
 ```
 
 
+## 使用
+访问 http://127.0.0.1:7001 账号：admin 密码：123456
 
+## 初始化操作：
+1. 添加主机，系统启动是会默认添加当前主机，如需修改，前往【主机】菜单
+2. 如果只部署公共镜像，可前往【应用】【部署公共镜像】
+3. 如果需要通过源代码构建镜像、发布镜像，必须添加一个注册中心，前往【设置】【注册中心】
 
 
