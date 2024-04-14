@@ -8,17 +8,19 @@
 
 # 快速开始
 ## 安装
+
+前置条件：mysql数据库
+
 ```
 docker pull mooncn/docker-admin
-docker run -d -p 7001:7001  -e dpip=127.0.0.1 -dpport=3306 -e dbpwd=123456  -v /var/run/docker.sock:/var/run/docker.sock mooncn/docker-admin
+docker run -d -p 7001:7001  -e dbip=127.0.0.1 -dbport=3306 -e dbpwd=123456  -v /var/run/docker.sock:/var/run/docker.sock mooncn/docker-admin
 ```
-## 设置
-浏览器访问 http://127.0.0.1:7001 账号：admin 密码：123456
+启动访问 http://127.0.0.1:7001 账号：admin 密码：123456
 
 
 
 # docker-compose
-## 一键部署， 含数据库
+## 一键部署， 包含mysql数据库
 ```
 version: '3'
 
@@ -29,13 +31,11 @@ services:
     ports:
       - "7001:7001" # 主机端口:容器端口
     volumes:
-      - "/var/run/docker.sock:/var/run/docker.sock"
-      - "./application-prod.yml:/home/application-prod.yml"
+      - "/var/run/docker.sock:/var/run/docker.sock" 
     environment:
-      dbip: 172.17.0.1 # 容器网关
+      dbip: 127.0.0.1 
       dbport: 3305
-      dbpwd: 2zbdWEs6vRHe8wc
-      spring.profiles.active: prod
+      dbpwd: 2zbdWEs6vRHe8wc # 密码
   mysql:
     image: mysql:5.7.35
     privileged: true
@@ -59,23 +59,6 @@ services:
       - ./mysql_data:/var/lib/mysql
 ```
 
-## 自定义数据库
-```
-version: '3'
-
-services:
-  admin:
-    image: mooncn/docker-admin:latest
-    restart: always
-    ports:
-      - "7001:7001" # 主机端口:容器端口
-    volumes:
-      - "/var/run/docker.sock:/var/run/docker.sock"
-    environment:
-      dbip: 127.0.0.1
-      dbport: 3306
-      dbpwd: 123456
-```
 
 
 

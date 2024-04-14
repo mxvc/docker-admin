@@ -5,6 +5,7 @@ import cn.moon.docker.admin.entity.User;
 import cn.moon.docker.admin.service.HostService;
 import cn.moon.docker.admin.service.UserService;
 import cn.moon.base.role.Role;
+import cn.moon.docker.sdk.DockerSdkManager;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -26,10 +27,12 @@ public class DataInit implements ApplicationRunner {
     @Resource
     HostService hostService;
 
+    @Resource
+    DockerSdkManager sdkManager;
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        if( userService.count() == 0){
+        if (userService.count() == 0) {
             User user = new User();
             user.setUsername("admin");
             user.setPassword("123456");
@@ -39,10 +42,10 @@ public class DataInit implements ApplicationRunner {
             log.info("创建默认账号 {}", user);
         }
 
-        if(hostService.count() == 0){
+        if (hostService.count() == 0) {
             Host host = new Host();
             host.setName("默认主机");
-            host.setDockerHost("tcp://localhost:2375");
+            host.setDockerHost(sdkManager.getLocalDockerHost());
             host.setIsRunner(true);
             hostService.save(host);
             log.info("创建默认主机配置 {}", host);
