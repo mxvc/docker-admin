@@ -16,7 +16,7 @@ WORKDIR /tmp/build
 
 # 构建缓存
 ADD ../pom.xml .
-ADD ../src/main/java/cn/BootApplication.java src/main/java/cn/BootApplication.java
+ADD ../src/main/java/cn/mooon/BootApplication.java src/main/java/cn/moon/BootApplication.java
 RUN mvn -DskipTests=true -q  package
 
 
