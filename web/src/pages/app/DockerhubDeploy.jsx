@@ -1,15 +1,13 @@
 import React from "react";
-import {get, post} from "../../utils/request";
+import {post} from "../../utils/request";
 import RemoteSelect from "../../components/RemoteSelect";
-import {AutoComplete, Button, Form, Input, message} from "antd";
+import {Button, Form, Input, message} from "antd";
 import {history} from "umi";
 
 
 let api = '/api/app/';
 
 export default class extends React.Component {
-
-
 
 
   formRef = React.createRef()
@@ -20,9 +18,6 @@ export default class extends React.Component {
       history.push('/app/view?id=' + rs.data)
     })
   }
-
-
-
 
 
   render() {
@@ -39,7 +34,7 @@ export default class extends React.Component {
         <Form.Item name='name' label='名称' required rules={[{required: true}]}>
           <Input/>
         </Form.Item>
-        <Form.Item name={['host','id']} label='主机' required rules={[{required: true}]}>
+        <Form.Item name={['host', 'id']} label='主机' required rules={[{required: true}]}>
           <RemoteSelect url="/api/host/options"/>
         </Form.Item>
 
@@ -50,7 +45,7 @@ export default class extends React.Component {
 
 
         <Form.Item name='imageTag' label='版本' required rules={[{required: true}]}>
-          <AutoComplete options={this.state.tagOptions}/>
+          <Input/>
         </Form.Item>
 
 
