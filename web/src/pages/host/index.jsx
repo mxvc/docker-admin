@@ -48,7 +48,7 @@ export default class extends React.Component {
 
     },
     {
-      title: '请求头Host',
+      title: '自定义请求头 Host',
       dataIndex: 'dockerHostHeader',
     },
     {
