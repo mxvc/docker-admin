@@ -73,23 +73,14 @@ public class ProjectController {
     @RequiresPermissions("project:save")
     @RequestMapping("save")
     public Result save(@RequestBody @Valid Project project) {
-
-
-        try {
-            Project db = service.saveProject(project);
-
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-
-        Result rs = Result.ok().msg("保存成功");
-        return rs;
+        service.saveProject(project);
+        return Result.ok().msg("保存成功");
     }
 
     @RequiresPermissions("project:save")
     @RequestMapping("update")
     public Result update(@RequestBody @Valid Project project) {
-            service.saveProject(project);
+        service.saveProject(project);
         return Result.ok().msg("修改成功");
     }
 
@@ -168,7 +159,7 @@ public class ProjectController {
     public List<Option> options() throws InterruptedException, IOException, GitAPIException {
         Query<Project> q = getQuery();
 
-        List<Project> list = service.findAll(q,Sort.by(Sort.Direction.DESC, BaseEntity.Fields.modifyTime));
+        List<Project> list = service.findAll(q, Sort.by(Sort.Direction.DESC, BaseEntity.Fields.modifyTime));
 
         List<Option> options = new ArrayList<>();
         for (Project h : list) {
