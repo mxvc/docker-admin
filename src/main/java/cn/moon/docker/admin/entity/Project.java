@@ -32,6 +32,7 @@ public class Project extends BaseEntity {
     // 默认分支
     String branch;
 
+    @NotNull
     String gitUrl;
 
 
@@ -46,19 +47,6 @@ public class Project extends BaseEntity {
         return registry;
     }
 
-    @Override
-    public void prePersist() {
-        super.prePersist();
-        if(registry == null){
-            registry =  SpringUtil.getBean(RegistryService.class).checkAndFindDefault();
-        }
-    }
 
-    @Override
-    public void preUpdate() {
-        super.preUpdate();
-        if(registry == null){
-            registry =  SpringUtil.getBean(RegistryService.class).checkAndFindDefault();
-        }
-    }
+
 }

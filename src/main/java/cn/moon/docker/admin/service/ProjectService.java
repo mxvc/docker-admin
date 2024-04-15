@@ -222,6 +222,10 @@ public class ProjectService extends BaseService<Project> {
 
     @Transactional
     public Project saveProject(Project project) {
+        project.setName(project.getName().trim());
+        project.setGitUrl(project.getGitUrl().trim());
+        project.setBranch(project.getBranch().trim());
+
         project = repository.save(project);
         return project;
     }

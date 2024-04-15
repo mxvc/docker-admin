@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import javax.validation.Valid;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -71,8 +72,15 @@ public class ProjectController {
 
     @RequiresPermissions("project:save")
     @RequestMapping("save")
-    public Result save(@RequestBody Project project) {
-        Project db = service.saveProject(project);
+    public Result save(@RequestBody @Valid Project project) {
+
+
+        try {
+            Project db = service.saveProject(project);
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
 
         Result rs = Result.ok().msg("保存成功");
         return rs;
@@ -80,8 +88,8 @@ public class ProjectController {
 
     @RequiresPermissions("project:save")
     @RequestMapping("update")
-    public Result update(@RequestBody Project project) {
-        service.save(project);
+    public Result update(@RequestBody @Valid Project project) {
+            service.saveProject(project);
         return Result.ok().msg("修改成功");
     }
 
