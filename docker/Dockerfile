@@ -9,6 +9,7 @@ RUN npm install &&  npm run build
 FROM maven:3-openjdk-8 as java
 WORKDIR /tmp/build
 
+ADD ../pom.xml ./pom.xml
 ADD ../src ./src
 
 #  将WEB界面融合到一起
