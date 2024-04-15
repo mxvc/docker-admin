@@ -11,7 +11,6 @@ import {formatTotalTime} from "../../utils/utils";
 import {ProTable} from "@ant-design/pro-components";
 import {get, getPageableData} from "../../utils/request";
 import moment from "moment";
-import StreamLog from "../../components/StreamLog";
 
 let api = '/api/buildLog/';
 
@@ -114,26 +113,26 @@ export default class extends React.Component {
       title: '-',
       dataIndex: 'option',
       valueType: 'option',
-      fixed:'right',
+      fixed: 'right',
       render: (_, row) => {
-        return <div>
+        return <Space>
           <a onClick={() => {
             Modal.info({
-              title:'构建日志',
-              width:1024,
-              closable:true,
-              okText:'关闭',
-              icon:null,
-              content:<StreamLog url={row.logUrl}/>
+              title: '构建日志',
+              width: 1024,
+              closable: true,
+              icon: null,
+              content: <iframe
+                src={row.logUrl} width='100%' height={500} marginWidth={0} marginHeight={0}
+                style={{
+                  border: 0,
+                }}
+              />
             })
-            }}>日志</a>
-
-          <Divider type='vertical'/>
-
+          }}>日志</a>
           <a onClick={() => this.stop(row)}>停止</a>
-          <Divider type='vertical'/>
           <a onClick={() => this.retry(row)}>重试</a>
-        </div>
+        </Space>
       }
     },
   ]
@@ -170,6 +169,7 @@ export default class extends React.Component {
       clearInterval(this.timer)
     }
   }
+
   triggerPipeline = () => {
     this.setState({showTrigger: true})
   }
@@ -182,34 +182,33 @@ export default class extends React.Component {
     })
   }
   cleanError = () => {
-    get("/api/project/cleanErrorLog", {id:this.projectId}).then(rs => {
+    get("/api/project/cleanErrorLog", {id: this.projectId}).then(rs => {
       this.actionRef.current.reload()
     })
   }
 
   render() {
-    const {project } = this.props;
+    const {project} = this.props;
     const {showTrigger} = this.state
 
     return (<>
 
       <ProTable
         headerTitle='构建记录'
-        toolBarRender={()=> {
+        toolBarRender={() => {
           return <Space><Button onClick={this.triggerPipeline} type="primary">立即构建</Button>
-            <Button onClick={this.cleanError} >清理</Button>
+            <Button onClick={this.cleanError}>清理</Button>
           </Space>;
         }}
         search={false}
         actionRef={this.actionRef}
-        request={(params, sort) =>getPageableData(this.listURL, params, sort)}
+        request={(params, sort) => getPageableData(this.listURL, params, sort)}
         columns={this.columns}
         rowSelection={false}
-        scroll={{x:'max-content'}}
+        scroll={{x: 'max-content'}}
 
         rowKey="id"
       />
-
 
 
       <Modal open={showTrigger} title="手动触发流水线"
@@ -218,15 +217,15 @@ export default class extends React.Component {
              onCancel={() => this.setState({showTrigger: false})}>
 
         <Form
-              onFinish={this.submitTrigger}
-              labelCol={{flex:'100px'}}
-              initialValues={{
-                value: project.branch || 'master',
-                version: project.defaultVersion || 'v' + moment().format('YYYYMMDD'),
-                dockerfile: project.dockerfile || 'Dockerfile',
-                projectId: project.id
-              }}
-              preserve={false}>
+          onFinish={this.submitTrigger}
+          labelCol={{flex: '100px'}}
+          initialValues={{
+            value: project.branch || 'master',
+            version: project.defaultVersion || 'v' + moment().format('YYYYMMDD'),
+            dockerfile: project.dockerfile || 'Dockerfile',
+            projectId: project.id
+          }}
+          preserve={false}>
           <Form.Item name="projectId" hidden>
           </Form.Item>
           <Form.Item name="value" label="分支、标签">
@@ -238,17 +237,18 @@ export default class extends React.Component {
           <Form.Item name="dockerfile" label="dockerfile">
             <Input/>
           </Form.Item>
-          <Form.Item name="useCache" label="使用缓存" >
-            <Switch defaultChecked />
+          <Form.Item name="useCache" label="使用缓存">
+            <Switch defaultChecked/>
           </Form.Item>
 
-          <div style={{display:'flex',justifyContent:'end'}}>
+          <div style={{display: 'flex', justifyContent: 'end'}}>
             <Button type='primary' htmlType="submit">确定</Button>
 
           </div>
 
         </Form>
       </Modal>
+
 
     </>)
   }

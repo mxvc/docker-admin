@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -59,8 +60,12 @@ public class AppController {
     }
 
     @RequestMapping("get")
-    public App view(String id) {
-        return service.findOne(id);
+    public App view(String id) throws UnsupportedEncodingException {
+        App app = service.findOne(id);
+
+        String url = LogUrlTool.getLogViewUrl(id);
+        app.setLogUrl(url);
+        return app;
     }
 
     @RequestMapping("container")

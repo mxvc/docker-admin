@@ -25,7 +25,6 @@ import {history} from "umi";
 import ContainerBox from "../../components/container/ContainerBox";
 import {showResult} from "../../utils/utils";
 import {notPermitted} from "../../utils/SysConfig";
-import StreamLog from "../../components/StreamLog";
 import {Empty} from "antd/lib";
 
 let api = '/api/app/';
@@ -219,7 +218,14 @@ export default class extends React.Component {
 
 
         <Tabs.TabPane tab="部署日志" key="deploy-log">
-          <StreamLog url={"/api/log/" + app.id} />
+          <iframe src={app.logUrl}
+                  width={window.screen.width - 300}
+                  height={window.screen.height - 450}
+                  frameBorder={0} marginWidth={0} marginHeight={0}
+                  style={{
+                    overflow:'hidden'
+                  }}
+          />
         </Tabs.TabPane>
 
         <Tabs.TabPane tab="配置" disabled={notPermitted('app:config')} key="2">
