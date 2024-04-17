@@ -1,7 +1,6 @@
 package cn.moon.docker.sdk;
 
 import com.github.dockerjava.api.async.ResultCallback;
-import com.github.dockerjava.api.async.ResultCallbackTemplate;
 import com.github.dockerjava.api.model.ResponseItem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,9 +9,8 @@ import org.slf4j.MDC;
 import java.io.Closeable;
 import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
 
-public class DefaultCallback<T extends ResponseItem> implements ResultCallback<T > {
+public class DefaultCallback<T extends ResponseItem> implements ResultCallback<T> {
 
     private static final Logger log = LoggerFactory.getLogger("docker-console");
 
@@ -22,16 +20,11 @@ public class DefaultCallback<T extends ResponseItem> implements ResultCallback<T
     private String logFileId;
 
 
-
-
     public DefaultCallback(String logFileId) {
         this.logFileId = logFileId;
     }
 
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ResultCallbackTemplate.class);
-
-    private final CountDownLatch started = new CountDownLatch(1);
 
     private final CountDownLatch completed = new CountDownLatch(1);
 
@@ -45,7 +38,8 @@ public class DefaultCallback<T extends ResponseItem> implements ResultCallback<T
     public void onStart(Closeable stream) {
         this.stream = stream;
         this.closed = false;
-        started.countDown();
+
+        MDC.put("logFileId", this.logFileId);
     }
 
     @Override
@@ -57,13 +51,9 @@ public class DefaultCallback<T extends ResponseItem> implements ResultCallback<T
         }
 
         try {
-            LOGGER.error("Error during callback", throwable);
-        } finally {
-            try {
-                close();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+            close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -101,17 +91,17 @@ public class DefaultCallback<T extends ResponseItem> implements ResultCallback<T
             try {
                 close();
             } catch (IOException e) {
-                LOGGER.debug("Failed to close", e);
+                log.debug("Failed to close", e);
             }
         }
     }
 
 
-
     /**
      * Throws the first occurred error as a runtime exception
+     *
      * @throws com.github.dockerjava.api.exception.DockerException The first docker based Error
-     * @throws RuntimeException on any other occurred error
+     * @throws RuntimeException                                    on any other occurred error
      */
     protected void throwFirstError() {
         if (firstError != null) {
@@ -126,11 +116,9 @@ public class DefaultCallback<T extends ResponseItem> implements ResultCallback<T
     }
 
 
-
-
     @Override
     public void onNext(ResponseItem item) {
-     if (item.isErrorIndicated()) {
+        if (item.isErrorIndicated()) {
             log.info("异常 {}", item.getErrorDetail().toString());
 
             throw new IllegalStateException(item.getErrorDetail().getMessage());
@@ -161,7 +149,6 @@ public class DefaultCallback<T extends ResponseItem> implements ResultCallback<T
     }
 
     private final StringBuffer buffer = new StringBuffer();
-
 
 
 }
