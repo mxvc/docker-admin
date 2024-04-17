@@ -2,12 +2,16 @@ package cn.moon.docker.sdk.callback;
 
 import com.github.dockerjava.api.async.ResultCallbackTemplate;
 import com.github.dockerjava.api.model.PushResponseItem;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
 
 @Slf4j
+@Getter
 public class MyPushImageCallback extends ResultCallbackTemplate<MyPushImageCallback, PushResponseItem> {
+
     private final String logFileId;
+
     private String error;
 
     LogBuffer logBuffer = new LogBuffer(log);
@@ -24,7 +28,4 @@ public class MyPushImageCallback extends ResultCallbackTemplate<MyPushImageCallb
         logBuffer.tryLog(item);
     }
 
-    public String getError() {
-        return error;
-    }
 }

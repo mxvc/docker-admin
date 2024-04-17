@@ -23,7 +23,7 @@ public class CleanImageJob {
     HostService hostService;
 
     @Resource
-    DockerSdkManager dockerService;
+    DockerSdkManager sdkManager;
 
 
 
@@ -38,7 +38,7 @@ public class CleanImageJob {
             try {
                 log.info("清理服务器 {}", host.getName());
 
-                DockerClient client = dockerService.getClient(host);
+                DockerClient client = sdkManager.getClient(host);
 
 
                 PruneResponse response = client.pruneCmd(PruneType.IMAGES)
@@ -53,8 +53,7 @@ public class CleanImageJob {
                 client.close();
 
             } catch (Exception e) {
-                log.info("清理失败  " + e.getMessage());
-                e.printStackTrace();
+                log.info("清理失败  " + e.getMessage(), e);
             }
 
         }

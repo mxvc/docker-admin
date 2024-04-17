@@ -4,7 +4,6 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.system.SystemUtil;
 import cn.moon.docker.admin.entity.Host;
 import cn.moon.docker.admin.entity.Registry;
-import cn.moon.docker.admin.service.RegistryService;
 import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.core.DefaultDockerClientConfig;
 import com.github.dockerjava.core.DockerClientConfig;
@@ -14,7 +13,6 @@ import com.github.dockerjava.transport.DockerHttpClient;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -23,17 +21,8 @@ import java.util.Map;
 public class DockerSdkManager {
 
 
-    @Resource
-    RegistryService registryConfig;
-
-
     public DockerClient getClient(Host host) {
         return this.getClient(host, new Registry());
-    }
-
-    public DockerClient getClient(Host host, String imageUrl) {
-        Registry registry = registryConfig.findByUrl(imageUrl);
-        return this.getClient(host, registry);
     }
 
 
@@ -72,9 +61,8 @@ public class DockerSdkManager {
 
 
     public String getLocalDockerHost() {
-        return SystemUtil.getOsInfo().isWindows() ?
-                "tcp://localhost:2375" :
-                "unix:///var/run/docker.sock";
+        boolean windows = SystemUtil.getOsInfo().isWindows();
+        return windows ? "tcp://localhost:2375" : "unix:///var/run/docker.sock";
     }
 
 

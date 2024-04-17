@@ -35,7 +35,7 @@
 
 
 
-    <logger name="cn.moon.docker">
+    <logger name="cn.moon.docker.sdk">
         <appender-ref ref="TASK_LOG" />
     </logger>
 
