@@ -9,9 +9,9 @@ import cn.moon.docker.admin.entity.BuildLog;
 import cn.moon.docker.admin.entity.DeployLog;
 import cn.moon.docker.admin.entity.Host;
 import cn.moon.docker.sdk.DockerSdkManager;
-import cn.moon.docker.sdk.callback.PullImageCallback;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.spring.SpringUtil;
+import cn.moon.docker.sdk.DefaultCallback;
 import cn.moon.lang.web.persistence.BaseService;
 import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.command.CreateContainerCmd;
@@ -78,7 +78,7 @@ public class AppService extends BaseService<App> {
 
 
             log.info("开始拉取镜像 {}", image);
-            client.pullImageCmd(image).exec(new PullImageCallback(app.getId())).awaitCompletion();
+            client.pullImageCmd(image).exec(new DefaultCallback<>(app.getId())).awaitCompletion();
 
 
             log.info("开始部署镜像 {}", image);

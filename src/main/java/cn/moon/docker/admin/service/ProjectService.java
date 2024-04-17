@@ -6,13 +6,13 @@ import cn.moon.docker.admin.dao.BuildLogDao;
 import cn.moon.docker.admin.dao.ProjectDao;
 import cn.moon.docker.admin.entity.*;
 import cn.moon.docker.sdk.DockerSdkManager;
-import cn.moon.docker.sdk.callback.MyBuildImageResultCallback;
-import cn.moon.docker.sdk.callback.MyPushImageCallback;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.moon.docker.sdk.DefaultCallback;
 import cn.moon.lang.web.persistence.BaseService;
 import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.command.PushImageCmd;
+import com.github.dockerjava.api.model.BuildResponseItem;
 import com.google.common.collect.Sets;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
@@ -58,11 +58,11 @@ public class ProjectService extends BaseService<Project> {
     @Resource
     private ApplicationEventPublisher applicationEventPublisher;
 
-    private final Map<String, MyBuildImageResultCallback> buildThreadMap = new HashMap<>();
+    private final Map<String, DefaultCallback> buildThreadMap = new HashMap<>();
 
 
     public void stopBuild(String id) throws IOException {
-        MyBuildImageResultCallback callback = buildThreadMap.get(id);
+        DefaultCallback callback = buildThreadMap.get(id);
         if (callback != null) {
             callback.close();
         }
@@ -143,7 +143,7 @@ public class ProjectService extends BaseService<Project> {
 
 
             log.info("向docker发送构建指令");
-            MyBuildImageResultCallback buildCallback = new MyBuildImageResultCallback(buildlogFileId);
+            DefaultCallback<BuildResponseItem> buildCallback = new DefaultCallback<>(buildlogFileId);
             buildThreadMap.put(buildLog.getId(), buildCallback);
             client.buildImageCmd(buildDir)
 
@@ -155,7 +155,7 @@ public class ProjectService extends BaseService<Project> {
                     .withTags(tags)
                     .withNoCache(!useCache)
                     .withDockerfilePath(dockerfile)
-                    .exec(buildCallback).awaitImageId();
+                    .exec(buildCallback).awaitCompletion();
             log.info("镜像构建结束 ");
 
             buildThreadMap.remove(buildLog.getId());
@@ -164,7 +164,7 @@ public class ProjectService extends BaseService<Project> {
             log.info("推送镜像");
             for (String tag : tags) {
                 PushImageCmd pushImageCmd = client.pushImageCmd(tag);
-                MyPushImageCallback callback = pushImageCmd.exec(new MyPushImageCallback(buildlogFileId));
+                DefaultCallback callback = pushImageCmd.exec(new DefaultCallback<>(buildlogFileId));
                 callback.awaitCompletion();
                 log.info("推送镜像结束 {}", tag);
             }

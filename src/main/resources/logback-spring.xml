@@ -15,7 +15,7 @@
 
 
     <!-- 构建日志-->
-    <appender name="TASK_LOG" class="ch.qos.logback.classic.sift.SiftingAppender">
+    <appender name="docker-console-appender" class="ch.qos.logback.classic.sift.SiftingAppender">
         <discriminator>
             <key>logFileId</key>
             <defaultValue>default</defaultValue>
@@ -35,8 +35,8 @@
 
 
 
-    <logger name="cn.moon.docker.sdk">
-        <appender-ref ref="TASK_LOG" />
+    <logger name="docker-console">
+        <appender-ref ref="docker-console-appender" />
     </logger>
 
 
