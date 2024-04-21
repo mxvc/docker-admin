@@ -5,7 +5,8 @@ import {getPageableData} from "../../utils/request";
 import {LazyLog, ScrollFollow} from "react-lazylog";
 import {
   CheckCircleFilled,
-  ClockCircleOutlined, CloseCircleFilled,
+  ClockCircleOutlined,
+  CloseCircleFilled,
   Loading3QuartersOutlined,
   MinusCircleTwoTone
 } from "@ant-design/icons";

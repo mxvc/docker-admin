@@ -1,9 +1,6 @@
 import React from "react";
 import {get} from "../../utils/request";
-import {Descriptions, message, Spin, Statistic} from "antd";
-import {Empty} from "antd/lib";
-import CodeMirrorEditor from "../CodeMirrorEditor";
-
+import {Spin, Statistic} from "antd";
 
 
 export default class extends React.Component {

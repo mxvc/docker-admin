@@ -5,7 +5,6 @@ import React from 'react';
 import {get, getPageableData, post} from "../../../utils/request";
 import common from "../../../utils/common";
 import {ProTable} from "@ant-design/pro-components";
-import {history} from "umi";
 import {notPermitted} from "../../../utils/SysConfig";
 
 const addTitle = "添加项目"

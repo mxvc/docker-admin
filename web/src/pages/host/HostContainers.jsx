@@ -1,4 +1,4 @@
-import {Alert, Button, Divider, message, Table} from 'antd';
+import {Button, Divider, message, Table} from 'antd';
 import React from 'react';
 import {get} from "../../utils/request";
 import {history} from "umi";

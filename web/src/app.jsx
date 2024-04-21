@@ -2,7 +2,7 @@
  * UMI Runtime Config https://umijs.org/docs/runtime-config
  */
 import {history} from 'umi';
-import {setLogin, setMenu} from "./utils/SysConfig";
+import {setLogin} from "./utils/SysConfig";
 import {get} from "@/utils/request";
 import {Modal} from "antd";
 

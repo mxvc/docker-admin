@@ -19,12 +19,6 @@ export default class extends React.Component {
     this.id = this.props.location.query.id
     get(api+'get', {id: this.id}).then(rs=>this.setState({project: rs}))
   }
-
-  save = value => {
-    value.id = this.state.project.id
-    post(api + 'update', value)
-  }
-
   render() {
     if(this.state.project == null){
       return <Spin />

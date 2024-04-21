@@ -3,7 +3,6 @@ import ContainerBox from "../../components/container/ContainerBox";
 import {Card} from "antd";
 
 
-
 export default class extends React.Component {
 
   render() {

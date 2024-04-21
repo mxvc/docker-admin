@@ -1,7 +1,7 @@
 import React from 'react';
 import {Button, Form, Input, message} from 'antd';
 import {LockOutlined, UserOutlined} from '@ant-design/icons';
-import {setLogin, setMenu, site} from "../utils/SysConfig";
+import {setLogin, site} from "../utils/SysConfig";
 import {post} from "../utils/request";
 import {history} from "umi";
 

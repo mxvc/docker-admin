@@ -1,9 +1,7 @@
 import React from 'react';
 import {Layout, Menu, message} from 'antd';
 import {history} from 'umi';
-import {
-  AppstoreOutlined, ClusterOutlined, LogoutOutlined, ProjectOutlined, SettingOutlined
-} from "@ant-design/icons";
+import {AppstoreOutlined, ClusterOutlined, LogoutOutlined, ProjectOutlined, SettingOutlined} from "@ant-design/icons";
 import {get} from "../utils/request";
 import {notPermitted} from "../utils/SysConfig";
 
