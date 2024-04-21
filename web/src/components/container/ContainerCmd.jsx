@@ -1,7 +1,6 @@
-import React, {Component} from "react";
+import React from "react";
 import {Input} from "antd";
 import {get} from "../../utils/request";
-import {KeyOutlined} from "@ant-design/icons";
 
 export default class  extends  React.Component {
 

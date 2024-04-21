@@ -11,6 +11,7 @@ import {
 } from "@ant-design/icons";
 import {formatTotalTime} from "../../utils/utils";
 import {ProTable} from "@ant-design/pro-components";
+import {friendlyTime} from "@moon-cn/hutool";
 
 let api = '/api/deployLog/';
 
@@ -53,7 +54,7 @@ export default class extends React.Component {
       title: '开始时间',
       dataIndex: 'createTime',
       render(_,row){
-        return new Date(row.createTime).timeSince();
+        return friendlyTime(row.createTime) ;
       }
     },
     {

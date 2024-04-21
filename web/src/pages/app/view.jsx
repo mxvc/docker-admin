@@ -26,6 +26,7 @@ import ContainerBox from "../../components/container/ContainerBox";
 import {showResult} from "../../utils/utils";
 import {notPermitted} from "../../utils/SysConfig";
 import {Empty} from "antd/lib";
+import * as hutool from "@moon-cn/hutool"
 
 let api = '/api/app/';
 
@@ -189,7 +190,7 @@ export default class extends React.Component {
               {container.status}</Tag>
           </Descriptions.Item>
 
-          <Descriptions.Item label='创建于'>  { new Date( app.createTime).timeSince()} </Descriptions.Item>
+          <Descriptions.Item label='创建于'>  { hutool.friendlyTime( app.createTime)} </Descriptions.Item>
 
         </Descriptions>
 

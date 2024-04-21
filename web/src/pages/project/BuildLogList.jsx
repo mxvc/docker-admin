@@ -11,6 +11,7 @@ import {formatTotalTime} from "../../utils/utils";
 import {ProTable} from "@ant-design/pro-components";
 import {get, getPageableData} from "../../utils/request";
 import moment from "moment";
+import {friendlyTime} from "@moon-cn/hutool";
 
 let api = '/api/buildLog/';
 
@@ -59,7 +60,7 @@ export default class extends React.Component {
       title: '开始时间',
       dataIndex: 'createTime',
       render(_, row) {
-        return <Tooltip title={row.createTime}> {new Date(row.createTime).timeSince()}</Tooltip>
+        return <Tooltip title={row.createTime}> { friendlyTime(row.createTime)}</Tooltip>
       }
     },
     {

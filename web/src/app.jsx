@@ -3,7 +3,6 @@
  */
 import {history} from 'umi';
 import {setLogin, setMenu} from "./utils/SysConfig";
-import './utils/timesince'
 import {get} from "@/utils/request";
 import {Modal} from "antd";
 

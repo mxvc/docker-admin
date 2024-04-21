@@ -2,15 +2,10 @@ import React from 'react';
 import {Layout, Menu, message} from 'antd';
 import {history} from 'umi';
 import {
-  AppstoreOutlined, BankOutlined,
-  CloudServerOutlined, ClusterOutlined, CreditCardOutlined,
-  DatabaseOutlined, FileOutlined, LogoutOutlined, ProfileOutlined,
-  ProjectOutlined, SettingOutlined,
-  UserOutlined
+  AppstoreOutlined, ClusterOutlined, LogoutOutlined, ProjectOutlined, SettingOutlined
 } from "@ant-design/icons";
 import {get} from "../utils/request";
 import {notPermitted} from "../utils/SysConfig";
-import Settings from "../pages/settings";
 
 const {Content, Sider} = Layout;
 
@@ -69,7 +64,6 @@ export default class extends React.Component {
       },
 
 
-
       {
         type: 'group',
         label: '其他',
@@ -96,15 +90,15 @@ export default class extends React.Component {
     // 过滤disabled
     for (let item of items) {
       let list = item.children;
-      if(list){
+      if (list) {
         list = list.filter(i => !(i.disabled === true))
         item.children = list
-        if(list.length === 0 ){
+        if (list.length === 0) {
           item.disabled = true;
         }
       }
     }
-    items = items.filter(i=> !(i.disabled === true))
+    items = items.filter(i => !(i.disabled === true))
 
 
     return (
