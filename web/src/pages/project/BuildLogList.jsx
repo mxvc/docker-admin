@@ -7,11 +7,10 @@ import {
   Loading3QuartersOutlined,
   MinusCircleTwoTone
 } from "@ant-design/icons";
-import {formatTotalTime} from "../../utils/utils";
 import {ProTable} from "@ant-design/pro-components";
 import {get, getPageableData} from "../../utils/request";
 import moment from "moment";
-import {friendlyTime} from "@moon-cn/hutool";
+import {friendlyTime, friendlyTotalTime} from "@moon-cn/hutool";
 
 let api = '/api/buildLog/';
 
@@ -107,7 +106,7 @@ export default class extends React.Component {
       title: '耗时',
       dataIndex: 'timeSpend',
       render(t, row) {
-        return formatTotalTime(t)
+        return friendlyTotalTime(t)
       }
     },
     {
