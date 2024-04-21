@@ -3,7 +3,7 @@ package cn.moon.docker.admin.controller;
 import cn.moon.base.shiro.CurrentUser;
 import cn.moon.docker.admin.entity.Host;
 import cn.moon.docker.admin.service.HostService;
-import cn.moon.docker.admin.bean.DockerInfo;
+import cn.moon.docker.admin.vo.DockerInfo;
 import cn.moon.lang.web.Option;
 import cn.moon.lang.web.Result;
 import cn.moon.lang.web.persistence.BaseEntity;

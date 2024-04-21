@@ -1,4 +1,4 @@
-package cn.moon.docker.admin.bean;
+package cn.moon.docker.admin.vo;
 
 import com.github.dockerjava.api.model.Container;
 import lombok.Data;
