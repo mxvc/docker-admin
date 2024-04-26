@@ -47,7 +47,3 @@ spring:
     password: ${dbpwd}
     hikari:
       minimum-idle: 3
-  mvc:
-    async:
-      # 异步请求超时时间， 用于日志滚动显示
-      request-timeout: 15m
