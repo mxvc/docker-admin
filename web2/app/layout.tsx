@@ -8,7 +8,6 @@ import '../styles/layout/layout.scss';
 import React from "react";
 
 import zhCn from "./zh-CN.json"
-debugger
 
 addLocale("zh-CN",zhCn["zh-CN"])
 interface RootLayoutProps {
