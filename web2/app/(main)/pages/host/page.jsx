@@ -3,11 +3,8 @@ import {Button} from 'primereact/button';
 import {Column} from 'primereact/column';
 import {DataTable} from 'primereact/datatable';
 import {Dialog} from 'primereact/dialog';
-import {InputNumber} from 'primereact/inputnumber';
 import {InputText} from 'primereact/inputtext';
-import {InputTextarea} from 'primereact/inputtextarea';
 import {Toolbar} from 'primereact/toolbar';
-import {classNames} from 'primereact/utils';
 import React, {useEffect, useRef, useState} from 'react';
 import {hutool} from "@moon-cn/hutool";
 import {Card} from "primereact/card";
@@ -19,8 +16,7 @@ export default () => {
 
     const [tableData, setTableData] = useState(null);
     const [productDialog, setProductDialog] = useState(false);
-    const [formData, setFormData] = useState({});
-    const [submitted, setSubmitted] = useState(false);
+    const [formData, setFormData] = useState({name: ''});
     const [globalFilter, setGlobalFilter] = useState('');
     const dt = useRef(null);
 
@@ -34,24 +30,20 @@ export default () => {
 
 
     const openNew = () => {
-        setFormData({});
-        setSubmitted(false);
+        setFormData({name: ''});
         setProductDialog(true);
     };
 
     const hideDialog = () => {
-        setSubmitted(false);
         setProductDialog(false);
     };
     const submitData = () => {
-        setSubmitted(true);
 
         hutool.http.post('/api/host/save', formData).then(rs => {
             commons.message.success(rs.message)
 
             loadData()
             setProductDialog(false);
-            setSubmitted(false)
         }).catch(commons.message.error)
 
 
@@ -77,26 +69,18 @@ export default () => {
 
         setFormData(_product);
     };
-
-    const onInputNumberChange = (e, name) => {
-        const val = e.value || 0;
-        let _product = {...formData};
-        _product[`${name}`] = val;
-
-        setFormData(_product);
-    };
-
-
     return (
         <Card>
             <Toolbar className="mb-4"
-                     start={<InputText type="search" onInput={(e) => setGlobalFilter(e.currentTarget.value)}
+                     start={<InputText type="search"
+                                       value={globalFilter}
+                                       onInput={(e) => setGlobalFilter(e.currentTarget.value)}
                                        placeholder="搜索..."/>
-
                      }
                      end={<Button label="新增" icon="pi pi-plus" severity="success" className=" mr-2"
                                   onClick={openNew}/>}
             ></Toolbar>
+
 
             <DataTable
                 ref={dt}
@@ -105,9 +89,8 @@ export default () => {
                 paginator
                 rows={10}
                 rowsPerPageOptions={[5, 10, 25]}
-                globalFilter={globalFilter}
             >
-                <Column field="name" header="主机名称"
+                <Column field="name" header="主机名称" filter
                         body={(data) => <Link href={'host/view?id=' + data.id}>{data.name}</Link>}/>
                 <Column field="dockerHost" header="Docker接口"
                         headerTooltip={'如：unix:///var/run/docker.sock,tcp://192.168.1.2:2375'}></Column>
@@ -134,39 +117,21 @@ export default () => {
                     onHide={hideDialog}>
 
                 <div className="field">
-                    <label htmlFor="name">Name</label>
+                    <label>Name</label>
                     <InputText
-                        id="name"
                         value={formData.name}
                         onChange={(e) => onInputChange(e, 'name')}
                         required
-                        autoFocus
-                        className={classNames({
-                            'p-invalid': submitted && !formData.name
-                        })}
                     />
-                    {submitted && !formData.name && <small className="p-invalid">Name is required.</small>}
                 </div>
                 <div className="field">
-                    <label htmlFor="description">Description</label>
-                    <InputTextarea id="description" value={formData.description}
-                                   onChange={(e) => onInputChange(e, 'description')} required rows={3}
-                                   cols={20}/>
+                    <label>Description</label>
+                    <InputText value={formData.description}
+                                   onChange={(e) => onInputChange(e, 'description')}
+                                   />
                 </div>
 
-                <div className="formgrid grid">
-                    <div className="field col">
-                        <label htmlFor="price">Price</label>
-                        <InputNumber id="price" value={formData.price}
-                                     onValueChange={(e) => onInputNumberChange(e, 'price')} mode="currency"
-                                     currency="USD" locale="en-US"/>
-                    </div>
-                    <div className="field col">
-                        <label htmlFor="quantity">Quantity</label>
-                        <InputNumber id="quantity" value={formData.quantity}
-                                     onValueChange={(e) => onInputNumberChange(e, 'quantity')}/>
-                    </div>
-                </div>
+
             </Dialog>
 
 
