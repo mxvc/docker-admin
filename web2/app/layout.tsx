@@ -8,11 +8,20 @@ import '../styles/layout/layout.scss';
 import React from "react";
 
 import zhCn from "./zh-CN.json"
+import {hutool} from "@moon-cn/hutool";
 
 addLocale("zh-CN",zhCn["zh-CN"])
 interface RootLayoutProps {
     children: React.ReactNode;
 }
+
+hutool.http.globalErrorMessageHandler = function (msg, error){
+    if(error?.code == 401){
+        localStorage.clear()
+        window.location.href = "/"
+    }
+}
+
 
 export default function RootLayout({ children }: RootLayoutProps) {
     return (
