@@ -16,7 +16,6 @@ export default () => {
 
     const [tableData, setTableData] = useState(null);
     const [formVisible, setFormVisible] = useState(false);
-    const [formData, setFormData] = useState({name: ''});
     const [globalFilter, setGlobalFilter] = useState('');
     const dt = useRef(null);
 
@@ -30,7 +29,6 @@ export default () => {
 
 
     const openNew = () => {
-        setFormData({name: ''});
         setFormVisible(true);
     };
 
@@ -46,7 +44,6 @@ export default () => {
     };
 
     const editRecord = (data) => {
-        setFormData({...data});
         setFormVisible(true);
     };
     const deleteRecord = (record) => {
@@ -104,7 +101,7 @@ export default () => {
 
                     submitData(data)
                     return false
-                }}>
+                }} >
                     <div className="field">
                         <label>主机名称</label>
                         <InputText name='name' required />
