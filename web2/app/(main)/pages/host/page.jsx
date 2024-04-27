@@ -15,7 +15,7 @@ import {commons} from "../../../../commons/commons";
 export default () => {
 
     const [tableData, setTableData] = useState(null);
-    const [productDialog, setProductDialog] = useState(false);
+    const [formVisible, setFormVisible] = useState(false);
     const [formData, setFormData] = useState({name: ''});
     const [globalFilter, setGlobalFilter] = useState('');
     const dt = useRef(null);
@@ -31,43 +31,29 @@ export default () => {
 
     const openNew = () => {
         setFormData({name: ''});
-        setProductDialog(true);
+        setFormVisible(true);
     };
 
     const hideDialog = () => {
-        setProductDialog(false);
+        setFormVisible(false);
     };
-    const submitData = () => {
-
-        hutool.http.post('/api/host/save', formData).then(rs => {
+    const submitData = (data) => {
+        hutool.http.post('/api/host/save', data).then(rs => {
             commons.message.success(rs.message)
-
             loadData()
-            setProductDialog(false);
-        }).catch(commons.message.error)
-
-
+            setFormVisible(false);
+        }).catch(e=>{commons.message.error(e); console.log(e)})
     };
 
     const editRecord = (data) => {
         setFormData({...data});
-        setProductDialog(true);
+        setFormVisible(true);
     };
     const deleteRecord = (record) => {
         hutool.http.post("api/host//delete", {id: record.id}).then(rs => {
             loadData()
             commons.message.success(rs.message)
         })
-
-    };
-
-
-    const onInputChange = (e, name) => {
-        const val = (e.target && e.target.value) || '';
-        let _product = {...formData};
-        _product[`${name}`] = val;
-
-        setFormData(_product);
     };
     return (
         <Card>
@@ -108,30 +94,39 @@ export default () => {
                 </>}/>
             </DataTable>
 
-            <Dialog visible={productDialog} header="主机信息" modal
+            <Dialog visible={formVisible} header="主机信息" modal
                     className="p-fluid"
-                    footer={<>
-                        <Button label="取消" text onClick={hideDialog}/>
-                        <Button label="确定" onClick={submitData}/>
-                    </>}
                     onHide={hideDialog}>
+                <form onSubmit={(event) => {
+                    event.preventDefault()
+                    const fd =new FormData(event.target);
+                    const data =Object.fromEntries(fd.entries())
 
-                <div className="field">
-                    <label>Name</label>
-                    <InputText
-                        value={formData.name}
-                        onChange={(e) => onInputChange(e, 'name')}
-                        required
-                    />
-                </div>
-                <div className="field">
-                    <label>Description</label>
-                    <InputText value={formData.description}
-                                   onChange={(e) => onInputChange(e, 'description')}
-                                   />
-                </div>
-
-
+                    submitData(data)
+                    return false
+                }}>
+                    <div className="field">
+                        <label>主机名称</label>
+                        <InputText name='name' required />
+                    </div>
+                    <div className="field">
+                        <label>Docker接口</label>
+                        <InputText name='dockerHost' required/>
+                    </div>
+                    <div className="field">
+                        <label>请求头Host</label>
+                        <InputText name='dockerHostHeader'/>
+                    </div>
+                    <div className="field">
+                        <label>备注</label>
+                        <InputText name='remark'/>
+                    </div>
+                    <div className="field">
+                        <label>是否构建主机</label>
+                        <InputText name='isRunner'/>
+                    </div>
+                        <Button style={{width: 100}} label="确定" type='submit'/>
+                </form>
             </Dialog>
 
 
