@@ -1,5 +1,6 @@
 package cn.moon.docker.admin.controller;
 
+import cn.hutool.core.util.StrUtil;
 import cn.moon.base.shiro.CurrentUser;
 import cn.moon.docker.admin.entity.Host;
 import cn.moon.docker.admin.service.HostService;
@@ -40,15 +41,19 @@ public class HostController {
 
     @RequiresPermissions("host:list")
     @RequestMapping("list")
-    public Page<Host> list(@PageableDefault(sort = BaseEntity.Fields.modifyTime, direction = Sort.Direction.DESC) Pageable pageable) {
+    public Page<Host> list(String searchText, @PageableDefault(sort = BaseEntity.Fields.modifyTime, direction = Sort.Direction.DESC) Pageable pageable) {
         Query<Host> q = getHostQuery();
+
+        if(StrUtil.isNotBlank(searchText)){
+            q.like("name", searchText.trim());
+        }
+
 
         Page<Host> list = service.findAll(q, pageable);
 
         return list;
     }
 
-    @NotNull
     private static Query<Host> getHostQuery() {
         Query<Host> q = new Query<>();
         Subject subject = SecurityUtils.getSubject();

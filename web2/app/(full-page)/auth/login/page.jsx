@@ -12,7 +12,7 @@ import {hutool} from "@moon-cn/hutool";
 
 const LoginPage = () => {
     const [account, setAccount] = useState('admin');
-    const [password, setPassword] = useState('123123');
+    const [password, setPassword] = useState('123456');
 
 
     const [checked, setChecked] = useState(false);
