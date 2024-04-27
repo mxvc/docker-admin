@@ -3,6 +3,7 @@ import Layout from '../../layout/layout';
 import React from "react";
 import {hutool} from "@moon-cn/hutool";
 import Link from "next/link";
+import {ConfirmPopup} from "primereact/confirmpopup";
 
 
 export default function (props) {
@@ -11,5 +12,8 @@ export default function (props) {
         return <Link href='/auth/login'>请先登录</Link>
     }
 
-    return <Layout>{props.children}</Layout>;
+    return <Layout>
+
+        {props.children}
+    </Layout>;
 }

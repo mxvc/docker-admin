@@ -63,7 +63,7 @@ public class HostController {
     @RequestMapping("save")
     public Result update(@RequestBody Host host) {
         service.save(host);
-        return Result.ok().msg("保存");
+        return Result.ok().msg("保存成功");
     }
 
 
