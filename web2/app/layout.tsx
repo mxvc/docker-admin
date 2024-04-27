@@ -37,7 +37,6 @@ export default function RootLayout({children}: RootLayoutProps) {
         <body>
         <PrimeReactProvider value={{
             locale: 'zh-CN',
-
         }}
 
         >
