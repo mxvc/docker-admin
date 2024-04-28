@@ -105,7 +105,7 @@ export default () => {
                                        setLazyState(lazyState)
                                    }}
                                    placeholder="搜索..."/>}
-                 end={<><Button label="新增" icon="pi pi-plus" size='small'  className=" mr-2"
+                 end={<><Button label="新增" icon="pi pi-plus"   className=" mr-2"
                                 onClick={openNew}/>
                      <Button icon="pi pi-refresh" text onClick={loadData}/>
                      <Button icon="pi pi-filter" text onClick={() => {
@@ -145,7 +145,6 @@ export default () => {
             filterDisplay={filterDisplay}
 
 
-            size='small'
         >
             <Column field="name" header="主机名称" sortable filter
                     body={(data) => <Link href={'host/view?id=' + data.id}>{data.name}</Link>}/>

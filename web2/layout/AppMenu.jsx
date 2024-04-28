@@ -19,11 +19,7 @@ export default () => {
                     to: '/pages/host'
                 },
 
-                {
-                    label: 'Empty',
-                    icon: 'pi pi-fw pi-circle-off',
-                    to: '/pages/empty'
-                }
+
             ]
         }
     ];
