@@ -33,8 +33,6 @@ export default () => {
             commons.message.success(rs.message)
             tableRef.current.loadData()
             setFormVisible(false);
-        }).catch(e => {
-            commons.message.error(e);
         }).finally(() => {
             form.setSubmitting(false)
         })
@@ -65,11 +63,11 @@ export default () => {
             <Column field="isRunner" header="是否构建主机" body={d => d.isRunner ? "是" : "否"}></Column>
 
             <Column body={rowData => <div>
-                <Button label='编辑' text severity="success" className="mr-2"
+                <Button plain label='编辑'  severity="success" className="mr-2"
                         onClick={() => editRecord(rowData)}/>
 
                 <Popconfirm title='确定删除？' onConfirm={() => deleteRecord(rowData)}>
-                    <Button label='删除' text severity="warning"/>
+                    <Button  label='删除'  severity="warning"/>
                 </Popconfirm>
             </div>}/>
         </ProTable>

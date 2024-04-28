@@ -10,8 +10,10 @@ import React from "react";
 
 import zhCn from "./zh-CN.json"
 import {hutool} from "@moon-cn/hutool";
+
+
 import {ConfirmPopup} from "primereact/confirmpopup";
-import {GlobalToast} from "@/commons/commons";
+import {commons, GlobalToast} from "@/commons/commons";
 
 addLocale("zh-CN", zhCn["zh-CN"])
 
@@ -25,7 +27,11 @@ hutool.http.globalErrorMessageHandler = function (msg, error) {
     if (error?.code == 401) {
         localStorage.clear()
         window.location.href = "/"
+        return
     }
+
+    commons.message.error(msg?.message || msg)
+
 }
 
 

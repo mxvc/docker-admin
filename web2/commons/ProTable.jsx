@@ -59,7 +59,7 @@ export default class extends React.Component {
         })
     };
     setLazyState = e => {
-        this.setState({lazyState: e})
+        this.setState({lazyState: e}, this.loadData)
     }
 
     render() {
@@ -70,11 +70,11 @@ export default class extends React.Component {
                      start={<InputText type="search"
                                        onInput={(e) => {
                                            let {lazyState} = this.state
-                                           this.setState({
-                                               search: {searchText: e.currentTarget.value}
-                                           })
                                            lazyState.page = undefined
-                                           this.setState({lazyState})
+                                           this.setState({
+                                               lazyState,
+                                               search: {searchText: e.currentTarget.value}
+                                           },this.loadData)
                                        }}
                                        placeholder="搜索..."/>}
                      end={<> {toolBarRender && toolBarRender()}
