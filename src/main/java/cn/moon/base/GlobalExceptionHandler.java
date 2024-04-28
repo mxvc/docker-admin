@@ -1,6 +1,7 @@
 
 package cn.moon.base;
 
+import cn.moon.lang.web.ExceptionHumanTool;
 import cn.moon.lang.web.Result;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authz.UnauthorizedException;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class GlobalExceptionHandler {
 
 
+
     @ExceptionHandler(UnauthorizedException.class)
     public Result ex(UnauthorizedException e) {
         log.error("异常", e);
@@ -23,6 +25,12 @@ public class GlobalExceptionHandler {
     }
 
 
+    @ExceptionHandler(Exception.class)
+    public Result ex(Exception e) {
+        log.error("异常", e);
+        String msg = ExceptionHumanTool.covert(e);
+        return Result.err().msg(msg).code(500);
+    }
 }
 
 

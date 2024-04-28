@@ -55,7 +55,7 @@
         <dependency>
             <groupId>io.github.moon-cn</groupId>
             <artifactId>commons-lang-web</artifactId>
-            <version>1.0.8</version>
+            <version>1.0.9</version>
         </dependency>
         <dependency>
             <groupId>io.github.moon-cn</groupId>
