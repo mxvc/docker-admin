@@ -1,25 +1,33 @@
 import React from 'react';
 import AppMenuitem from './AppMenuitem';
-import { MenuProvider } from './context/menucontext';
+import {MenuProvider} from './context/menucontext';
 
 export default () => {
     const model = [
         {
             label: 'Home',
-            items: [{ label: 'Dashboard', icon: 'pi pi-fw pi-home', to: '/' }]
+            items: [{label: 'Dashboard', icon: 'pi pi-fw pi-home', to: '/'}]
         },
         {
-            label: 'Pages',
+            label: '应用平台',
             icon: 'pi pi-fw pi-briefcase',
-            to: '/pages',
+            to: '/',
             items: [
                 {
-                    label: '主机',
-                    icon: 'pi pi-fw pi-pencil',
-                    to: '/pages/host'
+                    label: '项目',
+                    icon: 'pi pi-github',
+                    to: '/project'
                 },
-
-
+                {
+                    label: '容器',
+                    icon: 'pi pi-box',
+                    to: '/app'
+                },
+                {
+                    label: '主机',
+                    icon: 'pi pi-server' ,
+                    to: '/host'
+                },
             ]
         }
     ];

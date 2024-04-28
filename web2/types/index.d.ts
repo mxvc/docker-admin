@@ -6,11 +6,8 @@ import {
     BreadcrumbItem,
     MenuProps,
     MenuModel,
-    AppSubMenuProps,
     LayoutConfig,
     LayoutState,
-    AppBreadcrumbState,
-    Breadcrumb,
     LayoutContextProps,
     MailContextProps,
     MenuContextProps,
@@ -19,11 +16,9 @@ import {
     AppConfigProps,
     NodeRef,
     AppTopbarRef,
-    MenuModelItem,
     AppMenuItemProps,
     AppMenuItem
 } from './layout';
-import { Demo, LayoutType, SortOrderType, CustomEvent, ChartDataState, ChartOptionsState, AppMailSidebarItem, AppMailReplyProps, AppMailProps } from './demo';
 
 type ChildContainerProps = {
     children: ReactNode;
