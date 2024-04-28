@@ -13,51 +13,12 @@ import Popconfirm from "../../../../commons/Popconfirm";
 import {commons} from "../../../../commons/commons";
 import {Field, Form, Formik} from "formik";
 import {InputSwitch} from "primereact/inputswitch";
+import ProTable from "../../../../commons/ProTable";
 
 export default () => {
     const [formVisible, setFormVisible] = useState(false);
     const [formValues, setFormValues] = useState({});
-
-    const [loading, setLoading] = useState(false)
-    const [tableData, setTableData] = useState([])
-    const [totalRecords, setTotalRecords] = useState(0)
-    const [search, setSearch] = useState({})
-    const [filterDisplay, setFilterDisplay] = useState("menu"); // row, menu
-
-    const [lazyState, setLazyState] = useState({
-        first: 0,
-        rows: 10,
-        page: 0,
-        sortField: null,
-        sortOrder: null,
-        filters: null
-
-    });
-
-    const loadData = () => {
-        setLoading(true)
-        const params = {...search}
-        params.pageSize = lazyState.rows
-        if (lazyState.page != null) { // 排序时会为空，相当于从第一页
-            params.pageNumber = lazyState.page + 1; // springmvc设置了从1开始
-        }
-
-        if (lazyState.sortField) {
-            params.orderBy = lazyState.sortField + "," + (lazyState.sortOrder == 1 ? "asc" : "desc")
-        }
-        params.filters = lazyState.filters
-
-        hutool.http.get("/api/host/list", params).then(rs => {
-            const {content} = rs
-            setTableData(content)
-            setLazyState(lazyState)
-            setTotalRecords(rs.totalElements)
-        }).finally(() => {
-            setLoading(false)
-        })
-    };
-
-    useEffect(loadData, [lazyState, search]);
+    const tableRef = useRef();
 
     const openNew = () => {
         setFormValues({})
@@ -70,7 +31,7 @@ export default () => {
     const submitData = (data, form) => {
         hutool.http.post('/api/host/save', data).then(rs => {
             commons.message.success(rs.message)
-            loadData()
+            tableRef.current.loadData()
             setFormVisible(false);
         }).catch(e => {
             commons.message.error(e);
@@ -85,51 +46,15 @@ export default () => {
     };
     const deleteRecord = (record) => {
         hutool.http.post("api/host//delete", {id: record.id}).then(rs => {
-            loadData()
+            tableRef.current.loadData()
             commons.message.success(rs.message)
         })
     };
     return (<Card>
-        <Toolbar  className="mb-4"
-                 start={<InputText type="search"
-                                   onInput={(e) => {
-                                       setSearch({searchText: e.currentTarget.value});
-                                       lazyState.page = undefined
-                                       setLazyState(lazyState)
-                                   }}
-                                   placeholder="搜索..."/>}
-                 end={<><Button label="新增" icon="pi pi-plus"   className=" mr-2"
-                                onClick={openNew}/>
-                     <Button icon="pi pi-refresh" text onClick={loadData}/>
-                     <Button icon="pi pi-filter" text onClick={() => {
-                         setFilterDisplay(filterDisplay == 'row' ? "menu" : 'row')
-                     }}/>
-                 </>}
-        ></Toolbar>
-
-        <DataTable
-            value={tableData}
-            loading={loading}
-            dataKey="id"
-
-            lazy
-
-            paginator
-            rows={lazyState.rows}
-            first={lazyState.first}
-            totalRecords={totalRecords}
-            onPage={setLazyState}
-            rowsPerPageOptions={[2, 10, 50, 100, 200, 500, 1000, 2000]}
-            alwaysShowPaginator={false}
-
-            sortField={lazyState.sortField}
-            sortOrder={lazyState.sortOrder}
-            onSort={setLazyState}
-
-            onFilter={setLazyState}
-            filters={lazyState.filters}
-            filterDisplay={filterDisplay}
-        >
+        <ProTable ref={tableRef}
+                  url='api/host/list'
+                  toolBarRender={() => <Button label="新增" icon="pi pi-plus" className=" mr-2"
+                                               onClick={openNew}/>}>
             <Column field="name" header="主机名称" sortable filter
                     body={(data) => <Link href={'host/view?id=' + data.id}>{data.name}</Link>}/>
             <Column field="dockerHost" header="Docker接口" sortable filter></Column>
@@ -137,21 +62,23 @@ export default () => {
             <Column field="remark" header="备注"></Column>
             <Column field="isRunner" header="是否构建主机" body={d => d.isRunner ? "是" : "否"}></Column>
 
-            <Column body={rowData => <div >
-                <Button label='编辑'  text severity="success" className="mr-2"
+            <Column body={rowData => <div>
+                <Button label='编辑' text severity="success" className="mr-2"
                         onClick={() => editRecord(rowData)}/>
 
                 <Popconfirm title='确定删除？' onConfirm={() => deleteRecord(rowData)}>
-                    <Button label='删除'  text  severity="warning"  />
+                    <Button label='删除' text severity="warning"/>
                 </Popconfirm>
             </div>}/>
-        </DataTable>
+        </ProTable>
 
-
-        <Dialog visible={formVisible} header="主机信息" modal
+        <Dialog visible={formVisible}
+                header="主机信息"
+                modal
                 className="p-fluid"
                 onHide={hideDialog}>
-            <Formik initialValues={formValues} onSubmit={submitData}>
+            <Formik initialValues={formValues}
+                    onSubmit={submitData}>
                 {form => (<Form>
                     <div className="field ">
                         <label>主机名称</label>
@@ -179,7 +106,6 @@ export default () => {
                     </div>
                     <Button style={{width: 100}} label="确定" type='submit' disabled={form.isSubmitting}/>
                 </Form>)}
-
             </Formik>
         </Dialog>
     </Card>);
