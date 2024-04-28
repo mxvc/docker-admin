@@ -53,8 +53,10 @@ export default () => {
     return (<Card>
         <ProTable ref={tableRef}
                   url='api/host/list'
-                  toolBarRender={() => <Button label="新增" icon="pi pi-plus" className=" mr-2"
-                                               onClick={openNew}/>}>
+                  toolBarRender={() => {
+                      return <Button label="新增" icon="pi pi-plus" className=" mr-2"
+                                     onClick={openNew}/>;
+                  }}>
             <Column field="name" header="主机名称" sortable filter
                     body={(data) => <Link href={'host/view?id=' + data.id}>{data.name}</Link>}/>
             <Column field="dockerHost" header="Docker接口" sortable filter></Column>

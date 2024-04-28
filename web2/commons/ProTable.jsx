@@ -63,7 +63,7 @@ export default class extends React.Component {
     }
 
     render() {
-        const {toolbarRender, url, children, ...rest} = this.props
+        const {toolBarRender, url, children, ...rest} = this.props
         const {tableData, filterDisplay, lazyState, totalRecords, loading} = this.state
         return <>
             <Toolbar className="mb-4"
@@ -77,7 +77,7 @@ export default class extends React.Component {
                                            this.setState({lazyState})
                                        }}
                                        placeholder="搜索..."/>}
-                     end={<> {toolbarRender && toolbarRender()}
+                     end={<> {toolBarRender && toolBarRender()}
                          <Button icon="pi pi-refresh" text onClick={this.loadData}/>
                          <Button icon="pi pi-filter" text onClick={() => {
                              let {filterDisplay} = this.state
