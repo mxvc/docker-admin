@@ -63,11 +63,9 @@ export default () => {
             <Column field="isRunner" header="是否构建主机" body={d => d.isRunner ? "是" : "否"}></Column>
 
             <Column body={rowData => <div>
-                <Button plain label='编辑'  severity="success" className="mr-2"
-                        onClick={() => editRecord(rowData)}/>
-
+                <a className="mr-2 cursor-pointer" onClick={() => editRecord(rowData)}> 编辑 </a>
                 <Popconfirm title='确定删除？' onConfirm={() => deleteRecord(rowData)}>
-                    <Button  label='删除'  severity="warning"/>
+                    <a className='cursor-pointer'>删除</a>
                 </Popconfirm>
             </div>}/>
         </ProTable>

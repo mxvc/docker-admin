@@ -29,9 +29,7 @@ hutool.http.globalErrorMessageHandler = function (msg, error) {
         window.location.href = "/"
         return
     }
-
     commons.message.error(msg?.message || msg)
-
 }
 
 
@@ -42,7 +40,6 @@ export default function RootLayout({children}: RootLayoutProps) {
         <PrimeReactProvider value={{
             locale: 'zh-CN',
         }}
-
         >
             <LayoutProvider>
                 <ConfirmPopup/>
