@@ -46,7 +46,7 @@
             "周六"
         ],
         "emptyFilterMessage": "未找到结果",
-        "emptyMessage": "无可用选项",
+        "emptyMessage": "暂无数据",
         "emptySearchMessage": "未找到结果",
         "emptySelectionMessage": "未选择任何项",
         "endsWith": "以...结尾",

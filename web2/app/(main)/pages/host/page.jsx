@@ -23,7 +23,7 @@ export default () => {
     const [tableData, setTableData] = useState([])
     const [totalRecords, setTotalRecords] = useState(0)
     const [search, setSearch] = useState({})
-    const [filterDisplay, setFilterDisplay] = useState("row"); // row, menu
+    const [filterDisplay, setFilterDisplay] = useState("menu"); // row, menu
 
     const [lazyState, setLazyState] = useState({
         first: 0,
@@ -97,7 +97,7 @@ export default () => {
         })
     };
     return (<Card>
-        <Toolbar className="mb-4"
+        <Toolbar  className="mb-4"
                  start={<InputText type="search"
                                    onInput={(e) => {
                                        setSearch({searchText: e.currentTarget.value});
@@ -105,7 +105,7 @@ export default () => {
                                        setLazyState(lazyState)
                                    }}
                                    placeholder="搜索..."/>}
-                 end={<><Button label="新增" icon="pi pi-plus" severity="success" className=" mr-2"
+                 end={<><Button label="新增" icon="pi pi-plus" size='small'  className=" mr-2"
                                 onClick={openNew}/>
                      <Button icon="pi pi-refresh" text onClick={loadData}/>
                      <Button icon="pi pi-filter" text onClick={() => {
@@ -130,6 +130,7 @@ export default () => {
                 setLazyState(e)
             }}
             rowsPerPageOptions={[2, 10, 50, 100, 200, 500, 1000, 2000]}
+            alwaysShowPaginator={false}
 
             sortField={lazyState.sortField}
             sortOrder={lazyState.sortOrder}
@@ -143,6 +144,8 @@ export default () => {
             filters={lazyState.filters}
             filterDisplay={filterDisplay}
 
+
+            size='small'
         >
             <Column field="name" header="主机名称" sortable filter
                     body={(data) => <Link href={'host/view?id=' + data.id}>{data.name}</Link>}/>
@@ -151,14 +154,14 @@ export default () => {
             <Column field="remark" header="备注"></Column>
             <Column field="isRunner" header="是否构建主机" body={d => d.isRunner ? "是" : "否"}></Column>
 
-            <Column body={rowData => <>
-                <Button icon="pi pi-pencil" rounded severity="success" className="mr-2"
+            <Column body={rowData => <div >
+                <Button label='编辑'  text severity="success" className="mr-2"
                         onClick={() => editRecord(rowData)}/>
 
                 <Popconfirm title='确定删除？' onConfirm={() => deleteRecord(rowData)}>
-                    <Button icon="pi pi-trash" rounded severity="warning"/>
+                    <Button label='删除'  text  severity="warning"  />
                 </Popconfirm>
-            </>}/>
+            </div>}/>
         </DataTable>
 
 
