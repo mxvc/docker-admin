@@ -14,7 +14,6 @@ import {commons} from "../../../../commons/commons";
 import {Field, Form, Formik} from "formik";
 import {InputSwitch} from "primereact/inputswitch";
 
-
 export default () => {
     const [formVisible, setFormVisible] = useState(false);
     const [formValues, setFormValues] = useState({});
@@ -35,7 +34,6 @@ export default () => {
 
     });
 
-
     const loadData = () => {
         setLoading(true)
         const params = {...search}
@@ -44,14 +42,10 @@ export default () => {
             params.pageNumber = lazyState.page + 1; // springmvc设置了从1开始
         }
 
-        console.log(lazyState)
         if (lazyState.sortField) {
             params.orderBy = lazyState.sortField + "," + (lazyState.sortOrder == 1 ? "asc" : "desc")
         }
-
-
         params.filters = lazyState.filters
-
 
         hutool.http.get("/api/host/list", params).then(rs => {
             const {content} = rs
@@ -64,7 +58,6 @@ export default () => {
     };
 
     useEffect(loadData, [lazyState, search]);
-
 
     const openNew = () => {
         setFormValues({})
@@ -114,7 +107,6 @@ export default () => {
                  </>}
         ></Toolbar>
 
-
         <DataTable
             value={tableData}
             loading={loading}
@@ -126,25 +118,17 @@ export default () => {
             rows={lazyState.rows}
             first={lazyState.first}
             totalRecords={totalRecords}
-            onPage={e => {
-                setLazyState(e)
-            }}
+            onPage={setLazyState}
             rowsPerPageOptions={[2, 10, 50, 100, 200, 500, 1000, 2000]}
             alwaysShowPaginator={false}
 
             sortField={lazyState.sortField}
             sortOrder={lazyState.sortOrder}
-            onSort={e => {
-                setLazyState(e)
-            }}
+            onSort={setLazyState}
 
-            onFilter={e => {
-                setLazyState(e)
-            }}
+            onFilter={setLazyState}
             filters={lazyState.filters}
             filterDisplay={filterDisplay}
-
-
         >
             <Column field="name" header="主机名称" sortable filter
                     body={(data) => <Link href={'host/view?id=' + data.id}>{data.name}</Link>}/>
@@ -198,8 +182,6 @@ export default () => {
 
             </Formik>
         </Dialog>
-
-
     </Card>);
 };
 
