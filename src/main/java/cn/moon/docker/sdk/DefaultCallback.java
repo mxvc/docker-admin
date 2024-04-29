@@ -3,6 +3,7 @@ package cn.moon.docker.sdk;
 import cn.hutool.core.util.StrUtil;
 import com.github.dockerjava.api.async.ResultCallback;
 import com.github.dockerjava.api.model.ResponseItem;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
@@ -11,9 +12,9 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
 
+@Slf4j
 public class DefaultCallback<T extends ResponseItem> implements ResultCallback<T> {
 
-    private static final Logger log = LoggerFactory.getLogger("docker-console");
 
 
     public static final String TAB = "    ";

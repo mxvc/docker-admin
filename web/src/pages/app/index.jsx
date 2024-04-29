@@ -1,13 +1,14 @@
 import {PlusOutlined} from '@ant-design/icons';
-import {Button, Modal} from 'antd';
+import {AutoComplete, Button, Form, Input, message, Modal} from 'antd';
 import React from 'react';
-import {getPageableData} from "../../utils/request";
+import {get, getPageableData, post} from "../../utils/request";
 import ContainerStatus from "../../components/ContainerStatus";
 import {ProTable} from "@ant-design/pro-components";
 import {history} from "umi";
 import {notPermitted} from "../../utils/SysConfig";
 import ProjectDeploy from "./ProjectDeploy";
 import ImageDeploy from "./ImageDeploy";
+import RemoteSelect from "../../components/RemoteSelect";
 
 let api = '/api/app/';
 
@@ -64,11 +65,27 @@ export default class extends React.Component {
   ];
   state = {
     deployVisible: false,
-    deployImageVisible: false
+    deployImageVisible: false,
+    versions: []
   }
   reload = () => {
     this.actionRef.current.reload()
   }
+
+  loadVersions = projectId => {
+    get('api/project/versions', {projectId}).then(rs => {
+      this.setState({versions: rs})
+    })
+  };
+
+  handleSave = value => {
+    post(api + 'saveByProject', value).then(rs => {
+      message.success(rs.message)
+      history.push('/app/view?id=' + rs.data)
+    })
+  }
+
+  formRef = React.createRef()
 
   render() {
     return (
@@ -80,12 +97,7 @@ export default class extends React.Component {
                     onClick={() => {
                       this.setState({deployVisible: true})
                     }}>
-              部署
-            </Button>,
-            <Button disabled={notPermitted('app:save')} onClick={() => {
-              this.setState({deployImageVisible: true})
-            }}>
-              部署镜像
+              新增
             </Button>,
           ]}
           request={(params, sort) => getPageableData(api + 'list', params, sort)}
@@ -98,13 +110,42 @@ export default class extends React.Component {
         />
         <Modal title='部署项目' open={this.state.deployVisible} destroyOnClose={true} footer={null}
                onCancel={() => this.setState({deployVisible: false})}>
-          <ProjectDeploy/>
+          <Form
+            layout='horizontal'
+            labelCol={{flex:'100px'}}
+            ref={this.formRef}
+            onValuesChange={changedValues => {
+              if (changedValues.project != null) {
+                this.loadVersions(changedValues.project.id);
+              }
+            }}
+            onFinish={this.handleSave}
+          >
+
+            <Form.Item name={['project', 'id']} label='项目' required rules={[{required: true}]}>
+              <RemoteSelect url='/api/project/options' placeholder='请选择项目'></RemoteSelect>
+            </Form.Item>
+            <Form.Item name='imageTag' label='镜像版本' required rules={[{required: true}]}>
+              <AutoComplete options={this.state.versions} placeholder='请选择或输入镜像版本'/>
+            </Form.Item>
+
+
+            <Form.Item name={['host', 'id']} label='部署主机' required rules={[{required: true}]}>
+              <RemoteSelect showSearch url="/api/host/options"/>
+            </Form.Item>
+
+
+            <Form.Item name='name' label='应用名称' required rules={[{required: true}]}>
+              <Input/>
+            </Form.Item>
+
+            <Form.Item>
+              <Button htmlType='submit' type='primary'>确定</Button>
+            </Form.Item>
+          </Form>
         </Modal>
 
-        <Modal title='部署镜像' open={this.state.deployImageVisible} destroyOnClose={true} footer={null}
-               onCancel={() => this.setState({deployImageVisible: false})}>
-          <ImageDeploy/>
-        </Modal>
+
       </>
 
     )
