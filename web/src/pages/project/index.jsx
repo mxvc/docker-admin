@@ -15,7 +15,7 @@ let api = '/api/project/';
 export default class extends React.Component {
 
   state = {
-    showAddForm: false,
+    formOpen: false,
     showEditForm: false,
     formValues: {},
 
@@ -43,7 +43,6 @@ export default class extends React.Component {
       sorter: true,
       formItemProps: {
         rules: [{required: true}],
-        help:'例如：https://github.com/moon-cn/docker-hello.git'
       }
     },
 
@@ -87,7 +86,7 @@ export default class extends React.Component {
                 showEditForm: true,
                 formValues: row
               })
-            }}>修改</Button>
+            }}>编辑</Button>
           &nbsp;
           <Popconfirm disabled={notPermitted('project:delete')} title="确定删除，删除后将不可恢复"
                       onConfirm={() => this.handleDelete(row)}>
@@ -100,7 +99,7 @@ export default class extends React.Component {
   ];
   handleSave = value => {
     post(api + 'save', value).then(rs => {
-      this.state.showAddForm = false;
+      this.state.formOpen = false;
       this.setState(this.state)
       this.reload();
     })
@@ -129,7 +128,7 @@ export default class extends React.Component {
 
 
   render() {
-    let {showAddForm, showEditForm} = this.state
+    let {formOpen, showEditForm} = this.state
 
     return (<>
       <ProTable
@@ -138,10 +137,10 @@ export default class extends React.Component {
         toolBarRender={(action, {selectedRows}) => [
           <Button disabled={notPermitted('project:save')}
                   type="primary" onClick={() => {
-            this.state.showAddForm = true;
+            this.state.formOpen = true;
             this.setState(this.state)
           }}>
-            <PlusOutlined/> 新建
+            新增
           </Button>,
         ]}
         request={(params, sort) => getPageableData(api + "list", params, sort)}
@@ -158,9 +157,9 @@ export default class extends React.Component {
         maskClosable={false}
         destroyOnClose
         title={addTitle}
-        visible={showAddForm}
+        visible={formOpen}
         onCancel={() => {
-          this.state.showAddForm = false;
+          this.state.formOpen = false;
           this.setState(this.state)
         }}
         footer={null}

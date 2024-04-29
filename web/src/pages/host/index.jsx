@@ -18,7 +18,6 @@ export default class extends React.Component {
     formValues: {},
   }
   actionRef = React.createRef();
-  editFormRef = React.createRef()
 
   columns = [
     {
@@ -74,8 +73,7 @@ export default class extends React.Component {
       valueType: 'option',
       render: (_, record) => {
         return <div>
-
-          <a onClick={() => this.handleEdit(record)}>修改</a>
+          <a onClick={() => this.setState({formOpen: true, formValues: record})}>编辑</a>
 
           <Divider type='vertical'/>
           <Popconfirm title='确定删除' onConfirm={() => this.handleDelete(record)}>
@@ -101,33 +99,13 @@ export default class extends React.Component {
   }
 
   handleSave = value => {
-
-    post(api + 'save', value).then(rs => {
-      this.state.formOpen = false;
-      this.setState(this.state)
-      this.actionRef.current.reload();
-    })
-  }
-
-  handleEdit = row => {
-    this.setState({
-      showEditForm: true,
-      formValues: row
-    }, () => {
-      this.editFormRef.current.setFieldsValue(row)
-    })
-
-
-  }
-
-  handleUpdate = value => {
     value.id = this.state.formValues.id
     post(api + 'save', value).then(rs => {
-      this.state.showEditForm = false;
-      this.setState(this.state)
+      this.setState({formOpen: false})
       this.actionRef.current.reload();
     })
   }
+
 
   render() {
     let {formOpen, showEditForm} = this.state
@@ -161,6 +139,7 @@ export default class extends React.Component {
           this.setState(this.state)
         }}
         footer={null}
+        destroyOnClose
       >
         <ProTable
           form={{initialValues: this.state.formValues}}
