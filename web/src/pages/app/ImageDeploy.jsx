@@ -34,14 +34,7 @@ export default class extends React.Component {
 
 
 
-        <Form.Item name='imageUrl' label='镜像' required rules={[{required: true}]}>
-          <Input/>
-        </Form.Item>
 
-
-        <Form.Item name='imageTag' label='版本' required rules={[{required: true}]}>
-          <Input/>
-        </Form.Item>
         <Form.Item name={['host', 'id']} label='主机' required rules={[{required: true}]}>
           <RemoteSelect url="/api/host/options"/>
         </Form.Item>

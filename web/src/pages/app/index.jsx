@@ -1,13 +1,11 @@
 import {PlusOutlined} from '@ant-design/icons';
-import {AutoComplete, Button, Form, Input, message, Modal} from 'antd';
+import {AutoComplete, Button, Form, Input, message, Modal, Radio} from 'antd';
 import React from 'react';
 import {get, getPageableData, post} from "../../utils/request";
 import ContainerStatus from "../../components/ContainerStatus";
 import {ProTable} from "@ant-design/pro-components";
 import {history} from "umi";
 import {notPermitted} from "../../utils/SysConfig";
-import ProjectDeploy from "./ProjectDeploy";
-import ImageDeploy from "./ImageDeploy";
 import RemoteSelect from "../../components/RemoteSelect";
 
 let api = '/api/app/';
@@ -64,8 +62,12 @@ export default class extends React.Component {
 
   ];
   state = {
+
     deployVisible: false,
     deployImageVisible: false,
+
+    appType: 'project', // project ,image
+
     versions: []
   }
   reload = () => {
@@ -79,9 +81,9 @@ export default class extends React.Component {
   };
 
   handleSave = value => {
-    post(api + 'saveByProject', value).then(rs => {
+    post(api + 'save', value).then(rs => {
       message.success(rs.message)
-      history.push('/app/view?id=' + rs.data)
+      this.reload()
     })
   }
 
@@ -108,11 +110,11 @@ export default class extends React.Component {
           search={false}
           options={{search: true}}
         />
-        <Modal title='部署项目' open={this.state.deployVisible} destroyOnClose={true} footer={null}
+        <Modal title='新增应用' open={this.state.deployVisible} destroyOnClose={true} footer={null}
                onCancel={() => this.setState({deployVisible: false})}>
           <Form
             layout='horizontal'
-            labelCol={{flex:'100px'}}
+            labelCol={{flex: '100px'}}
             ref={this.formRef}
             onValuesChange={changedValues => {
               if (changedValues.project != null) {
@@ -122,12 +124,32 @@ export default class extends React.Component {
             onFinish={this.handleSave}
           >
 
-            <Form.Item name={['project', 'id']} label='项目' required rules={[{required: true}]}>
-              <RemoteSelect url='/api/project/options' placeholder='请选择项目'></RemoteSelect>
-            </Form.Item>
-            <Form.Item name='imageTag' label='镜像版本' required rules={[{required: true}]}>
-              <AutoComplete options={this.state.versions} placeholder='请选择或输入镜像版本'/>
-            </Form.Item>
+            <Radio.Group style={{marginLeft:120,marginBottom:16}} value={this.state.appType} onChange={(e) => this.setState({appType: e.target.value})}>
+              <Radio.Button value="project">项目</Radio.Button>
+              <Radio.Button value="image">镜像</Radio.Button>
+            </Radio.Group>
+
+            {this.state.appType === 'project' ?
+              <>
+                <Form.Item name={['project', 'id']}
+                           label='项目' required rules={[{required: true}]}>
+                  <RemoteSelect url='/api/project/options' placeholder='请选择项目'></RemoteSelect>
+                </Form.Item>
+                <Form.Item name='imageTag' label='版本' required rules={[{required: true}]}>
+                  <AutoComplete options={this.state.versions} placeholder='请选择版本'/>
+                </Form.Item>
+              </> :
+
+              <>
+                <Form.Item name='imageUrl' label='镜像' required rules={[{required: true}]}>
+                  <Input/>
+                </Form.Item>
+
+
+                <Form.Item name='imageTag' label='版本' required rules={[{required: true}]}>
+                  <Input/>
+                </Form.Item>
+              </>}
 
 
             <Form.Item name={['host', 'id']} label='部署主机' required rules={[{required: true}]}>

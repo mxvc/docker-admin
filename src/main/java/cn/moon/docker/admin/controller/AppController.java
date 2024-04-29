@@ -86,20 +86,10 @@ public class AppController {
         App db = service.save(app);
 
 
-        service.deploy(db);
-
         return Result.ok().msg("部署指令已发送").data(db.getId());
     }
 
-    @RequiresPermissions("app:save")
-    @RequestMapping("saveByProject")
-    public Result saveByProject(@RequestBody App app) {
-        App db = service.save(app);
 
-        service.deploy(db);
-
-        return Result.ok().msg("部署指令已发送").msg(db.getId());
-    }
 
 
     @RequiresPermissions("app:save")
