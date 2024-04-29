@@ -29,8 +29,8 @@ export default class extends React.Component {
       })
 
     hutool.http.get(api + "runtime/get", {id})
-      .then(result => {
-        this.setState({host: result, runtimeLoading: false})
+      .then(rs => {
+        this.setState({info: rs, runtimeLoading: false})
       })
 
 
