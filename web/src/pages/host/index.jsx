@@ -3,7 +3,6 @@ import {Button, Divider, message, Modal, Popconfirm, Radio} from 'antd';
 import React from 'react';
 
 import {getPageableData, post} from "../../utils/request";
-import common from "../../utils/common";
 import {ProTable} from "@ant-design/pro-components";
 import {history} from "umi";
 
@@ -48,7 +47,7 @@ export default class extends React.Component {
 
     },
     {
-      title: '自定义请求头 Host',
+      title: '请求头Host',
       dataIndex: 'dockerHostHeader',
     },
     {
@@ -164,7 +163,6 @@ export default class extends React.Component {
         footer={null}
       >
         <ProTable
-          {...common.getTableFormProps()}
           onSubmit={this.handleSave}
           columns={this.columns}
         />
@@ -183,7 +181,6 @@ export default class extends React.Component {
         footer={null}
       >
         <ProTable
-          {...common.getTableFormProps()}
           onSubmit={this.handleUpdate}
           columns={this.columns}
 

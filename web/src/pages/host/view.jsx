@@ -4,6 +4,7 @@ import {get, post} from "../../utils/request";
 import HostImages from "./HostImages";
 import HostContainers from "./HostContainers";
 import {Spin} from "antd/lib";
+import {hutool} from "@moon-cn/hutool";
 
 let api = '/api/host/';
 
@@ -11,23 +12,28 @@ let api = '/api/host/';
 export default class extends React.Component {
 
   state = {
-    host: null,
-    info: null,
+    host: {},
+    info: {},
     loading: true,
+
+    runtimeLoading: true,
   }
 
 
   componentDidMount() {
     let {id} = this.props.location.query;
 
-    get(api + "get", {id}).then(result => {
-      this.setState({...result, loading: false})
-    })
-  }
+    hutool.http.get(api + "get", {id})
+      .then(result => {
+        this.setState({host: result, loading: false})
+      })
 
-  save = value => {
-    value.id = this.state.host.id
-    post(api + 'update', value)
+    hutool.http.get(api + "runtime/get", {id})
+      .then(result => {
+        this.setState({host: result, runtimeLoading: false})
+      })
+
+
   }
 
 
@@ -40,10 +46,16 @@ export default class extends React.Component {
 
     return (<>
       <Card>
-
-
         <Descriptions title={"主机信息 【" + host.name + '】'}>
-          <Descriptions.Item label="主机名">{info.name} </Descriptions.Item>
+          <Descriptions.Item label="主机名">{host.name} </Descriptions.Item>
+          <Descriptions.Item label="Docker接口">{host.dockerHost} </Descriptions.Item>
+          <Descriptions.Item label="请求头Host">{host.dockerHostHeader} </Descriptions.Item>
+          <Descriptions.Item label="备注">{host.remark} </Descriptions.Item>
+          <Descriptions.Item label="是否构建主机">{host.isRunner ? '是' : '否'} </Descriptions.Item>
+
+        </Descriptions>
+
+        <Descriptions title='运行时'>
           <Descriptions.Item label="操作系统">{info.operatingSystem}</Descriptions.Item>
           <Descriptions.Item label="id">{info.id}</Descriptions.Item>
           <Descriptions.Item label="架构">{info.architecture}</Descriptions.Item>

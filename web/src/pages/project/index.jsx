@@ -3,7 +3,6 @@ import {Button, message, Modal, Popconfirm} from 'antd';
 import React from 'react';
 
 import {get, getPageableData, post} from "../../utils/request";
-import common from "../../utils/common";
 import {ProTable} from "@ant-design/pro-components";
 import {history} from "umi";
 import {notPermitted} from "../../utils/SysConfig";
@@ -167,10 +166,11 @@ export default class extends React.Component {
         footer={null}
       >
         <ProTable
-          {...common.getTableFormProps({
-            branch: 'master',
-            dockerfile: 'Dockerfile'
-          })}
+          type='form'
+          form={{initialValues:{
+              branch: 'master',
+              dockerfile: 'Dockerfile'
+            }}}
           onSubmit={this.handleSave}
           columns={this.columns}
         />
@@ -189,7 +189,8 @@ export default class extends React.Component {
         footer={null}
       >
         <ProTable
-          {...common.getTableFormProps(this.state.formValues)}
+          type='form'
+          form={{initialValues:this.state.formValues}}
           onSubmit={this.handleUpdate}
           columns={this.columns}
         />

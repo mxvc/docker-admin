@@ -3,9 +3,8 @@ import {Button, Input, message, Modal, Popconfirm, Select, Space, Tree} from 'an
 import React from 'react';
 
 import {get, getPageableData, post} from "../../../utils/request";
-import common from "../../../utils/common";
 import {ProTable} from "@ant-design/pro-components";
-import {HttpClient} from "@moon-cn/commons-lang";
+import {hutool} from "@moon-cn/hutool";
 
 const addTitle = "添加用户"
 const editTitle = '编辑用户'
@@ -30,14 +29,14 @@ export default class extends React.Component {
 
 
   componentDidMount() {
-    get('api/user/roleOptions').then(rs => {
+    hutool.http.get('api/user/roleOptions').then(rs => {
       let roleOptions = rs.data;
 
       this.setState({roleOptions})
     })
 
 
-    get('api/data-perm/tree').then(rs => {
+    hutool.http.get('api/data-perm/tree').then(rs => {
       this.setState({dataPermTree: rs.data})
     })
 
@@ -144,7 +143,7 @@ export default class extends React.Component {
   }
 
   grant() {
-    HttpClient.postForm('api/data-perm/grant', {
+    hutool.http.postForm('api/data-perm/grant', {
       id: this.state.formValues.id,
       keys: this.state.dataPermChecked
     }).then(rs => {
@@ -191,7 +190,6 @@ export default class extends React.Component {
         footer={null}
       >
         <ProTable
-          {...common.getTableFormProps()}
           onSubmit={this.handleSave}
           columns={this.columns}
         />
@@ -202,7 +200,7 @@ export default class extends React.Component {
         maskClosable={false}
         destroyOnClose
         title={editTitle}
-        visible={showEditForm}
+        open={showEditForm}
         onCancel={() => {
           this.state.showEditForm = false;
           this.setState(this.state)
@@ -210,7 +208,8 @@ export default class extends React.Component {
         footer={null}
       >
         <ProTable
-          {...common.getTableFormProps(this.state.formValues)}
+          type='form'
+          form={{initialValues:this.state.formValues}}
           onSubmit={this.handleUpdate}
           columns={this.columns}
         />

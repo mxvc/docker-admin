@@ -11,7 +11,7 @@ import {
   MinusCircleTwoTone
 } from "@ant-design/icons";
 import {ProTable} from "@ant-design/pro-components";
-import {friendlyTime, friendlyTotalTime} from "@moon-cn/hutool";
+import {hutool} from "@moon-cn/hutool";
 
 let api = '/api/deployLog/';
 
@@ -54,7 +54,7 @@ export default class extends React.Component {
       title: '开始时间',
       dataIndex: 'createTime',
       render(_,row){
-        return friendlyTime(row.createTime) ;
+        return hutool.date.friendlyTime(row.createTime) ;
       }
     },
     {
@@ -86,7 +86,7 @@ export default class extends React.Component {
       title: '耗时',
       dataIndex: 'timeSpend',
       render(t, row) {
-       return  friendlyTotalTime(t)
+       return  hutool.date.friendlyTotalTime(t)
       }
     },
     {

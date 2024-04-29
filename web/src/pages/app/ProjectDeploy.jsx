@@ -49,23 +49,23 @@ export default class extends React.Component {
         }}
         onFinish={this.handleSave}
       >
-        <Form.Item name='name' label='名称' required rules={[{required: true}]}>
-          <Input/>
+
+        <Form.Item name={['project','id']} label='项目' required rules={[{required: true}]}>
+          <RemoteSelect url='/api/project/options' disabled={defaultUrl}></RemoteSelect>
         </Form.Item>
+        <Form.Item name='imageTag' label='版本' required rules={[{required: true}]}>
+          <AutoComplete options={this.state.versions} />
+        </Form.Item>
+
+
         <Form.Item name={['host','id']} label='主机' required rules={[{required: true}]}>
           <RemoteSelect showSearch url="/api/host/options"/>
         </Form.Item>
 
 
-        <Form.Item name={['project','id']} label='项目' required rules={[{required: true}]}>
-          <RemoteSelect url='/api/project/options' disabled={defaultUrl}></RemoteSelect>
+        <Form.Item name='name' label='名称' required rules={[{required: true}]}>
+          <Input/>
         </Form.Item>
-
-
-        <Form.Item name='imageTag' label='版本' required rules={[{required: true}]}>
-          <AutoComplete options={this.state.versions} />
-        </Form.Item>
-
 
         <Form.Item>
           <Button htmlType='submit' type='primary'>确定</Button>

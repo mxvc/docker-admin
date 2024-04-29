@@ -17,7 +17,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.subject.Subject;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -91,7 +90,14 @@ public class HostController {
     }
 
     @RequestMapping("get")
-    public Map<String, Object> get(String id) {
+    public Host get(String id) {
+        Host host = service.findOne(id);
+
+        return host;
+    }
+
+    @RequestMapping("runtime/get")
+    public DockerInfo runtime(String id) {
         Host host = service.findOne(id);
         Info info = service.getDockerInfo(host);
 
@@ -99,11 +105,7 @@ public class HostController {
         BeanUtils.copyProperties(info, dockerInfo);
 
 
-        Map<String, Object> result = new HashMap<>();
-        result.put("host", host);
-        result.put("info", dockerInfo);
-
-        return result;
+        return dockerInfo;
     }
 
 

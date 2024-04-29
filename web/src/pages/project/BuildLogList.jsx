@@ -10,7 +10,7 @@ import {
 import {ProTable} from "@ant-design/pro-components";
 import {get, getPageableData} from "../../utils/request";
 import moment from "moment";
-import {friendlyTime, friendlyTotalTime} from "@moon-cn/hutool";
+import {hutool} from "@moon-cn/hutool";
 
 let api = '/api/buildLog/';
 
@@ -59,7 +59,7 @@ export default class extends React.Component {
       title: '开始时间',
       dataIndex: 'createTime',
       render(_, row) {
-        return <Tooltip title={row.createTime}> { friendlyTime(row.createTime)}</Tooltip>
+        return <Tooltip title={row.createTime}> { hutool.date.friendlyTime(row.createTime)}</Tooltip>
       }
     },
     {
@@ -106,7 +106,7 @@ export default class extends React.Component {
       title: '耗时',
       dataIndex: 'timeSpend',
       render(t, row) {
-        return friendlyTotalTime(t)
+        return hutool.date.friendlyTotalTime(t)
       }
     },
     {

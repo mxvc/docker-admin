@@ -26,7 +26,7 @@ import ContainerBox from "../../components/container/ContainerBox";
 import {showResult} from "../../utils/utils";
 import {notPermitted} from "../../utils/SysConfig";
 import {Empty} from "antd/lib";
-import * as hutool from "@moon-cn/hutool"
+import {hutool} from "@moon-cn/hutool";
 
 let api = '/api/app/';
 
@@ -73,10 +73,14 @@ export default class extends React.Component {
 
 
   loadContainer = () => {
-    get("/api/app/container", {id: this.id},true).then(rs => {
+    hutool.http.get("/api/app/container", {id: this.id}).then(rs => {
       const container = rs.data;
-      this.setState({container, containerNotFound:false})
+      if(container){
+        this.setState({container, containerNotFound:false})
+      }else {
+        this.setState({ containerNotFound:true})
 
+      }
     }).catch(() => {
       this.setState({containerNotFound: true})
     })
@@ -173,8 +177,8 @@ export default class extends React.Component {
     return (<>
 
       <Card title={app.name} extra={<Space>
-        {state == 'exited' && <Button onClick={this.start} type="primary">启动</Button>}
-        {state == 'running' && <Button onClick={this.stop} type="primary" danger>停止</Button>}
+        {state === 'exited' && <Button onClick={this.start} type="primary">启动</Button>}
+        {state === 'running' && <Button onClick={this.stop} type="primary" danger>停止</Button>}
         <Button onClick={this.deploy} type="primary">重新部署</Button>
       </Space>}>
 
@@ -190,7 +194,7 @@ export default class extends React.Component {
               {container.status}</Tag>
           </Descriptions.Item>
 
-          <Descriptions.Item label='创建于'>  { hutool.friendlyTime( app.createTime)} </Descriptions.Item>
+          <Descriptions.Item label='创建于'>  { hutool.date.friendlyTime( app.createTime)} </Descriptions.Item>
 
         </Descriptions>
 
@@ -207,6 +211,7 @@ export default class extends React.Component {
 
   renderTabs = () => {
     const {container, containerNotFound} = this.state;
+
     const {app} = this.state
 
 

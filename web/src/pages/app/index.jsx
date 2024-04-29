@@ -7,7 +7,7 @@ import {ProTable} from "@ant-design/pro-components";
 import {history} from "umi";
 import {notPermitted} from "../../utils/SysConfig";
 import ProjectDeploy from "./ProjectDeploy";
-import DockerhubDeploy from "./DockerhubDeploy";
+import ImageDeploy from "./DockerhubDeploy";
 
 let api = '/api/app/';
 
@@ -63,7 +63,8 @@ export default class extends React.Component {
 
   ];
   state = {
-    deployVisible: false
+    deployVisible: false,
+    deployImageVisible: false
   }
   reload = () => {
     this.actionRef.current.reload()
@@ -75,15 +76,16 @@ export default class extends React.Component {
         <ProTable
           actionRef={this.actionRef}
           toolBarRender={(action, {selectedRows}) => [
-            <Button disabled={notPermitted('app:save')} type="primary" onClick={() => {
-              this.setState({deployVisible: true})
-            }}>
-              <PlusOutlined/> 部署项目
+            <Button disabled={notPermitted('app:save')} type="primary"
+                    onClick={() => {
+                      this.setState({deployVisible: true})
+                    }}>
+              <PlusOutlined/> 部署
             </Button>,
-            <Button disabled={notPermitted('app:save')}  onClick={() => {
-              this.setState({deployVisible: true})
+            <Button disabled={notPermitted('app:save')} onClick={() => {
+              this.setState({deployImageVisible: true})
             }}>
-            部署公共镜像
+              部署镜像
             </Button>,
           ]}
           request={(params, sort) => getPageableData(api + 'list', params, sort)}
@@ -94,14 +96,14 @@ export default class extends React.Component {
           search={false}
           options={{search: true}}
         />
-        <Modal title='部署项目应用' open={this.state.deployVisible} destroyOnClose={true} footer={null}
+        <Modal title='部署项目' open={this.state.deployVisible} destroyOnClose={true} footer={null}
                onCancel={() => this.setState({deployVisible: false})}>
           <ProjectDeploy/>
         </Modal>
 
-        <Modal title='部署公共镜像' open={this.state.deployVisible} destroyOnClose={true} footer={null}
-               onCancel={() => this.setState({deployVisible: false})}>
-          <DockerhubDeploy/>
+        <Modal title='部署镜像' open={this.state.deployImageVisible} destroyOnClose={true} footer={null}
+               onCancel={() => this.setState({deployImageVisible: false})}>
+          <ImageDeploy/>
         </Modal>
       </>
 

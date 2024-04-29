@@ -9,8 +9,7 @@
   "dependencies": {
     "@ant-design/icons": "^5.2.6",
     "@ant-design/pro-components": "^2.0.0",
-    "@moon-cn/commons-lang": "^1.0.0-beta.10",
-    "@moon-cn/hutool": "^1.0.0-beta.8",
+    "@moon-cn/hutool": "^1.0.0-beta.11",
     "antd": "^4.0.0",
     "axios": "^1.6.1",
     "codemirror": "^5.0.0",
