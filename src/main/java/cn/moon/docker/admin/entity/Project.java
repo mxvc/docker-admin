@@ -26,10 +26,11 @@ public class Project extends BaseEntity {
 
 
     //默认的dockerfile
+    @NotNull
     String dockerfile;
-    String defaultVersion;
 
     // 默认分支
+    @NotNull
     String branch;
 
     @NotNull

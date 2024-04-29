@@ -1,5 +1,5 @@
 import {PlusOutlined} from '@ant-design/icons';
-import {Button, message, Modal, Popconfirm} from 'antd';
+import {Button, Form, message, Modal, Popconfirm} from 'antd';
 import React from 'react';
 
 import {get, getPageableData, post} from "../../utils/request";
@@ -8,7 +8,6 @@ import {history} from "umi";
 import {notPermitted} from "../../utils/SysConfig";
 
 const addTitle = "添加项目"
-const editTitle = '编辑项目'
 let api = '/api/project/';
 
 
@@ -58,12 +57,6 @@ export default class extends React.Component {
     },
 
     {
-      title: '版本',
-      dataIndex: 'defaultVersion',
-      formItemProps: {
-        help: '不填则每日一个版本'
-      }
-    }, {
       title: '最近更新',
       dataIndex: 'modifyTime',
       sorter: true,
@@ -80,10 +73,8 @@ export default class extends React.Component {
             type='link'
             disabled={notPermitted('project:save')}
             onClick={() => {
-              this.state.showEditForm = true;
-              this.state.formValues = row;
               this.setState({
-                showEditForm: true,
+                formOpen: true,
                 formValues: row
               })
             }}>编辑</Button>
@@ -98,6 +89,7 @@ export default class extends React.Component {
     },
   ];
   handleSave = value => {
+    value.id = this.state.formValues.id
     post(api + 'save', value).then(rs => {
       this.state.formOpen = false;
       this.setState(this.state)
@@ -108,17 +100,6 @@ export default class extends React.Component {
   reload = () => {
     this.actionRef.current.reload();
   };
-
-  handleUpdate = value => {
-    let params = value;
-    params.id = this.state.formValues.id
-
-    post(api + 'update', params).then(rs => {
-      this.state.showEditForm = false;
-      this.setState(this.state)
-      this.actionRef.current.reload();
-    })
-  }
   handleDelete = (row) => {
     get(api + 'delete', {id: row.id}).then(rs => {
       message.info(rs.message)
@@ -137,8 +118,12 @@ export default class extends React.Component {
         toolBarRender={(action, {selectedRows}) => [
           <Button disabled={notPermitted('project:save')}
                   type="primary" onClick={() => {
-            this.state.formOpen = true;
-            this.setState(this.state)
+            this.setState({
+              formOpen: true, formValues: {
+                branch: 'master',
+                dockerfile: 'Dockerfile'
+              }
+            })
           }}>
             新增
           </Button>,
@@ -156,46 +141,24 @@ export default class extends React.Component {
       <Modal
         maskClosable={false}
         destroyOnClose
-        title={addTitle}
-        visible={formOpen}
+        title='项目信息'
+        open={formOpen}
         onCancel={() => {
-          this.state.formOpen = false;
-          this.setState(this.state)
+          this.setState({formOpen: false})
         }}
         footer={null}
       >
         <ProTable
           type='form'
-          form={{initialValues:{
-              branch: 'master',
-              dockerfile: 'Dockerfile'
-            }}}
+          form={{
+            initialValues: this.state.formValues,
+            layout: 'horizontal',
+            labelCol: {flex:'100px'},
+          }}
           onSubmit={this.handleSave}
           columns={this.columns}
         />
       </Modal>
-
-
-      <Modal
-        maskClosable={false}
-        destroyOnClose
-        title={editTitle}
-        visible={showEditForm}
-        onCancel={() => {
-          this.state.showEditForm = false;
-          this.setState(this.state)
-        }}
-        footer={null}
-      >
-        <ProTable
-          type='form'
-          form={{initialValues:this.state.formValues}}
-          onSubmit={this.handleUpdate}
-          columns={this.columns}
-        />
-      </Modal>
-
-
     </>)
   }
 
