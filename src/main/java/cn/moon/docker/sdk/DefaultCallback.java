@@ -1,5 +1,6 @@
 package cn.moon.docker.sdk;
 
+import cn.hutool.core.util.StrUtil;
 import com.github.dockerjava.api.async.ResultCallback;
 import com.github.dockerjava.api.model.ResponseItem;
 import org.slf4j.Logger;
@@ -142,7 +143,7 @@ public class DefaultCallback<T extends ResponseItem> implements ResultCallback<T
             }
 
         } else if (item.getStatus() != null) {
-            log.info("{}{} {}", TAB, item.getStatus(), item.getProgressDetail().toString());
+            log.info("{}{} {}", TAB, item.getStatus(), StrUtil.nullToEmpty(item.getProgress()));
         } else {
             log.info("{}{}", TAB, item);
         }

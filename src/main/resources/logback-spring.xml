@@ -35,9 +35,13 @@
 
 
 
-    <logger name="docker-console">
+    <logger name="cn.moon.docker.admin.service.ProjectService">
         <appender-ref ref="docker-console-appender" />
     </logger>
+    <logger name="cn.moon.docker.sdk">
+        <appender-ref ref="docker-console-appender" />
+    </logger>
+
 
 
     <!-- 日志输出级别 -->

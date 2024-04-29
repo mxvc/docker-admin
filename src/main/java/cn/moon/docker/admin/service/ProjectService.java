@@ -1,5 +1,7 @@
 package cn.moon.docker.admin.service;
 
+import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.unit.DataSizeUtil;
 import cn.moon.base.tool.GitTool;
 import cn.moon.docker.admin.BuildSuccessEvent;
 import cn.moon.docker.admin.dao.BuildLogDao;
@@ -13,8 +15,10 @@ import cn.moon.lang.web.persistence.BaseService;
 import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.command.PushImageCmd;
 import com.github.dockerjava.api.model.BuildResponseItem;
+import com.github.dockerjava.api.model.PushResponseItem;
 import com.google.common.collect.Sets;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.FileUtils;
 import org.slf4j.MDC;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Example;
@@ -94,12 +98,11 @@ public class ProjectService extends BaseService<Project> {
         Project project = this.findOne(buildLog.getProjectId());
         try {
 
-            log.info("日志ID {}", buildLog.getId());
-            log.info("开始构建镜像任务 {} {} {}", project.getName(), branchOrTag, version);
+            log.info("开始构建镜像任务 {} {} {} {}", project.getName(), project.getGitUrl(), branchOrTag, version);
 
             Host host = hostService.getDefaultDockerRunner();
             Assert.notNull(host, "无构建主机");
-            log.info("构建主机： {} {} {}", host.getName(), host.getDockerHost(), host.getRemark());
+            log.info("构建主机： {} {} {}", host.getName(), host.getDockerHost(), StrUtil.emptyIfNull(host.getRemark()));
 
             String username = null;
             String password = null;
@@ -109,65 +112,60 @@ public class ProjectService extends BaseService<Project> {
                 password = credential.getPassword();
             }
 
+            log.info("代码下载中...");
             GitTool.CloneResult cloneResult = GitTool.clone(project.getGitUrl(), username, password, branchOrTag);
             File workDir = cloneResult.getDir();
             log.info("代码下载完毕 " + workDir);
             log.info("提交信息:" + cloneResult.getCodeMessage());
+            log.info("代码文件大小 {}", DataSizeUtil.format( FileUtil.size(workDir)));
 
             log.info("dockerfile {}", dockerfile);
+            {
+                // 修复三方接口bug，必须要有Dockerfile在根目录
+                File temp = new File(workDir, "Dockerfile");
+                if (!temp.exists()) {
+                    temp.createNewFile();
+                    FileUtils.writeStringToFile(temp, "FROM centos", "utf-8");
+                }
+            }
 
 
             buildLog.setBuildHostName(host.getName());
             buildLog.setCodeMessage(cloneResult.getCodeMessage());
-            buildLog = logDao.save(buildLog);
-
+            buildLog = logDao.saveAndFlush(buildLog);
 
             Registry registry = registryService.checkAndFindDefault();
-
             DockerClient client = dockerService.getClient(host, registry);
 
-
             String imageUrl = registry.getUrl() + "/" + registry.getNamespace() + "/" + project.getName();
-            String image = imageUrl + ":" + version;
-            log.info("发布镜像url {}", image);
+            String imageTag = imageUrl + ":" + version;
+            log.info("镜像 {}", imageTag);
 
             Assert.state(!StrUtil.containsBlank(imageUrl), "镜像路径不能包含空格");
 
-
             buildLog.setImageUrl(imageUrl);
-
-
-            Set<String> tags = Sets.newHashSet(image);
-
             File buildDir = new File(workDir, context);
-
 
             log.info("向docker发送构建指令");
             DefaultCallback<BuildResponseItem> buildCallback = new DefaultCallback<>(buildlogFileId);
             buildThreadMap.put(buildLog.getId(), buildCallback);
             client.buildImageCmd(buildDir)
-
-
                     // 删除构建产生的容器
                     .withForcerm(true)
-
                     .withNetworkMode("host")
-                    .withTags(tags)
+                    .withTags(Collections.singleton(imageTag))
                     .withNoCache(!useCache)
-                    .withDockerfilePath(dockerfile)
+                    .withDockerfile(new File(buildDir,dockerfile))
                     .exec(buildCallback).awaitCompletion();
             log.info("镜像构建结束 ");
 
             buildThreadMap.remove(buildLog.getId());
 
             // 推送
-            log.info("推送镜像");
-            for (String tag : tags) {
-                PushImageCmd pushImageCmd = client.pushImageCmd(tag);
-                DefaultCallback callback = pushImageCmd.exec(new DefaultCallback<>(buildlogFileId));
-                callback.awaitCompletion();
-                log.info("推送镜像结束 {}", tag);
-            }
+            log.info("推送镜像 {}", imageTag);
+            PushImageCmd pushImageCmd = client.pushImageCmd(imageTag);
+            pushImageCmd.exec(new DefaultCallback<>(buildlogFileId)).awaitCompletion();
+            log.info("推送镜像结束 {}", imageTag);
 
             client.close();
 
@@ -224,7 +222,7 @@ public class ProjectService extends BaseService<Project> {
     public Project saveProject(Project project) {
         project.setName(project.getName().trim());
         project.setGitUrl(project.getGitUrl().trim());
-        if(project.getBranch() != null){
+        if (project.getBranch() != null) {
             project.setBranch(project.getBranch().trim());
         }
 
