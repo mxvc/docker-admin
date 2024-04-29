@@ -81,15 +81,9 @@ public class AppController {
     @RequiresPermissions("app:save")
     @RequestMapping("save")
     public Result save(@RequestBody App app) {
-        app.setConfig(new App.AppConfig());
-
-        App db = service.save(app);
-
-
-        return Result.ok().msg("部署指令已发送").data(db.getId());
+         service.save(app);
+        return Result.ok().msg("保存成功");
     }
-
-
 
 
     @RequiresPermissions("app:save")

@@ -8,7 +8,7 @@ import {
   Divider,
   Input,
   message,
-  Modal,
+  Modal, Result,
   Row,
   Space,
   Spin,
@@ -218,7 +218,11 @@ export default class extends React.Component {
     return <>
       <Tabs  activeKey={this.state.tabKey}  onChange={key=>this.setState({tabKey:key})} destroyInactiveTabPane defaultActiveKey='deploy-log'>
         <Tabs.TabPane tab="容器" key="container">
-          {containerNotFound ?  <Empty description='容器未启动或正在部署中....'></Empty>:   <ContainerBox containerId={container.id} hostId={app.host?.id} />}
+          {containerNotFound ?
+
+            <Result title='容器未运行' status='warning' ></Result>:
+            <ContainerBox containerId={container.id} hostId={app.host?.id} />
+          }
         </Tabs.TabPane>
 
 
