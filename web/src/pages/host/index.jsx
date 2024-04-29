@@ -13,7 +13,7 @@ let api = '/api/host/';
 export default class extends React.Component {
 
   state = {
-    showAddForm: false,
+    formOpen: false,
     showEditForm: false,
     formValues: {},
   }
@@ -89,8 +89,7 @@ export default class extends React.Component {
 
 
   clickAddBtn = () => {
-    this.state.showAddForm = true;
-    this.setState(this.state)
+    this.setState({formOpen: true, formValues: {}})
   }
   handleDelete = row => {
     post(api + 'delete', row).then(rs => {
@@ -104,7 +103,7 @@ export default class extends React.Component {
   handleSave = value => {
 
     post(api + 'save', value).then(rs => {
-      this.state.showAddForm = false;
+      this.state.formOpen = false;
       this.setState(this.state)
       this.actionRef.current.reload();
     })
@@ -131,14 +130,15 @@ export default class extends React.Component {
   }
 
   render() {
-    let {showAddForm, showEditForm} = this.state
+    let {formOpen, showEditForm} = this.state
     return (<>
       <ProTable
         actionRef={this.actionRef}
 
         toolBarRender={(action, {selectedRows}) => [
-          <Button type="primary" onClick={this.clickAddBtn}>
-            <PlusOutlined/> 添加主机
+          <Button type="primary"
+                  onClick={() => this.setState({formOpen: true, formValues: {}})}>
+            <PlusOutlined/> 新增
           </Button>,
         ]}
         request={(params, sort) => getPageableData(api + "list", params, sort)}
@@ -153,38 +153,20 @@ export default class extends React.Component {
 
       <Modal
         maskClosable={false}
-        title={addTitle}
+        title='主机信息'
         width={800}
-        visible={showAddForm}
+        open={formOpen}
         onCancel={() => {
-          this.state.showAddForm = false;
+          this.state.formOpen = false;
           this.setState(this.state)
         }}
         footer={null}
       >
         <ProTable
+          form={{initialValues: this.state.formValues}}
+          type='form'
           onSubmit={this.handleSave}
           columns={this.columns}
-        />
-      </Modal>
-
-
-      <Modal
-        maskClosable={false}
-        title='修改主机'
-        width={800}
-        visible={showEditForm}
-        onCancel={() => {
-          this.state.showEditForm = false;
-          this.setState(this.state)
-        }}
-        footer={null}
-      >
-        <ProTable
-          onSubmit={this.handleUpdate}
-          columns={this.columns}
-
-          formRef={this.editFormRef}
         />
       </Modal>
 

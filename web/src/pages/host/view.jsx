@@ -1,4 +1,4 @@
-import {Badge, Card, Descriptions, Tabs} from 'antd';
+import {Badge, Card, Descriptions, Skeleton, Tabs} from 'antd';
 import React from 'react';
 import {get, post} from "../../utils/request";
 import HostImages from "./HostImages";
@@ -45,22 +45,10 @@ export default class extends React.Component {
 
 
     return (<>
-      <Card>
-        <Descriptions title={"主机信息 【" + host.name + '】'}>
-          <Descriptions.Item label="主机名">{host.name} </Descriptions.Item>
-          <Descriptions.Item label="Docker接口">{host.dockerHost} </Descriptions.Item>
-          <Descriptions.Item label="请求头Host">{host.dockerHostHeader} </Descriptions.Item>
-          <Descriptions.Item label="备注">{host.remark} </Descriptions.Item>
-          <Descriptions.Item label="是否构建主机">{host.isRunner ? '是' : '否'} </Descriptions.Item>
-
-        </Descriptions>
-
-        <Descriptions title='运行时'>
+      <Card >
+        <Descriptions title={host.name } >
           <Descriptions.Item label="操作系统">{info.operatingSystem}</Descriptions.Item>
-          <Descriptions.Item label="id">{info.id}</Descriptions.Item>
-          <Descriptions.Item label="架构">{info.architecture}</Descriptions.Item>
           <Descriptions.Item label="内存"> {(info.memTotal / 1024 / 1024 / 1024).toFixed(1)} G</Descriptions.Item>
-
 
           <Descriptions.Item label="根目录">{info.dockerRootDir}</Descriptions.Item>
           <Descriptions.Item label="版本">{info.serverVersion}</Descriptions.Item>
@@ -77,9 +65,7 @@ export default class extends React.Component {
             <HostImages id={host.id}/>
           </Tabs.TabPane>
         </Tabs>
-
       </Card>
-
     </>)
   }
 

@@ -7,7 +7,7 @@ import {ProTable} from "@ant-design/pro-components";
 import {history} from "umi";
 import {notPermitted} from "../../utils/SysConfig";
 import ProjectDeploy from "./ProjectDeploy";
-import ImageDeploy from "./DockerhubDeploy";
+import ImageDeploy from "./ImageDeploy";
 
 let api = '/api/app/';
 
@@ -80,7 +80,7 @@ export default class extends React.Component {
                     onClick={() => {
                       this.setState({deployVisible: true})
                     }}>
-              <PlusOutlined/> 部署
+              部署
             </Button>,
             <Button disabled={notPermitted('app:save')} onClick={() => {
               this.setState({deployImageVisible: true})

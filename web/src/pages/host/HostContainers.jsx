@@ -1,4 +1,4 @@
-import {Button, Divider, message, Table} from 'antd';
+import {Button, Divider, message, Skeleton, Table} from 'antd';
 import React from 'react';
 import {get} from "../../utils/request";
 import {history} from "umi";
@@ -9,7 +9,8 @@ let api = '/api/host/';
 export default class extends React.Component {
 
   state = {
-    list: []
+    list: [],
+    loading: true,
   }
 
   componentDidMount() {
@@ -17,11 +18,12 @@ export default class extends React.Component {
   }
 
   loadData = () => {
-    const hide = message.loading("加载容器列表中...", 0)
-    get(api + "containers", {id:this.props.id}).then(list => {
+    this.setState({loading: true})
+    get(api + "containers", {id: this.props.id}).then(list => {
       this.setState({list})
-      hide()
-    }).catch(hide)
+    }).finally(() => {
+      this.setState({loading: false})
+    })
   }
 
   remove = (id) => {
@@ -53,7 +55,7 @@ export default class extends React.Component {
         const name = row.Names[0].substr(1)
         const id = row.Id.substr(0, 12)
         return <div>
-          <a onClick={() => history.push('containerView?containerId='+id +'&hostId='+hostId) }>{name}</a>
+          <a onClick={() => history.push('containerView?containerId=' + id + '&hostId=' + hostId)}>{name}</a>
           <br/> {id}
         </div>
       }
@@ -92,16 +94,16 @@ export default class extends React.Component {
   ];
 
   render() {
-    const {list} = this.state
+    const {list, loading} = this.state
     return (<div>
 
-
-
-      <Table dataSource={list}
-             columns={this.columns}
-             rowKey="Id"
-             pagination={false}
-      />
+      {loading ?
+        <Skeleton active /> :
+        <Table dataSource={list}
+               columns={this.columns}
+               rowKey="Id"
+               pagination={false}
+        />}
 
 
     </div>)
