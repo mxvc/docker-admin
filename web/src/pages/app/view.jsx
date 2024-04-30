@@ -48,8 +48,6 @@ export default class extends React.Component {
     },
     showEditName: false,
     newName: ''
-
-
   }
 
 
@@ -84,31 +82,31 @@ export default class extends React.Component {
   }
   loadTagOptions(url) {
     if (url) {
-      get('api/repository/tagOptions', {url}).then(rs => {
+      hutool.http.get('api/repository/tagOptions', {url}).then(rs => {
         this.setState({tagOptions: rs})
       })
     }
   }
   deploy = () => {
-    post('api/app/deploy/' + this.state.app.id)
+    hutool.http.post('api/app/deploy/' + this.state.app.id)
   }
   start = () => {
-    post('api/app/start/' + this.state.app.id)
+    hutool.http.post('api/app/start/' + this.state.app.id)
   }
   stop = () => {
-    post('api/app/stop/' + this.state.app.id)
+    hutool.http. post('api/app/stop/' + this.state.app.id)
   }
 
   setAutoDeploy = (id, autoDeploy) => {
-    get("/api/app/autoDeploy", {id, autoDeploy})
+    hutool.http. get("/api/app/autoDeploy", {id, autoDeploy})
   }
   setAutoRestart = (id, autoRestart) => {
-    get("/api/app/autoRestart", {id, autoRestart})
+    hutool.http. get("/api/app/autoRestart", {id, autoRestart})
   }
   moveApp = () => {
     const id = this.state.app.id;
     const hostId = this.state.moveApp.targetHostId;
-    get("/api/app/moveApp", {id, hostId}).then(rs => {
+    hutool.http.get("/api/app/moveApp", {id, hostId}).then(rs => {
       window.location.reload(true)
     })
   }
@@ -116,7 +114,7 @@ export default class extends React.Component {
   updateVersion = () => {
     const id = this.state.app.id;
     const tag = this.state.publishApp.targetVersion;
-    get("/api/app/updateVersion", {id, version: tag}).then(rs => {
+    hutool.http. get("/api/app/updateVersion", {id, version: tag}).then(rs => {
       message.success(rs.message)
       window.location.reload(true)
     })
@@ -126,7 +124,7 @@ export default class extends React.Component {
   handleDelete = () => {
     const id = this.state.app.id
     const hide = message.loading('删除中...')
-    get(api + 'delete', {id}).then(rs => {
+    hutool.http.get(api + 'delete', {id}).then(rs => {
       message.info(rs.message)
       hide();
 
@@ -155,7 +153,7 @@ export default class extends React.Component {
     let {newName} = this.state;
     const hide = message.loading('指令发送中...')
     this.setState({tabKey:'deploy-log'})
-    post(api + 'rename' , {appId, newName}).then(rs => {
+    hutool.http.post(api + 'rename' , {appId, newName}).then(rs => {
 
       message.success(rs.message)
       this.setState({app: rs.data, showEditName: false})

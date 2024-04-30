@@ -84,7 +84,7 @@ export default class extends React.Component {
     {
       title: '耗时',
       dataIndex: 'timeSpend',
-      render(t, row) {
+      render(t) {
        return  hutool.date.friendlyTotalTime(t)
       }
     },

@@ -1,8 +1,3 @@
-export const site = {
-  title: '容器管理平台',
-  serverUrl: 'http://127.0.0.1:7001/'
-}
-
 let loginData = {};
 export function setLogin(data){
     loginData = data;

@@ -1,7 +1,7 @@
 import React from 'react';
 import {Button, Form, Input, message} from 'antd';
 import {LockOutlined, UserOutlined} from '@ant-design/icons';
-import {setLogin, site} from "../utils/SysConfig";
+import {setLogin} from "../utils/SysConfig";
 
 import {history} from "umi";
 import {hutool} from "@moon-cn/hutool";
@@ -44,7 +44,7 @@ export default class extends React.Component {
           }}
           onFinish={this.onFinish}
         >
-          <h1>{site.title}</h1>
+          <h1>容器管理面板</h1>
           <Form.Item
             name="username"
             rules={[{required: true, message: '请输入用户名!'}]}

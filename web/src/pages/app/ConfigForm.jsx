@@ -60,7 +60,7 @@ export default class extends React.Component {
           <Select
             options={[
               {label: '主机模式（同主机IP）', value: 'host',},
-              {label: '桥接（虚拟IP，NAT,需设置端口映射）', value: 'bridge',},
+              {label: '桥接模式（虚拟IP，需自定义端口）', value: 'bridge',},
               {label: '无需网络', value: 'none',},
             ]}
             style={{width: 300}}
