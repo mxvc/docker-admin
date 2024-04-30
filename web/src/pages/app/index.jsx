@@ -1,12 +1,11 @@
-import {PlusOutlined} from '@ant-design/icons';
 import {AutoComplete, Button, Form, Input, message, Modal, Radio} from 'antd';
 import React from 'react';
-import {get, getPageableData, post} from "../../utils/request";
 import ContainerStatus from "../../components/ContainerStatus";
 import {ProTable} from "@ant-design/pro-components";
 import {history} from "umi";
 import {notPermitted} from "../../utils/SysConfig";
 import RemoteSelect from "../../components/RemoteSelect";
+import {hutool} from "@moon-cn/hutool";
 
 let api = '/api/app/';
 
@@ -75,13 +74,13 @@ export default class extends React.Component {
   }
 
   loadVersions = projectId => {
-    get('api/project/versions', {projectId}).then(rs => {
+    hutool.http. get('api/project/versions', {projectId}).then(rs => {
       this.setState({versions: rs})
     })
   };
 
   handleSave = value => {
-    post(api + 'save', value).then(rs => {
+    hutool.http.post(api + 'save', value).then(rs => {
       message.success(rs.message)
       this.reload()
     })
@@ -102,7 +101,7 @@ export default class extends React.Component {
               新增
             </Button>,
           ]}
-          request={(params, sort) => getPageableData(api + 'list', params, sort)}
+          request={(params, sort) => hutool.http.requestAntdSpringPageData(api + 'list', params, sort)}
           columns={this.columns}
           rowSelection={false}
           rowKey="id"

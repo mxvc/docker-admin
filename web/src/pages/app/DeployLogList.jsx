@@ -1,7 +1,6 @@
 import {Modal} from 'antd';
 import React from 'react';
 
-import {getPageableData} from "../../utils/request";
 import {LazyLog, ScrollFollow} from "react-lazylog";
 import {
   CheckCircleFilled,
@@ -134,7 +133,7 @@ export default class extends React.Component {
       <ProTable
         search={false}
         actionRef={this.actionRef}
-        request={(params, sort) => getPageableData(this.listURL, params, sort)}
+        request={(params, sort) => hutool.http.requestAntdSpringPageData(this.listURL, params, sort)}
         columns={this.columns}
         rowSelection={false}
         toolBarRender={false}

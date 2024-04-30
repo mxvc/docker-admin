@@ -1,6 +1,6 @@
 import {Card, Col, Row, Statistic} from "antd";
 import React from "react";
-import {get} from "../utils/request";
+import {hutool} from "@moon-cn/hutool";
 
 export default class extends React.Component {
 
@@ -9,7 +9,7 @@ export default class extends React.Component {
   }
 
   componentDidMount() {
-    get('api/homeInfo').then(rs=>{
+    hutool.http.get('api/homeInfo').then(rs=>{
       this.setState({info:rs.data})
     })
   }

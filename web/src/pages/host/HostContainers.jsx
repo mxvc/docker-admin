@@ -1,7 +1,7 @@
-import {Button, Divider, message, Skeleton, Table} from 'antd';
+import {Button, Divider, Skeleton, Table} from 'antd';
 import React from 'react';
-import {get} from "../../utils/request";
 import {history} from "umi";
+import {hutool} from "@moon-cn/hutool";
 
 let api = '/api/host/';
 
@@ -19,7 +19,7 @@ export default class extends React.Component {
 
   loadData = () => {
     this.setState({loading: true})
-    get(api + "containers", {id: this.props.id}).then(list => {
+    hutool.http.get(api + "containers", {id: this.props.id}).then(list => {
       this.setState({list})
     }).finally(() => {
       this.setState({loading: false})
@@ -28,15 +28,15 @@ export default class extends React.Component {
 
   remove = (id) => {
     let params = this.props;
-    get("/api/container/remove", {hostId: params.id, containerId: id}).then(this.loadData)
+    hutool.http.get("/api/container/remove", {hostId: params.id, containerId: id}).then(this.loadData)
   }
   stop = (id) => {
     let params = this.props;
-    get("/api/container/stop", {hostId: params.id, containerId: id}).then(this.loadData)
+    hutool.http.get("/api/container/stop", {hostId: params.id, containerId: id}).then(this.loadData)
   }
   start = (id) => {
     let params = this.props;
-    get("/api/container/start", {hostId: params.id, containerId: id}).then(this.loadData)
+    hutool.http.get("/api/container/start", {hostId: params.id, containerId: id}).then(this.loadData)
   }
 
   columns = [
@@ -81,7 +81,7 @@ export default class extends React.Component {
       title: '-', dataIndex: 'action', render: (_, row) => {
         let id = row.Id;
         let state = row.State;
-        let running = state == 'running';
+        let running = state === 'running';
         return <div>
           <Button onClick={() => this.start(id)} disabled={running} size="small">启动</Button>
           <Divider type={"vertical"}/>
@@ -98,7 +98,7 @@ export default class extends React.Component {
     return (<div>
 
       {loading ?
-        <Skeleton active /> :
+        <Skeleton active/> :
         <Table dataSource={list}
                columns={this.columns}
                rowKey="Id"

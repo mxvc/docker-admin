@@ -1,7 +1,7 @@
 import {Card, Descriptions, Spin} from 'antd';
 import React from 'react';
-import {get, post} from "../../utils/request";
 import BuildLogList from "./BuildLogList";
+import {hutool} from "@moon-cn/hutool";
 
 let api = '/api/project/';
 
@@ -17,18 +17,19 @@ export default class extends React.Component {
 
   componentDidMount() {
     this.id = this.props.location.query.id
-    get(api+'get', {id: this.id}).then(rs=>this.setState({project: rs}))
+    hutool.http.get(api + 'get', {id: this.id}).then(rs => this.setState({project: rs}))
   }
+
   render() {
-    if(this.state.project == null){
-      return <Spin />
+    if (this.state.project == null) {
+      return <Spin/>
     }
 
     const {project} = this.state;
     return (<>
 
       <Card className='mb-2'>
-        <Descriptions title={project.name} >
+        <Descriptions title={project.name}>
           <Descriptions.Item label='id'>{project.id}</Descriptions.Item>
           <Descriptions.Item label='代码源'>{project.gitUrl}</Descriptions.Item>
           <Descriptions.Item label='dockerfile'>{project.dockerfile}</Descriptions.Item>
@@ -39,7 +40,7 @@ export default class extends React.Component {
       </Card>
 
 
-     <BuildLogList  project={project}/>
+      <BuildLogList project={project}/>
 
 
     </>)

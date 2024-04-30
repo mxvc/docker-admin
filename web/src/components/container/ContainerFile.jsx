@@ -1,15 +1,15 @@
 import React from "react";
 import {Card, Col, message, Row, Table, Tree} from "antd";
-import {get} from "../../utils/request";
+import {hutool} from "@moon-cn/hutool";
 
-function findByKey(k,list){
+function findByKey(k, list) {
   for (let item of list) {
-    if(item.key == k){
+    if (item.key == k) {
       return item;
     }
-    if(item.children && item.children.length){
-      const  rs = findByKey(k, item.children)
-      if(rs){
+    if (item.children && item.children.length) {
+      const rs = findByKey(k, item.children)
+      if (rs) {
         return rs;
       }
     }
@@ -21,15 +21,15 @@ export default class extends React.Component {
   state = {
     treeData: [],
 
-    treeLoading:false,
+    treeLoading: false,
 
-    curNode : {}
+    curNode: {}
 
   }
-  onSelect = (keys)=>{
+  onSelect = (keys) => {
     const key = keys;
     const node = findByKey(key, this.state.treeData)
-    this.setState({curNode:node})
+    this.setState({curNode: node})
   }
 
 
@@ -46,10 +46,9 @@ export default class extends React.Component {
   }
 
 
-
   onLoadData = (treeNode) => {
-    const {key,path,children} = treeNode
-    return new Promise( (resolve,reject) => {
+    const {key, path, children} = treeNode
+    return new Promise((resolve, reject) => {
 
       let {hostId, containerId} = this.props;
       let {treeData} = this.state
@@ -60,25 +59,23 @@ export default class extends React.Component {
       }
 
       const hide = message.loading("加载文件信息中...", 0)
-      this.setState({treeLoading:true})
-      get("/api/container/file", {hostId, containerId, path}).then(rs => {
+      this.setState({treeLoading: true})
+      hutool.http.get("/api/container/file", {hostId, containerId, path}).then(rs => {
         hide()
 
         const {dirs, files} = rs.data
 
 
-
-
         const node = findByKey(key, treeData);
-        if(node){
+        if (node) {
           node.children = dirs;
-          node.fileList  =files;
+          node.fileList = files;
         }
 
 
-        this.setState({ treeData:[...treeData], treeLoading: false})
+        this.setState({treeData: [...treeData], treeLoading: false})
         resolve()
-      }).catch(()=>{
+      }).catch(() => {
         hide()
         resolve()
 
@@ -97,7 +94,7 @@ export default class extends React.Component {
     return <div className='bg-gray-100 p-2'>
       <Row gutter={10}>
         <Col flex='250px'>
-          <Card >
+          <Card>
             <Tree.DirectoryTree loadData={this.onLoadData} treeData={this.state.treeData} onSelect={this.onSelect}/>
           </Card>
         </Col>

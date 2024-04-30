@@ -2,9 +2,9 @@ import {PlusOutlined} from '@ant-design/icons';
 import {Button, Divider, message, Modal, Popconfirm} from 'antd';
 import React from 'react';
 
-import {get, getPageableData, post} from "../../../utils/request";
 import {ProTable} from "@ant-design/pro-components";
 import {notPermitted} from "../../../utils/SysConfig";
+import {hutool} from "@moon-cn/hutool";
 
 const addTitle = "添加项目"
 const editTitle = '编辑项目'
@@ -63,7 +63,7 @@ export default class extends React.Component {
     },
   ];
   handleSave = value => {
-    post(api + 'save', value).then(rs => {
+    hutool.http.post(api + 'save', value).then(rs => {
       this.state.showAddForm = false;
       this.setState(this.state)
       this.reload();
@@ -78,14 +78,14 @@ export default class extends React.Component {
     let params = value;
     params.id = this.state.formValues.id
 
-    post(api + 'update', params).then(rs => {
+    hutool.http.post(api + 'update', params).then(rs => {
       this.state.showEditForm = false;
       this.setState(this.state)
       this.actionRef.current.reload();
     })
   }
   handleDelete = (row) => {
-    get(api + 'delete', {id:row.id}).then(rs => {
+    hutool.http.get(api + 'delete', {id:row.id}).then(rs => {
       message.info(rs.message )
       this.actionRef.current.reload();
     })
@@ -109,7 +109,7 @@ export default class extends React.Component {
                   <PlusOutlined/> 新建
                 </Button>,
               ]}
-              request={(params, sort) => getPageableData(api + "list" , params, sort)}
+              request={(params, sort) => hutool.http.requestAntdSpringPageData(api + "list" , params, sort)}
               columns={this.columns}
               rowSelection={false}
               rowKey="id"

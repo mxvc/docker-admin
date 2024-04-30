@@ -1,6 +1,6 @@
 import React from "react";
-import {get} from "../../utils/request";
 import {Spin} from "antd";
+import {hutool} from "@moon-cn/hutool";
 
 
 export default class extends React.Component {
@@ -11,7 +11,7 @@ export default class extends React.Component {
 
   componentDidMount() {
     let {hostId, containerId} = this.props;
-    get('/api/container/get', {hostId, containerId}).then(rs => {
+    hutool.http. get('/api/container/get', {hostId, containerId}).then(rs => {
       this.setState({data: rs.data})
     })
   }

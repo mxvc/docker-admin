@@ -1,6 +1,6 @@
 import {Tag} from "antd";
 import React from "react";
-import {get} from '../utils/request'
+import {hutool} from "@moon-cn/hutool";
 
 /**
  * 容器状态
@@ -13,7 +13,7 @@ export default class extends React.Component {
 
   componentDidMount() {
     const {hostId, appName} = this.props
-    get("api/container/status", {hostId, appName}, true).then(rs => {
+    hutool.http.get("api/container/status", {hostId, appName}).then(rs => {
       this.setState({status: rs.message})
     })
   }

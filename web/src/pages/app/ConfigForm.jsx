@@ -1,8 +1,8 @@
 import {Button, Col, Divider, Input, message, Row, Select, Spin} from "antd";
 import React from "react";
 import EditTable from "../../components/EditTable";
-import {post} from "../../utils/request";
 import CodeMirrorEditor from "../../components/CodeMirrorEditor";
+import {hutool} from "@moon-cn/hutool";
 
 
 export default class extends React.Component {
@@ -36,7 +36,7 @@ export default class extends React.Component {
     const {form} = this.state;
     const hide = message.loading("修改配置中...", 0)
     this.setState({form: null})
-    post('/api/app/updateConfig?id=' + this.props.app.id, form).then(rs => {
+   hutool.http. post('/api/app/updateConfig?id=' + this.props.app.id, form).then(rs => {
       const app = rs.data;
       this.setState({form: app.config})
       hide()

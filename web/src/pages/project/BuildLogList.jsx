@@ -8,7 +8,6 @@ import {
   MinusCircleTwoTone
 } from "@ant-design/icons";
 import {ProTable} from "@ant-design/pro-components";
-import {get, getPageableData} from "../../utils/request";
 import moment from "moment";
 import {hutool} from "@moon-cn/hutool";
 
@@ -138,13 +137,13 @@ export default class extends React.Component {
   ]
 
   retry = row => {
-    get("/api/project/build", row).then(rs => {
+   hutool.http. get("/api/project/build", row).then(rs => {
       this.reload()
     })
   }
 
   stop = row => {
-    get("/api/project/stopBuild", row).then(rs => {
+    hutool.http.get("/api/project/stopBuild", row).then(rs => {
       this.reload()
     })
   }
@@ -176,13 +175,13 @@ export default class extends React.Component {
 
 
   submitTrigger = (values) => {
-    get("/api/project/build", values).then(rs => {
+    hutool.http.get("/api/project/build", values).then(rs => {
       this.setState({showTrigger: false})
       this.actionRef.current.reload()
     })
   }
   cleanError = () => {
-    get("/api/project/cleanErrorLog", {id: this.projectId}).then(rs => {
+    hutool.http.get("/api/project/cleanErrorLog", {id: this.projectId}).then(rs => {
       this.actionRef.current.reload()
     })
   }
@@ -202,7 +201,7 @@ export default class extends React.Component {
         }}
         search={false}
         actionRef={this.actionRef}
-        request={(params, sort) => getPageableData(this.listURL, params, sort)}
+        request={(params, sort) => hutool.http.requestAntdSpringPageData(this.listURL, params, sort)}
         columns={this.columns}
         rowSelection={false}
         scroll={{x: 'max-content'}}

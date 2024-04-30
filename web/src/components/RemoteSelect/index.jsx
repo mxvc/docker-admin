@@ -1,10 +1,7 @@
 import {Select} from 'antd';
 
 import React from "react";
-import {get} from "../../utils/request";
-
-const {Option} = Select;
-
+import {hutool} from "@moon-cn/hutool";
 
 class RemoteSelect extends React.Component {
   constructor(props) {
@@ -19,23 +16,21 @@ class RemoteSelect extends React.Component {
   }
 
   componentDidMount() {
-    get(this.props.url).then(data=>{
-       this.setState({data:data})
+    hutool.http.get(this.props.url).then(data => {
+      this.setState({data: data})
     })
   }
 
 
-
-
   render() {
-    const {url,...rest} = this.props;
+    const {url, ...rest} = this.props;
     return (
       <Select
         showSearch={true}
         options={this.state.data}
 
         {...rest}
-     />
+      />
     );
   }
 }

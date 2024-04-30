@@ -3,15 +3,13 @@
   "scripts": {
     "start": "umi dev",
     "build": "umi build",
-    "tailwindcss": "npx tailwindcss -i ./src/input.css -o ./src/tailwind-dist.css --watch",
-    "use-fast-npm-aliyun": "npm config set registry https://registry.npmmirror.com"
+    "tailwindcss": "npx tailwindcss -i ./src/input.css -o ./src/tailwind-dist.css --watch"
   },
   "dependencies": {
     "@ant-design/icons": "^5.2.6",
     "@ant-design/pro-components": "^2.0.0",
-    "@moon-cn/hutool": "^1.0.0-beta.11",
+    "@moon-cn/hutool": "^1.0.0-beta.19",
     "antd": "^4.0.0",
-    "axios": "^1.6.1",
     "codemirror": "^5.0.0",
     "react": "18.x",
     "react-dom": "18.x",

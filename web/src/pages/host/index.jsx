@@ -2,11 +2,10 @@ import {PlusOutlined} from '@ant-design/icons';
 import {Button, Divider, message, Modal, Popconfirm, Radio} from 'antd';
 import React from 'react';
 
-import {getPageableData, post} from "../../utils/request";
 import {ProTable} from "@ant-design/pro-components";
 import {history} from "umi";
+import {hutool} from "@moon-cn/hutool";
 
-const addTitle = "添加主机"
 let api = '/api/host/';
 
 
@@ -84,13 +83,8 @@ export default class extends React.Component {
       },
     },
   ];
-
-
-  clickAddBtn = () => {
-    this.setState({formOpen: true, formValues: {}})
-  }
   handleDelete = row => {
-    post(api + 'delete', row).then(rs => {
+    hutool.http.post(api + 'delete', row).then(rs => {
       message.success(rs.message)
       this.actionRef.current.reload();
     }).catch(rs => {
@@ -100,7 +94,7 @@ export default class extends React.Component {
 
   handleSave = value => {
     value.id = this.state.formValues.id
-    post(api + 'save', value).then(rs => {
+    hutool.http.post(api + 'save', value).then(rs => {
       this.setState({formOpen: false})
       this.actionRef.current.reload();
     })
@@ -119,7 +113,7 @@ export default class extends React.Component {
             <PlusOutlined/> 新增
           </Button>,
         ]}
-        request={(params, sort) => getPageableData(api + "list", params, sort)}
+        request={(params, sort) => hutool.http.requestAntdSpringPageData(api + "list", params, sort)}
 
         columns={this.columns}
         rowSelection={false}

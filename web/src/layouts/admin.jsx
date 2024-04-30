@@ -2,8 +2,8 @@ import React from 'react';
 import {Layout, Menu, message} from 'antd';
 import {history} from 'umi';
 import {AppstoreOutlined, ClusterOutlined, LogoutOutlined, ProjectOutlined, SettingOutlined} from "@ant-design/icons";
-import {get} from "../utils/request";
 import {notPermitted} from "../utils/SysConfig";
+import {hutool} from "@moon-cn/hutool";
 
 const {Content, Sider} = Layout;
 
@@ -25,7 +25,7 @@ export default class extends React.Component {
   logout = () => {
     localStorage.clear();
     const hide = message.loading("注销登录...", 0)
-    get("/api/logout").then(rs => {
+    hutool.http.get("/api/logout").then(rs => {
       history.push("/login")
       hide()
     })
@@ -120,7 +120,7 @@ export default class extends React.Component {
 
   onClick = ({key}) => {
     this.setState({key})
-    if (key == 'logout') {
+    if (key === 'logout') {
       this.logout()
       return
     }

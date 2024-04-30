@@ -3,17 +3,17 @@
  */
 import {history} from 'umi';
 import {setLogin} from "./utils/SysConfig";
-import {get} from "@/utils/request";
 import {Modal} from "antd";
+import {hutool} from "@moon-cn/hutool";
 
 export function render(oldRender) {
   let path = history.location.pathname;
-  if (path == '/login') {
+  if (path === '/login') {
     oldRender()
     return
   }
 
-  get("api/login/check").then((rs) => {
+  hutool.http.get("api/login/check").then((rs) => {
     setLogin(rs.data)
     oldRender()
   }).catch(() => {

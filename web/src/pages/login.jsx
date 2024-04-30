@@ -2,8 +2,9 @@ import React from 'react';
 import {Button, Form, Input, message} from 'antd';
 import {LockOutlined, UserOutlined} from '@ant-design/icons';
 import {setLogin, site} from "../utils/SysConfig";
-import {post} from "../utils/request";
+
 import {history} from "umi";
+import {hutool} from "@moon-cn/hutool";
 
 export default class extends React.Component {
 
@@ -17,7 +18,7 @@ export default class extends React.Component {
 
   onFinish = values => {
     this.setState({loginLoading: true})
-    post('api/login', values).then(rs => {
+    hutool.http. post('api/login', values).then(rs => {
       if (rs.success) {
         setLogin(rs.data)
         history.push('/')

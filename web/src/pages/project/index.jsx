@@ -1,13 +1,11 @@
-import {PlusOutlined} from '@ant-design/icons';
 import {Button, Form, message, Modal, Popconfirm} from 'antd';
 import React from 'react';
 
-import {get, getPageableData, post} from "../../utils/request";
 import {ProTable} from "@ant-design/pro-components";
 import {history} from "umi";
 import {notPermitted} from "../../utils/SysConfig";
+import {hutool} from "@moon-cn/hutool";
 
-const addTitle = "添加项目"
 let api = '/api/project/';
 
 
@@ -90,7 +88,7 @@ export default class extends React.Component {
   ];
   handleSave = value => {
     value.id = this.state.formValues.id
-    post(api + 'save', value).then(rs => {
+    hutool.http.post(api + 'save', value).then(rs => {
       this.state.formOpen = false;
       this.setState(this.state)
       this.reload();
@@ -101,7 +99,7 @@ export default class extends React.Component {
     this.actionRef.current.reload();
   };
   handleDelete = (row) => {
-    get(api + 'delete', {id: row.id}).then(rs => {
+    hutool.http.get(api + 'delete', {id: row.id}).then(rs => {
       message.info(rs.message)
       this.actionRef.current.reload();
     })
@@ -128,7 +126,7 @@ export default class extends React.Component {
             新增
           </Button>,
         ]}
-        request={(params, sort) => getPageableData(api + "list", params, sort)}
+        request={(params, sort) => hutool.http.requestAntdSpringPageData(api + "list", params, sort)}
         columns={this.columns}
         rowSelection={false}
         rowKey="id"
@@ -153,7 +151,7 @@ export default class extends React.Component {
           form={{
             initialValues: this.state.formValues,
             layout: 'horizontal',
-            labelCol: {flex:'100px'},
+            labelCol: {flex: '100px'},
           }}
           onSubmit={this.handleSave}
           columns={this.columns}

@@ -20,12 +20,9 @@ import {
 import React from 'react';
 import ConfigForm from "./ConfigForm";
 import RemoteSelect from "../../components/RemoteSelect";
-import {get, post} from "../../utils/request";
 import {history} from "umi";
 import ContainerBox from "../../components/container/ContainerBox";
-import {showResult} from "../../utils/utils";
 import {notPermitted} from "../../utils/SysConfig";
-import {Empty} from "antd/lib";
 import {hutool} from "@moon-cn/hutool";
 
 let api = '/api/app/';
@@ -93,7 +90,7 @@ export default class extends React.Component {
     }
   }
   deploy = () => {
-    post('api/app/deploy/' + this.state.app.id).then(showResult).catch(showResult)
+    post('api/app/deploy/' + this.state.app.id)
   }
   start = () => {
     post('api/app/start/' + this.state.app.id)

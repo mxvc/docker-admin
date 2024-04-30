@@ -1,6 +1,6 @@
 import {Button, message, Table} from 'antd';
 import React from 'react';
-import {get} from "../../utils/request";
+import {hutool} from "@moon-cn/hutool";
 
 let api = '/api/host/';
 
@@ -20,7 +20,7 @@ export default class extends React.Component {
   loadData() {
     let params = this.props;
     const hide = message.loading("加载主机镜像中...", 0)
-    get(api + "images", params).then(list => {
+    hutool.http.get(api + "images", params).then(list => {
       this.setState({list})
       hide()
     }).catch(hide)
@@ -32,7 +32,7 @@ export default class extends React.Component {
     this.setState({loadingMap: map})
     let params = this.props;
     const hide = message.loading("删除镜像中...", 0)
-    get(api + "/deleteImage", {id: params.id, imageId}).then(rs => {
+    hutool.http.get(api + "/deleteImage", {id: params.id, imageId}).then(rs => {
       let map = this.state.loadingMap;
       map[imageId] = false;
       this.setState({loadingMap: map})

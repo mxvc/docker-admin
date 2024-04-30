@@ -1,6 +1,5 @@
 import {Badge, Card, Descriptions, Skeleton, Tabs} from 'antd';
 import React from 'react';
-import {get, post} from "../../utils/request";
 import HostImages from "./HostImages";
 import HostContainers from "./HostContainers";
 import {Spin} from "antd/lib";
