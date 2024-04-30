@@ -10,7 +10,6 @@ import cn.moon.lang.web.Result;
 import cn.moon.lang.web.persistence.BaseEntity;
 import cn.moon.lang.web.persistence.Query;
 import com.github.dockerjava.api.exception.ConflictException;
-import com.github.dockerjava.api.model.Container;
 import com.github.dockerjava.api.model.Image;
 import com.github.dockerjava.api.model.Info;
 import lombok.extern.slf4j.Slf4j;
@@ -43,7 +42,7 @@ public class HostController {
     public Page<Host> list(String searchText, @PageableDefault(sort = BaseEntity.Fields.modifyTime, direction = Sort.Direction.DESC) Pageable pageable) {
         Query<Host> q = getHostQuery();
 
-        if(StrUtil.isNotBlank(searchText)){
+        if (StrUtil.isNotBlank(searchText)) {
             q.like("name", searchText.trim());
         }
 
@@ -97,21 +96,21 @@ public class HostController {
     }
 
     @RequestMapping("runtime/get")
-    public DockerInfo runtime(String id) {
+    public Result runtime(String id) {
         Host host = service.findOne(id);
-        Info info = service.getDockerInfo(host);
 
-        DockerInfo dockerInfo = new DockerInfo();
-        BeanUtils.copyProperties(info, dockerInfo);
+            Info info = service.getDockerInfo(host);
 
+            DockerInfo dockerInfo = new DockerInfo();
+            BeanUtils.copyProperties(info, dockerInfo);
 
-        return dockerInfo;
+            return Result.ok().data(dockerInfo);
     }
 
 
     @RequestMapping("containers")
-    public List<Container> containers(String id) {
-        return service.getContainers(id);
+    public Result containers(String id) {
+            return Result.ok().data(service.getContainers(id));
     }
 
     @RequestMapping("images")

@@ -1,4 +1,4 @@
-import {Button, Form, message, Modal, Popconfirm} from 'antd';
+import {Button, Form, message, Modal, Popconfirm, Result, Skeleton} from 'antd';
 import React from 'react';
 
 import {ProTable} from "@ant-design/pro-components";
@@ -12,6 +12,8 @@ let api = '/api/project/';
 export default class extends React.Component {
 
   state = {
+    checkResult:null, // success, message
+
     formOpen: false,
     showEditForm: false,
     formValues: {},
@@ -86,6 +88,16 @@ export default class extends React.Component {
       },
     },
   ];
+
+  componentDidMount() {
+    // 检查是否定义注册中心
+    hutool.http.get('api/project/check').then(rs=>{
+      this.setState({checkResult:rs})
+    })
+  }
+
+
+
   handleSave = value => {
     value.id = this.state.formValues.id
     hutool.http.post(api + 'save', value).then(rs => {
@@ -107,7 +119,15 @@ export default class extends React.Component {
 
 
   render() {
-    let {formOpen, showEditForm} = this.state
+    let {formOpen, checkResult} = this.state
+
+    if(!checkResult) {
+      return  <Skeleton  />
+    }
+
+    if(!checkResult.success) {
+      return  <Result title={checkResult.message}></Result>
+    }
 
     return (<>
       <ProTable

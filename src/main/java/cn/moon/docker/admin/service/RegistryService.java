@@ -47,4 +47,8 @@ public class RegistryService extends BaseService<Registry> {
     public List<Registry> findAll() {
         return dao.findAll();
     }
+
+    public long countEnabled() {
+        return dao.count();
+    }
 }

@@ -23,13 +23,13 @@ export default class extends React.Component {
     let {id} = this.props.location.query;
 
     hutool.http.get(api + "get", {id})
-      .then(result => {
-        this.setState({host: result, loading: false})
+      .then(rs => {
+        this.setState({host: rs, loading: false})
       })
 
     hutool.http.get(api + "runtime/get", {id})
       .then(rs => {
-        this.setState({info: rs, runtimeLoading: false})
+        this.setState({info: rs.data, runtimeLoading: false})
       })
 
 

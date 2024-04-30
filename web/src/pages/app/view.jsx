@@ -55,7 +55,7 @@ export default class extends React.Component {
     let id = this.props.location.query.id;
     this.id = id;
 
-    get('api/app/get', {id: id}).then(rs => {
+    hutool.http.get('api/app/get', {id: id}).then(rs => {
       this.setState({app: rs, loading: false});
       this.loadTagOptions(rs.imageUrl)
     })

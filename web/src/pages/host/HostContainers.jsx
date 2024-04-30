@@ -19,8 +19,8 @@ export default class extends React.Component {
 
   loadData = () => {
     this.setState({loading: true})
-    hutool.http.get(api + "containers", {id: this.props.id}).then(list => {
-      this.setState({list})
+    hutool.http.get(api + "containers", {id: this.props.id}).then(rs => {
+      this.setState({list:rs.data})
     }).finally(() => {
       this.setState({loading: false})
     })

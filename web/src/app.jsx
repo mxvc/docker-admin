@@ -3,8 +3,13 @@
  */
 import {history} from 'umi';
 import {setLogin} from "./utils/SysConfig";
-import {Modal} from "antd";
+import {message, Modal} from "antd";
 import {hutool} from "@moon-cn/hutool";
+
+
+hutool.http.setGlobalErrorMessageHandler(msg=>{
+  message.error(msg)
+})
 
 export function render(oldRender) {
   let path = history.location.pathname;

@@ -6,6 +6,7 @@ import cn.moon.docker.admin.entity.Project;
 import cn.moon.docker.admin.service.BuildLogService;
 import cn.moon.docker.admin.service.ProjectService;
 import cn.hutool.core.util.StrUtil;
+import cn.moon.docker.admin.service.RegistryService;
 import cn.moon.lang.web.Option;
 import cn.moon.lang.web.Result;
 import cn.moon.lang.web.persistence.BaseEntity;
@@ -46,6 +47,19 @@ public class ProjectController {
 
     @Resource
     private BuildLogService logService;
+
+    @Resource
+    private RegistryService registryService;
+
+    @RequestMapping("check")
+    public Result check() {
+        long count = registryService.countEnabled();
+        if(count == 0){
+            return Result.err().msg("请先定义注册中心！");
+        }
+        return Result.ok();
+    }
+
 
 
     @RequiresPermissions("project:list")
