@@ -99,7 +99,7 @@ public class TerminalHandler extends AbstractWebSocketHandler {
                 .withAttachStderr(true)
                 .withAttachStdin(true)
                 .exec().getId();
-
+        is.addData("ls -l\n".getBytes(StandardCharsets.UTF_8));
 
 
         client.execStartCmd(id)
@@ -142,7 +142,7 @@ public class TerminalHandler extends AbstractWebSocketHandler {
                     }
                 });
 
-        is.addData("ls -l\n".getBytes(StandardCharsets.UTF_8));
+
     }
 
     private static void send(WebSocketSession session, String str) {
