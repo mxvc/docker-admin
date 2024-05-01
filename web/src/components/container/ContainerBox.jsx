@@ -12,7 +12,7 @@ export default class extends React.Component {
   render() {
     const {containerId, hostId} = this.props;
 
-    return <Tabs tabPosition='left' destroyInactiveTabPane>
+    return <Tabs  destroyInactiveTabPane>
       <Tabs.TabPane tab="日志" key="container-log">
         <ContainerLog hostId={hostId} containerId={containerId}/>
       </Tabs.TabPane>
