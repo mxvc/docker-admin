@@ -166,7 +166,7 @@ export default class extends React.Component {
       <Card title={app.name} extra={<Space>
         {state === 'exited' && <Button onClick={this.start} type="primary">启动</Button>}
         {state === 'running' && <Button onClick={this.stop} type="primary" danger>停止</Button>}
-        <Button onClick={this.deploy} type="primary">重新部署</Button>
+        <Button onClick={this.deploy} type="primary">部署</Button>
       </Space>}>
 
 

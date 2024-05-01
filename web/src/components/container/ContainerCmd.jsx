@@ -43,7 +43,7 @@ export default class extends React.Component {
     // 初始化
     term._initialized = true
     term.writeln("Docker Terminal  \x1b[1;32m容器终端\x1b[0m.")
-    term.writeln('请输入Linux命令， 如 ls -l')
+    term.writeln('请输入Linux命令， 如 ls')
     term.write('> ')
 
     term.onKey(e => {
