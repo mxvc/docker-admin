@@ -83,6 +83,7 @@ export default class extends React.Component {
     hutool.http.post(api + 'save', value).then(rs => {
       message.success(rs.message)
       this.reload()
+      this.setState({deployVisible:false})
     })
   }
 

@@ -12,10 +12,6 @@ export default class extends React.Component {
     loginLoading: false
   }
 
-  componentDidMount() {
-
-  }
-
   onFinish = values => {
     this.setState({loginLoading: true})
     hutool.http. post('api/login', values).then(rs => {

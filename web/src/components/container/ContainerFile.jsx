@@ -2,34 +2,12 @@ import React from "react";
 import {Card, Col, message, Row, Table, Tree} from "antd";
 import {hutool} from "@moon-cn/hutool";
 
-function findByKey(k, list) {
-  for (let item of list) {
-    if (item.key == k) {
-      return item;
-    }
-    if (item.children && item.children.length) {
-      const rs = findByKey(k, item.children)
-      if (rs) {
-        return rs;
-      }
-    }
-  }
-}
-
 export default class extends React.Component {
 
   state = {
     treeData: [],
-
     treeLoading: false,
-
     curNode: {}
-
-  }
-  onSelect = (keys) => {
-    const key = keys;
-    const node = findByKey(key, this.state.treeData)
-    this.setState({curNode: node})
   }
 
 
@@ -62,58 +40,58 @@ export default class extends React.Component {
       this.setState({treeLoading: true})
       hutool.http.get("/api/container/file", {hostId, containerId, path}).then(rs => {
         hide()
-
         const {dirs, files} = rs.data
-
-
-        const node = findByKey(key, treeData);
+        const node =  hutool.tree.findByKey(key, treeData, "key");
         if (node) {
           node.children = dirs;
           node.fileList = files;
         }
-
-
         this.setState({treeData: [...treeData], treeLoading: false})
         resolve()
       }).catch(() => {
         hide()
         resolve()
-
       })
-
     })
-
-
   };
 
+  onSelect = (keys) => {
+    const key = keys[0];
+    const node = hutool.tree.findByKey(key, this.state.treeData, "key")
+    this.setState({curNode: node})
+  }
 
   render() {
     let {hostId, containerId} = this.props;
 
-
-    return <div className='bg-gray-100 p-2'>
-      <Row gutter={10}>
+    return <div >
+      <Row gutter={10} wrap={false}>
         <Col flex='250px'>
-          <Card>
-            <Tree.DirectoryTree loadData={this.onLoadData} treeData={this.state.treeData} onSelect={this.onSelect}/>
+          <Card style={{height: '80vh', overflowY: "auto"}}>
+            <Tree.DirectoryTree
+              loadData={this.onLoadData}
+              treeData={this.state.treeData}
+              onSelect={this.onSelect}/>
           </Card>
         </Col>
 
         <Col flex='auto'>
           <Card title='文件列表'>
-            <Table pagination={false} dataSource={this.state.curNode?.fileList} columns={[
-              {title: '名称', dataIndex: 'title'},
-              {title: '路径', dataIndex: 'path'},
-              {title: '大小', dataIndex: 'sizeFmt'},
-              {title: '修改时间', dataIndex: 'time'},
-              {
-                title: '-', dataIndex: 'option', render: (_, row) => {
-                  let url = 'api/container/downloadFile?hostId=' + hostId + "&containerId=" + containerId + "&file=" + row.path
-                  return <a href={url} target='_blank'>下载</a>
-                }
-              }
-
-            ]}></Table>
+            <Table pagination={false}
+                   dataSource={this.state.curNode?.fileList}
+                   columns={[
+                     {title: '名称', dataIndex: 'title'},
+                     {title: '大小', dataIndex: 'sizeFmt'},
+                     {title: '修改时间', dataIndex: 'time'},
+                     {
+                       title: '-', dataIndex: 'option',
+                       render: (_, row) => {
+                         let url = 'api/container/downloadFile?hostId=' + hostId + "&containerId=" + containerId + "&file=" + row.path
+                         return <a href={url} target='_blank'>下载</a>
+                       }
+                     }
+                   ]}>
+            </Table>
           </Card>
         </Col>
       </Row>

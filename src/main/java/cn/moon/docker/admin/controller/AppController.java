@@ -17,10 +17,7 @@ import org.apache.shiro.subject.Subject;
 import org.springframework.data.domain.*;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.util.Assert;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
@@ -62,6 +59,11 @@ public class AppController {
     public App view(String id) throws UnsupportedEncodingException {
         App app = service.findOne(id);
 
+        if(app.getImageUrl() == null){
+            String fullUrl = app.getProject().getRegistry().getFullUrl();
+            app.setImageUrl(fullUrl +"/" + app.getProject().getName());
+        }
+
         String url = LogUrlTool.getLogViewUrl(id);
         app.setLogUrl(url);
         return app;
@@ -71,10 +73,10 @@ public class AppController {
     public Result container(String id) {
         App app = service.findOne(id);
         Assert.state(app != null, "应用不存在");
-        Container container = service.getContainer(app);
-        Assert.state(container != null, "容器部署中...");
+        ContainerVo container = service.getContainerVo(app);
 
-        return Result.ok().msg("获取容器信息成功").data(new ContainerVo(container));
+
+        return Result.ok().msg("获取容器信息成功").data(container);
     }
 
 
@@ -140,7 +142,7 @@ public class AppController {
 
         service.deploy(app);
         log.info("部署指令已发送");
-        return Result.err();
+        return Result.ok();
     }
 
 
@@ -175,13 +177,7 @@ public class AppController {
         return rs;
     }
 
-    @RequiresPermissions("app:moveApp")
-    @RequestMapping("moveApp")
-    public Result moveApp(String id, String hostId) {
-        service.moveApp(id, hostId);
 
-        return Result.ok();
-    }
 
     @RequiresPermissions("app:start")
     @RequestMapping("start/{appId}")
@@ -224,4 +220,7 @@ public class AppController {
 
         return Result.ok().data(list);
     }
+
+
+
 }

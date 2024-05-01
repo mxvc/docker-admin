@@ -90,24 +90,26 @@ export default class extends React.Component {
 
     {
       dataIndex: 'action',
-      fixed:'right',
+      fixed: 'right',
       width: 200,
       render: (_, row) => {
         const map = this.state.loadingMap;
         const result = map[row.Id]
 
 
-        return <Button size={"small"} loading={result} onClick={() => this.delete(row.Id)}>删除 {result != null && '已点击'}</Button>;
+        return <Button size={"small"} loading={result}
+                       onClick={() => this.delete(row.Id)}>删除 {result != null && '已点击'}</Button>;
       }
     },
   ];
 
   render() {
-    return <Table dataSource={this.state.list}
-                  rowKey="Id"
-                  size={"small"}
-                  columns={this.columns}
-                  scroll={{x: 'max-content'}}
+    return <Table
+      dataSource={this.state.list}
+      rowKey="Id"
+      size={"small"}
+      columns={this.columns}
+      scroll={{x: 'max-content'}}
 
     />
 

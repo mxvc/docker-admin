@@ -8,6 +8,7 @@ import cn.moon.docker.admin.entity.App;
 import cn.moon.docker.admin.entity.BuildLog;
 import cn.moon.docker.admin.entity.DeployLog;
 import cn.moon.docker.admin.entity.Host;
+import cn.moon.docker.admin.vo.ContainerVo;
 import cn.moon.docker.sdk.DockerSdkManager;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.spring.SpringUtil;
@@ -33,8 +34,7 @@ import java.util.*;
 @Slf4j
 public class AppService extends BaseService<App> {
 
-    @Resource
-    HostService hostService;
+    Set<String> deployingList = new HashSet<>();
 
     @Resource
     DeployLogDao deployLogDao;
@@ -48,7 +48,9 @@ public class AppService extends BaseService<App> {
 
     @Async
     public void deploy(App app) {
+        deployingList.add(app.getId());
         MDC.put("logFileId", app.getId());
+
         // 修改更新时间
         app.setModifyTime(new Date());
         this.save(app);
@@ -219,6 +221,7 @@ public class AppService extends BaseService<App> {
             e.printStackTrace();
             log.info("--------------------------------------------------");
         }
+        deployingList.remove(app.getId());
 
     }
 
@@ -272,6 +275,20 @@ public class AppService extends BaseService<App> {
         return list;
     }
 
+
+    public ContainerVo getContainerVo(App app){
+        Container container = getContainer(app);
+        ContainerVo data = new ContainerVo(container);
+
+        if(deployingList.contains(app.getId())){
+            data.setState("deploying");
+            data.setStatus("部署中...");
+        }
+
+
+        return data;
+    }
+
     public Container getContainer(App app) {
         DockerClient client = dockerManager.getClient(app.getHost());
 
@@ -293,19 +310,7 @@ public class AppService extends BaseService<App> {
         repository.deleteById(id);
     }
 
-    public void moveApp(String id, String hostId) {
-        Assert.hasLength(hostId, "hostId不能为空");
-        // 远程删除应用
-        App app = this.findOne(id);
-        this.deleteContainer(app);
 
-        Host host = hostService.findOne(hostId);
-
-        app.setHost(host);
-        app = this.save(app);
-
-        SpringUtil.getBean(getClass()).deploy(app);
-    }
 
     public void updateAppVersion(String id, String tag) {
         Assert.hasLength(tag, "tag不能为空");

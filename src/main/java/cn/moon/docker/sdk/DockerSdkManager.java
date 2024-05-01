@@ -34,10 +34,7 @@ public class DockerSdkManager {
             dockerHostHeader = host.getDockerHostHeader();
         }
 
-        log.info("docker host: {}", dockerHost);
 
-
-        log.info("注册中心 {} ", registry);
         DefaultDockerClientConfig.Builder builder = DefaultDockerClientConfig.createDefaultConfigBuilder()
                 .withDockerHost(dockerHost);
         if (registry != null) {

@@ -1,11 +1,13 @@
-# 项目介绍
-容器管理，支持CICD。
-
+# 容器管理面板
+- 多主机容器管理
+- 持续集成
+- 持续部署
+- 支持跨网络（需配合FRP）
 
 # 安装
 ## docker 命令行安装
 
-前置条件：mysql数据库
+需准备一个mysql数据库
 
 ```
 docker run -d -p 7001:7001  -e dbip=127.0.0.1 -dbport=3306 -e dbpwd=123456  -v /var/run/docker.sock:/var/run/docker.sock mooncn/docker-admin

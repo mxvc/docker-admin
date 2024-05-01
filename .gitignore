@@ -34,3 +34,4 @@ build/
 *.log
 /bin/frpc.ini
 /docker-admin-logs/
+*.temp
