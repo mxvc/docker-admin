@@ -51,22 +51,7 @@ public class ContainerController {
     private ContainerService containerService;
 
 
-    @RequestMapping("get")
-    public Result get(@RequestParam String hostId, String containerId) throws Exception {
-        Host host = hostService.findOne(hostId);
-        DockerClient client = dockerManager.getClient(host);
 
-
-        InspectContainerResponse response = client.inspectContainerCmd(containerId).exec();
-
-        String json = JsonTool.toPrettyJsonQuietly(response);
-
-        json = Objects.requireNonNull(json).replaceAll("\\\\\"", "").replaceAll("\"", "");
-
-
-        return Result.ok().msg("获取容器信息成功").data(json);
-
-    }
 
 
     @RequestMapping("stats")

@@ -3,7 +3,6 @@ import ContainerLog from "../../components/container/ContainerLog";
 import {Tabs} from "antd";
 import ContainerFile from "./ContainerFile";
 import ContainerCmd from "./ContainerCmd";
-import ContainerInfo from "./ContainerInfo";
 import ContainerStats from "./ContainerStats";
 
 export default class extends React.Component {
@@ -27,9 +26,6 @@ export default class extends React.Component {
       </Tabs.TabPane>
       <Tabs.TabPane tab="资源统计" key="container-stats">
         <ContainerStats hostId={hostId} containerId={containerId}/>
-      </Tabs.TabPane>
-      <Tabs.TabPane tab="详情" key="container-info">
-        <ContainerInfo hostId={hostId} containerId={containerId}/>
       </Tabs.TabPane>
     </Tabs>
   }
