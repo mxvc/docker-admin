@@ -3,7 +3,6 @@ import ContainerLog from "../../components/container/ContainerLog";
 import {Tabs} from "antd";
 import ContainerFile from "./ContainerFile";
 import ContainerCmd from "./ContainerCmd";
-import ContainerStats from "./ContainerStats";
 
 export default class extends React.Component {
 
@@ -11,7 +10,7 @@ export default class extends React.Component {
   render() {
     const {containerId, hostId} = this.props;
 
-    return <Tabs  destroyInactiveTabPane>
+    return <Tabs  destroyInactiveTabPane >
       <Tabs.TabPane tab="日志" key="container-log">
         <ContainerLog hostId={hostId} containerId={containerId}/>
       </Tabs.TabPane>
@@ -21,12 +20,10 @@ export default class extends React.Component {
         <ContainerFile hostId={hostId} containerId={containerId}/>
       </Tabs.TabPane>
 
-      <Tabs.TabPane tab="命令" key="container-cmd">
+      <Tabs.TabPane tab="终端" key="container-cmd">
         <ContainerCmd hostId={hostId} containerId={containerId}/>
       </Tabs.TabPane>
-      <Tabs.TabPane tab="资源统计" key="container-stats">
-        <ContainerStats hostId={hostId} containerId={containerId}/>
-      </Tabs.TabPane>
+
     </Tabs>
   }
 

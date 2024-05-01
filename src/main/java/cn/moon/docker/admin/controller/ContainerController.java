@@ -53,63 +53,6 @@ public class ContainerController {
 
 
 
-
-    @RequestMapping("stats")
-    public Result stats(@RequestParam String hostId, String containerId) throws Exception {
-        Host host = hostService.findOne(hostId);
-        DockerClient client = dockerManager.getClient(host);
-
-
-        StatsCmd cmd = client.statsCmd(containerId);
-
-
-        List<Statistics> list = new ArrayList<>();
-        ResultCallback.Adapter<Statistics> callback = cmd.exec(new ResultCallback.Adapter<Statistics>() {
-            @Override
-            public void onNext(Statistics statistics) {
-                super.onNext(statistics);
-                list.add(statistics);
-                System.out.println(statistics);
-            }
-        });
-
-        // 为了计算cpu使用率，需至少两个，以计算用时
-        while (list.size() < 2) {
-            Thread.sleep(1000);
-        }
-        callback.close();
-        cmd.close();
-        client.close();
-
-
-        // https://docs.docker.com/engine/api/v1.43/#tag/Container/operation/ContainerStats
-        Statistics st = list.get(1);
-
-        long used_memory = st.getMemoryStats().getUsage() - Objects.requireNonNull(st.getMemoryStats().getStats()).getCache();
-        long available_memory = st.getMemoryStats().getLimit();
-
-        Map<String, Object> map = new LinkedHashMap<>();
-        map.put("MEM USAGE / LIMIT", DataSizeUtil.format(st.getMemoryStats().getUsage()) + " / " + DataSizeUtil.format(st.getMemoryStats().getLimit()));
-        map.put("MEM 使用率", (used_memory * 1D / available_memory) * 100.0 + "%");
-
-        // cpu
-        CpuStatsConfig cpuStats = st.getCpuStats();
-        CpuStatsConfig preCpuStats = st.getPreCpuStats();
-
-        long cpu_delta = Objects.requireNonNull(cpuStats.getCpuUsage()).getTotalUsage() - Objects.requireNonNull(preCpuStats.getCpuUsage()).getTotalUsage();
-        long system_cpu_delta = cpuStats.getSystemCpuUsage() - preCpuStats.getSystemCpuUsage();
-
-        long number_cpus = cpuStats.getOnlineCpus();
-
-        map.put("CPU 个数", number_cpus);
-        map.put("CPU 使用率", (cpu_delta * 1D / system_cpu_delta) * number_cpus * 100.0 + "%");
-
-
-        return Result.ok().msg("获取容器状态统计成功").data(map);
-
-    }
-
-
     @RequestMapping("log/{hostId}/{containerId}")
     public void logByHost(@PathVariable String hostId, @PathVariable String containerId, HttpServletResponse response) throws Exception {
         DockerClient client = containerService.responseLog(hostId);
