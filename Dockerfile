@@ -2,8 +2,10 @@
 FROM node:14-alpine as WEB
 WORKDIR /tmp/build
 
+
 ADD web .
-RUN npm install &&  npm run build
+RUN npm install
+RUN npm run build
 
 # 步骤2 后端打包
 FROM maven:3-openjdk-8 as java
