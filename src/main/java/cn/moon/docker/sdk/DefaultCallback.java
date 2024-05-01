@@ -66,7 +66,7 @@ public class DefaultCallback<T extends ResponseItem> implements ResultCallback<T
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        MDC.remove("logFileId");
+      //  MDC.remove("logFileId");
     }
 
     @Override

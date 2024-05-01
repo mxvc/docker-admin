@@ -11,6 +11,8 @@ public class ContainerVo implements Serializable {
 
     public ContainerVo(Container c) {
         if (c == null) {
+            state = "notFound";
+            status = "容器未部署";
             return;
         }
         image = c.getImage();
@@ -39,8 +41,11 @@ public class ContainerVo implements Serializable {
     String image;
     String name;
 
-    String state;
+    String state; // notFound， deploying
     String status;
+
+
+
 
 
 

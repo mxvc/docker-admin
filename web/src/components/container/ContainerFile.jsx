@@ -64,7 +64,7 @@ export default class extends React.Component {
   render() {
     let {hostId, containerId} = this.props;
 
-    return <div className='bg-gray-100 p-2'>
+    return <div >
       <Row gutter={10} wrap={false}>
         <Col flex='250px'>
           <Card style={{height: '80vh', overflowY: "auto"}}>

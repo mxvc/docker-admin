@@ -1,9 +1,9 @@
 import React from "react";
-import {hutool} from "@moon-cn/hutool";
 import {Terminal} from "xterm";
 import "xterm/css/xterm.css"
 import { AttachAddon } from '@xterm/addon-attach';
 
+import { FitAddon } from 'xterm-addon-fit'
 
 export default class extends React.Component {
 
@@ -26,7 +26,7 @@ export default class extends React.Component {
       fontSize:'small',
       theme: {
 
-        foreground: "#ECECEC", //字体
+        foreground: "#1bd206", //字体
         background: "#000000", //背景色
         cursor: "help", //设置光标
       }
@@ -38,6 +38,10 @@ export default class extends React.Component {
 
     const attachAddon = new AttachAddon(this.webSocket);
     term.loadAddon(attachAddon);
+    let fitAddon = new FitAddon();
+    term.loadAddon(fitAddon)
+
+    fitAddon.fit()
 
     term.open(this.domRef.current)
     term.focus()
@@ -48,12 +52,12 @@ export default class extends React.Component {
 
 
   componentWillUnmount() {
-    this.term.dispose()
+    this.term?.dispose()
     this.term = null
   }
   render() {
     return <div>
-      <div ref={this.domRef}></div>
+      <div ref={this.domRef} ></div>
 
     </div>
   }

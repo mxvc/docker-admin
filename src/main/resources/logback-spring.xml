@@ -15,7 +15,7 @@
 
 
     <!-- 构建日志-->
-    <appender name="docker-console-appender" class="ch.qos.logback.classic.sift.SiftingAppender">
+    <appender name="docker-log-appender" class="ch.qos.logback.classic.sift.SiftingAppender">
         <discriminator>
             <key>logFileId</key>
             <defaultValue>default</defaultValue>
@@ -36,10 +36,13 @@
 
 
     <logger name="cn.moon.docker.admin.service.ProjectService">
-        <appender-ref ref="docker-console-appender" />
+        <appender-ref ref="docker-log-appender" />
+    </logger>
+    <logger name="cn.moon.docker.admin.service.AppService">
+        <appender-ref ref="docker-log-appender" />
     </logger>
     <logger name="cn.moon.docker.sdk">
-        <appender-ref ref="docker-console-appender" />
+        <appender-ref ref="docker-log-appender" />
     </logger>
 
 

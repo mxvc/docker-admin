@@ -9,7 +9,7 @@ import {
   Input,
   message,
   Modal, Result,
-  Row,
+  Row, Skeleton,
   Space,
   Spin,
   Switch,
@@ -19,11 +19,12 @@ import {
 } from 'antd';
 import React from 'react';
 import ConfigForm from "./ConfigForm";
-import RemoteSelect from "../../components/RemoteSelect";
 import {history} from "umi";
-import ContainerBox from "../../components/container/ContainerBox";
-import {notPermitted} from "../../utils/SysConfig";
+import {isPermitted, notPermitted} from "../../utils/SysConfig";
 import {hutool} from "@moon-cn/hutool";
+import ContainerLog from "../../components/container/ContainerLog";
+import ContainerCmd from "../../components/container/ContainerCmd";
+import ContainerFile from "../../components/container/ContainerFile";
 
 let api = '/api/app/';
 
@@ -33,19 +34,20 @@ export default class extends React.Component {
   state = {
     loading: true,
     app: {},
+
+    containerLoading: true,
     container: {},
-    containerNotFound: false,
+
 
     tagOptions: [],
-
-    tabKey: undefined,
 
 
     publishApp: {
       targetVersion: null
     },
     showEditName: false,
-    newName: ''
+    newName: '',
+
   }
 
 
@@ -55,58 +57,74 @@ export default class extends React.Component {
 
     hutool.http.get('api/app/get', {id: id}).then(rs => {
       this.setState({app: rs, loading: false});
-      this.loadTagOptions(rs.imageUrl)
+      this.loadTagOptions(rs)
     })
 
 
     this.loadContainer();
+
+
   }
-
-
 
 
   loadContainer = () => {
+    console.log('loadContainer')
+    this.setState({containerLoading: true})
     hutool.http.get("/api/app/container", {id: this.id}).then(rs => {
       const container = rs.data;
-      if(container){
-        this.setState({container, containerNotFound:false})
-      }else {
-        this.setState({ containerNotFound:true})
+      this.setState({container})
 
+      if (container.state === 'deploying') {
+        setTimeout(() => this.loadContainer(), 1000)
       }
+
     }).catch(() => {
-      this.setState({containerNotFound: true})
+    }).finally(() => {
+      this.setState({containerLoading: false})
     })
   }
-  loadTagOptions(url) {
-    if (url) {
-      hutool.http.get('api/repository/tagOptions', {url}).then(rs => {
+
+  loadTagOptions(app) {
+    if(app.project){
+      hutool.http.get('api/project/versions', {projectId:app.project.id}).then(rs => {
         this.setState({tagOptions: rs})
       })
     }
+
   }
+
   deploy = () => {
-    hutool.http.post('api/app/deploy/' + this.state.app.id)
+    const {container} = this.state
+    container.state = 'deploying'
+    this.setState({container})
+    hutool.http.post('api/app/deploy/' + this.state.app.id).then(rs => {
+      message.success('部署指令已发送，异步执行中...')
+      this.loadContainer()
+    })
   }
   start = () => {
-    hutool.http.post('api/app/start/' + this.state.app.id)
+    hutool.http.post('api/app/start/' + this.state.app.id).then(() => {
+      this.loadContainer()
+    })
   }
   stop = () => {
-    hutool.http. post('api/app/stop/' + this.state.app.id)
+    hutool.http.post('api/app/stop/' + this.state.app.id).then(() => {
+      this.loadContainer()
+    })
   }
 
   setAutoDeploy = (id, autoDeploy) => {
-    hutool.http. get("/api/app/autoDeploy", {id, autoDeploy})
+    hutool.http.get("/api/app/autoDeploy", {id, autoDeploy})
   }
   setAutoRestart = (id, autoRestart) => {
-    hutool.http. get("/api/app/autoRestart", {id, autoRestart})
+    hutool.http.get("/api/app/autoRestart", {id, autoRestart})
   }
 
 
   updateVersion = () => {
     const id = this.state.app.id;
     const tag = this.state.publishApp.targetVersion;
-    hutool.http. get("/api/app/updateVersion", {id, version: tag}).then(rs => {
+    hutool.http.get("/api/app/updateVersion", {id, version: tag}).then(rs => {
       message.success(rs.message)
       window.location.reload(true)
     })
@@ -144,8 +162,7 @@ export default class extends React.Component {
     let appId = this.state.app.id;
     let {newName} = this.state;
     const hide = message.loading('指令发送中...')
-    this.setState({tabKey:'deploy-log'})
-    hutool.http.post(api + 'rename' , {appId, newName}).then(rs => {
+    hutool.http.post(api + 'rename', {appId, newName}).then(rs => {
 
       message.success(rs.message)
       this.setState({app: rs.data, showEditName: false})
@@ -153,7 +170,7 @@ export default class extends React.Component {
   }
 
   render() {
-    const {container, app, loading} = this.state;
+    const {container, app, loading, containerLoading} = this.state;
 
     if (loading) {
       return <Spin/>
@@ -166,22 +183,21 @@ export default class extends React.Component {
       <Card title={app.name} extra={<Space>
         {state === 'exited' && <Button onClick={this.start} type="primary">启动</Button>}
         {state === 'running' && <Button onClick={this.stop} type="primary" danger>停止</Button>}
-        <Button onClick={this.deploy} type="primary">部署</Button>
+        <Button onClick={this.deploy} loading={this.state.container.state === 'deploying'} type="primary">部署</Button>
       </Space>}>
 
 
         <Descriptions size="small">
           <Descriptions.Item label='应用'>  {app.name} </Descriptions.Item>
           <Descriptions.Item label='主机'>  {app.host?.name} </Descriptions.Item>
-          <Descriptions.Item label='镜像' span={2}>  {app.imageUrl}:{app.imageTag} </Descriptions.Item>
-          <Descriptions.Item label='容器'>  {container.name}         </Descriptions.Item>
-
           <Descriptions.Item label='状态'>
-            <Tag color={container.state == 'running' ? 'green' : 'red'}>
-              {container.status}</Tag>
-          </Descriptions.Item>
+            {containerLoading ?
+              "检测中..." : <Tag color={container.state == 'running' ? 'green' : 'red'}>
+                {container.status}</Tag>}
 
-          <Descriptions.Item label='创建于'>  { hutool.date.friendlyTime( app.createTime)} </Descriptions.Item>
+          </Descriptions.Item>
+          <Descriptions.Item label='镜像' span={2}>  {app.imageUrl}:{app.imageTag} </Descriptions.Item>
+
 
         </Descriptions>
 
@@ -197,86 +213,111 @@ export default class extends React.Component {
   }
 
   renderTabs = () => {
-    const {container, containerNotFound} = this.state;
+    const {container, containerLoading} = this.state;
+
 
     const {app} = this.state
 
-
-    return <>
-      <Tabs  activeKey={this.state.tabKey}  onChange={key=>this.setState({tabKey:key})} destroyInactiveTabPane defaultActiveKey='deploy-log'>
-        <Tabs.TabPane tab="容器" key="container">
-          {containerNotFound ?
-
-            <Result title='容器未运行' status='warning' ></Result>:
-            <ContainerBox containerId={container.id} hostId={app.host?.id} />
-          }
-        </Tabs.TabPane>
+    const notFound = container.state === 'notFound'
 
 
+    let containerId = container.id
+    let hostId = app.host.id
 
-        <Tabs.TabPane tab="部署日志" key="deploy-log">
-          <iframe src={app.logUrl}
-                  width={window.screen.width - 300}
-                  height={window.screen.height - 450}
-                  frameBorder={0} marginWidth={0} marginHeight={0}
-                  style={{
-                    overflow:'hidden'
-                  }}
-          />
-        </Tabs.TabPane>
+    const items = []
+    let iframe = <iframe src={app.logUrl}
+                         {...hutool.html.getIframeCommonProps()}
+                         width={window.screen.width - 300}
+                         height={window.screen.height - 450}
+                         style={{
+                           overflow: 'hidden'
+                         }}
+    />;
+    if (container.state === 'deploying') {
 
-        <Tabs.TabPane tab="配置" disabled={notPermitted('app:config')} key="2">
-          <ConfigForm app={app} onChange={app => {
-            window.location.reload(true)
-          }}/>
-        </Tabs.TabPane>
+      return iframe
+    }
 
+    // 容器信息
+    if (!notFound) {
+      items.push({
+        key: 'log',
+        label: '日志',
+        children: <ContainerLog hostId={hostId} containerId={containerId}/>
+      })
 
-        <Tabs.TabPane tab="发布" key="publish">
+      items.push({
+        key: 'terminal',
+        label: '终端',
+        children: <ContainerCmd hostId={hostId} containerId={containerId}/>
+      })
 
+      items.push({
+        key: 'file',
+        label: '文件',
+        children: <ContainerFile hostId={hostId} containerId={containerId}/>
 
-          <Row wrap={false}>
-            <Col flex="100px">自动发布</Col>
-            <Col flex="auto">
-              <Switch checked={app.autoDeploy}
-                      onChange={checked => {
-                        app.autoDeploy = checked
-                        this.setState({app: this.state.app})
-                        this.setAutoDeploy(app.id, checked)
-                      }}
-              ></Switch>
-              <div>
-                <Typography.Text type="secondary">当有镜像构建成功后，自动更新应用到最新构建的版本</Typography.Text>
-              </div>
-            </Col>
-          </Row>
-          <Divider></Divider>
-
-          <Row wrap={false}>
-            <Col flex="100px">手动发布</Col>
-            <Col flex="auto">
-              <AutoComplete  options={this.state.tagOptions}
-                             style={{width: 150}}
-                             value={this.state.publishApp.targetVersion}
-                             onChange={targetVersion => {
-                this.setState({publishApp: {targetVersion}})
-              }}/>
-
-              &nbsp;&nbsp;
-              <Button type={"primary"} onClick={this.updateVersion}>更新应用</Button>
-
-              <div>
-                <Typography.Text type="secondary">用指定的镜像版本</Typography.Text>
-              </div>
-            </Col>
-          </Row>
-
-        </Tabs.TabPane>
+      })
+    }
 
 
+    if (isPermitted('app:config')) {
+      items.push({
+        key: 'config',
+        label: '配置',
+        children: <ConfigForm app={app}
+                              onChange={app => {
+                                window.location.reload(true)
+                              }}/>
+      })
+    }
 
+    items.push({
+      key: 'publish',
+      label: '发布', children: <>
+        <Row wrap={false}>
+          <Col flex="100px">自动发布</Col>
+          <Col flex="auto">
+            <Switch checked={app.autoDeploy}
+                    onChange={checked => {
+                      app.autoDeploy = checked
+                      this.setState({app: this.state.app})
+                      this.setAutoDeploy(app.id, checked)
+                    }}
+            ></Switch>
+            <div>
+              <Typography.Text type="secondary">当有镜像构建成功后，自动更新应用到最新构建的版本</Typography.Text>
+            </div>
+          </Col>
+        </Row>
+        <Divider></Divider>
 
-        <Tabs.TabPane tab="设置" key="setting" disabled={notPermitted('app:config')}>
+        <Row wrap={false}>
+          <Col flex="100px">手动发布</Col>
+          <Col flex="auto">
+            <AutoComplete options={this.state.tagOptions}
+                          style={{width: 150}}
+                          value={this.state.publishApp.targetVersion}
+                          onChange={targetVersion => {
+                            this.setState({publishApp: {targetVersion}})
+                          }}/>
+
+            &nbsp;&nbsp;
+            <Button type={"primary"} onClick={this.updateVersion}>更新应用</Button>
+
+            <div>
+              <Typography.Text type="secondary">用指定的镜像版本</Typography.Text>
+            </div>
+          </Col>
+        </Row>
+      </>
+    })
+
+    if (isPermitted('app:config')) {
+      items.push({
+        key: 'setting',
+        label: "设置",
+        children: <>
           <Row wrap={false}>
             <Col flex="100px">名称</Col>
             <Col flex="auto">
@@ -327,10 +368,17 @@ export default class extends React.Component {
               </Space>
             </Col>
           </Row>
+        </>
+      })
+    }
 
-
-        </Tabs.TabPane>
-      </Tabs>
+    items.push({
+      key: 'deployLog',
+      label: '部署日志',
+      children: iframe
+    })
+    return <>
+      <Tabs items={items} destroyInactiveTabPane></Tabs>
     </>
   }
 
