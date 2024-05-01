@@ -175,13 +175,7 @@ public class AppController {
         return rs;
     }
 
-    @RequiresPermissions("app:moveApp")
-    @RequestMapping("moveApp")
-    public Result moveApp(String id, String hostId) {
-        service.moveApp(id, hostId);
 
-        return Result.ok();
-    }
 
     @RequiresPermissions("app:start")
     @RequestMapping("start/{appId}")

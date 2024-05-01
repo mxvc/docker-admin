@@ -293,19 +293,7 @@ public class AppService extends BaseService<App> {
         repository.deleteById(id);
     }
 
-    public void moveApp(String id, String hostId) {
-        Assert.hasLength(hostId, "hostId不能为空");
-        // 远程删除应用
-        App app = this.findOne(id);
-        this.deleteContainer(app);
 
-        Host host = hostService.findOne(hostId);
-
-        app.setHost(host);
-        app = this.save(app);
-
-        SpringUtil.getBean(getClass()).deploy(app);
-    }
 
     public void updateAppVersion(String id, String tag) {
         Assert.hasLength(tag, "tag不能为空");

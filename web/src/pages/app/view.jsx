@@ -40,9 +40,7 @@ export default class extends React.Component {
 
     tabKey: undefined,
 
-    moveApp: {
-      targetHostId: null
-    },
+
     publishApp: {
       targetVersion: null
     },
@@ -103,13 +101,7 @@ export default class extends React.Component {
   setAutoRestart = (id, autoRestart) => {
     hutool.http. get("/api/app/autoRestart", {id, autoRestart})
   }
-  moveApp = () => {
-    const id = this.state.app.id;
-    const hostId = this.state.moveApp.targetHostId;
-    hutool.http.get("/api/app/moveApp", {id, hostId}).then(rs => {
-      window.location.reload(true)
-    })
-  }
+
 
   updateVersion = () => {
     const id = this.state.app.id;
@@ -281,28 +273,7 @@ export default class extends React.Component {
 
         </Tabs.TabPane>
 
-        <Tabs.TabPane tab="迁移" key="move" disabled={notPermitted('app:moveApp')}>
-          <Row wrap={false}>
-            <Col flex="100px">迁移应用</Col>
-            <Col flex="auto">
-                <Alert message="应用会迁移到下列任意一台主机中" type="warning"></Alert>
 
-              <br />
-
-                <RemoteSelect url="/api/host/options"
-                              style={{width: 300}}
-                              placeholder="请选择"
-                              showSearch
-                              value={this.state.moveApp.targetHostId} onChange={targetHostId => {
-                  this.setState({moveApp: {targetHostId}})
-                }} />
-
-              &nbsp;&nbsp;
-
-                <Button type={"primary"} onClick={this.moveApp}>迁移</Button>
-            </Col>
-          </Row>
-        </Tabs.TabPane>
 
 
         <Tabs.TabPane tab="设置" key="setting" disabled={notPermitted('app:config')}>
