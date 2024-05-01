@@ -2,6 +2,7 @@ import React from "react";
 import {hutool} from "@moon-cn/hutool";
 import {Terminal} from "xterm";
 import "xterm/css/xterm.css"
+import { AttachAddon } from '@xterm/addon-attach';
 
 
 export default class extends React.Component {
@@ -29,74 +30,26 @@ export default class extends React.Component {
         lineHeight: 16
       }
     })
-    // 创建terminal实例
+
+    const {hostId,containerId} = this.props
+
+    this.webSocket = new WebSocket("ws://"+location.hostname+":7001/api/ws/terminal?hostId=" + hostId + "&containerId="+containerId);
+
+    const attachAddon = new AttachAddon(this.webSocket);
+    term.loadAddon(attachAddon);
+
     term.open(this.domRef.current)
-    // 换行并输入起始符 $
+    term.focus()
 
 
     this.term = term
-    this.runFakeTerminal()
   };
-  runFakeTerminal = () => {
-    let term = this.term
-    if (term._initialized) return
-    // 初始化
-    term._initialized = true
-    term.writeln("Docker Terminal  \x1b[1;32m容器终端\x1b[0m.")
-    term.writeln('请输入Linux命令， 如 ls')
-    term.write('> ')
 
-    term.onKey(e => {
-      const printable = !e.domEvent.altKey && !e.domEvent.altGraphKey && !e.domEvent.ctrlKey && !e.domEvent.metaKey
-      if (e.domEvent.keyCode === 13) { // 回车
-
-        term.writeln("\n")
-        this.handleSend(this.cmd)
-        this.cmd = ""
-
-      } else if (e.domEvent.keyCode === 8) { // back 删除的情况
-        if (term._core.buffer.x > 2) {
-          term.write('\b \b')
-        }
-      }else {
-        if (printable) {
-          term.write(e.key)
-          this.cmd += e.key
-        }
-
-      }
-    })
-    term.onData(key => {  // 粘贴的情况
-      if(key.length > 1) {
-        term.write(key)
-      }
-      console.log('key', key)
-    })
-  };
 
   componentWillUnmount() {
     this.term.dispose()
-    this.term._initialized = false
+    this.term = null
   }
-
-
-  handleSend = (cmd) => {
-    console.log(cmd)
-    let {hostId, containerId} = this.props;
-
-    hutool.http.get('/api/container/cmd', {hostId, containerId, cmd}).then(rs => {
-      if(rs.data){
-        const lines = rs.data.split("\n")
-        for (let line of lines) {
-          this.term.writeln(line)
-        }
-      }else {
-        this.term.writeln("命令执行错误")
-      }
-      this.term.write('> ')
-    })
-  }
-
   render() {
     return <div>
       <div ref={this.domRef}></div>

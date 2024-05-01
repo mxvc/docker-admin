@@ -268,34 +268,7 @@ public class ContainerController {
         return Result.ok().msg("获取文件列表成功").data(data);
     }
 
-    @RequestMapping("cmd")
-    public Result cmd(String hostId, String containerId, String cmd) throws Exception {
-        Host host = hostService.findOne(hostId);
 
-        DockerClient client = dockerManager.getClient(host);
-
-        ExecCreateCmdResponse response = client.execCreateCmd(containerId)
-                .withCmd("sh", "-c", cmd).withAttachStdout(true).exec();
-        String execId = response.getId();
-
-
-        System.out.println("执行命令 {}" + cmd);
-
-        StringBuilder sb = new StringBuilder();
-        client.execStartCmd(execId).exec(new ResultCallbackTemplate<ExecStartResultCallback, Frame>() {
-            @Override
-            public void onNext(Frame frame) {
-                String str = new String(frame.getPayload());
-                System.out.println(str);
-                sb.append(new String(frame.getPayload()));
-            }
-        }).awaitCompletion();
-
-
-        client.close();
-
-        return Result.ok().msg("执行命令成功" + cmd).data(sb.toString());
-    }
 
 
     @Data
