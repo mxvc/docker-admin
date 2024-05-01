@@ -1,36 +1,26 @@
 package cn.moon.docker.admin.websocket;
 
 import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.util.RandomUtil;
-import cn.hutool.core.util.URLUtil;
 import cn.moon.docker.admin.entity.Host;
 import cn.moon.docker.admin.service.HostService;
 import cn.moon.docker.sdk.DockerSdkManager;
 import com.github.dockerjava.api.DockerClient;
-import com.github.dockerjava.api.async.ResultCallback;
-import com.github.dockerjava.api.command.AttachContainerCmd;
-import com.github.dockerjava.api.command.ExecCreateCmdResponse;
 import com.github.dockerjava.api.model.Frame;
-import com.github.dockerjava.core.async.ResultCallbackTemplate;
-import com.github.dockerjava.core.command.AttachContainerResultCallback;
 import com.github.dockerjava.core.command.ExecStartResultCallback;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
-import org.springframework.web.socket.*;
+import org.springframework.web.socket.CloseStatus;
+import org.springframework.web.socket.TextMessage;
+import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.AbstractWebSocketHandler;
-import cn.moon.logview.TailFile;
 
 import javax.annotation.Resource;
-import javax.naming.ldap.StartTlsRequest;
 import java.io.*;
-import java.net.URLDecoder;
-import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 
 @Slf4j
@@ -43,32 +33,29 @@ public class TerminalHandler extends AbstractWebSocketHandler {
 
     @Resource
     DockerSdkManager dockerManager;
-    private DynamicByteArrayInputStream is;
 
+    Map<String, OutputStream> streamMap = new ConcurrentHashMap<>();
 
-
+    Map<String, Closeable[]> closeableMap = new ConcurrentHashMap<>();
 
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
         String payload = message.getPayload();
-        System.out.println(payload);
 
-        if(payload.equals("\r")){
-            payload  ="\r\n";
+        OutputStream os = streamMap.get(session.getId());
+        if (os != null) {
+            os.write(payload.getBytes(StandardCharsets.UTF_8));
+        } else {
+            send(session, "与容器的连接异常");
         }
 
-        is.addData(payload.getBytes(StandardCharsets.UTF_8));
-        send(session, payload);
     }
-
 
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) {
         log.info("打开连接 {} {}", session.getId(), session.getUri());
 
-        is = new DynamicByteArrayInputStream();
-        is.addData("ls -l\n".getBytes(StandardCharsets.UTF_8));
         send(session, "服务器连接成功\n");
 
         String query = session.getUri().getQuery();
@@ -99,20 +86,26 @@ public class TerminalHandler extends AbstractWebSocketHandler {
                 .withAttachStderr(true)
                 .withAttachStdin(true)
                 .exec().getId();
-        is.addData("ls -l\n".getBytes(StandardCharsets.UTF_8));
 
 
-        client.execStartCmd(id)
+        PipedInputStream pipedInputStream = new PipedInputStream();
+        try {
+            streamMap.put(session.getId(), new PipedOutputStream(pipedInputStream));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        ExecStartResultCallback callback = client.execStartCmd(id)
                 .withDetach(false)
                 .withTty(true)
-                .withStdIn(is)
+                .withStdIn(pipedInputStream)
                 .exec(new ExecStartResultCallback() {
 
                     @Override
                     public void onNext(Frame frame) {
                         byte[] bytes = frame.getPayload();
-
                         send(session, new String(bytes));
+                        super.onNext(frame);
                     }
 
                     @Override
@@ -142,6 +135,7 @@ public class TerminalHandler extends AbstractWebSocketHandler {
                     }
                 });
 
+        closeableMap.put(session.getId(), new Closeable[] {callback, client});
 
     }
 
@@ -149,7 +143,7 @@ public class TerminalHandler extends AbstractWebSocketHandler {
         try {
             session.sendMessage(new TextMessage(str));
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            e.getMessage();
         }
     }
 
@@ -157,6 +151,14 @@ public class TerminalHandler extends AbstractWebSocketHandler {
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) {
         log.info("关闭连接 {} {}", session.getId(), status);
+
+
+        IOUtils.closeQuietly(streamMap.get(session.getId()));
+
+        IOUtils.closeQuietly(closeableMap.get(session.getId()));
+
+        streamMap.remove(session.getId());
+        closeableMap.remove(session.getId());
     }
 
 

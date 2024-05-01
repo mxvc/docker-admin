@@ -23,11 +23,12 @@ export default class extends React.Component {
       disableStdin: false, //是否应禁用输入。
       cursorStyle: "underline", //光标样式
       cursorBlink: true, //光标闪烁
+      fontSize:'small',
       theme: {
+
         foreground: "#ECECEC", //字体
         background: "#000000", //背景色
         cursor: "help", //设置光标
-        lineHeight: 16
       }
     })
 
