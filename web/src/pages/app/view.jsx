@@ -238,6 +238,12 @@ export default class extends React.Component {
       return iframe
     }
 
+    items.push({
+      key: 'deployLog',
+      label: '部署日志',
+      children: iframe
+    })
+
     // 容器信息
     if (!notFound) {
       items.push({
@@ -372,11 +378,7 @@ export default class extends React.Component {
       })
     }
 
-    items.push({
-      key: 'deployLog',
-      label: '部署日志',
-      children: iframe
-    })
+
     return <>
       <Tabs items={items} destroyInactiveTabPane></Tabs>
     </>

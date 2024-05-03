@@ -104,7 +104,7 @@ export default class extends React.Component {
         <Sider width={150}>
 
           <div className='py-3 m-4  bg-gray-800 flex align-middle justify-center '>
-            <a className='text-white' onClick={() => history.push('/')}>HOME</a>
+            <a className='text-white' onClick={() => history.push('/')}>容器面板</a>
           </div>
           <Menu theme='dark'
                 onClick={this.onClick} selectedKeys={[this.state.key]} items={items}/>
