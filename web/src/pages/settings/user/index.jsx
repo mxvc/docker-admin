@@ -187,7 +187,7 @@ export default class extends React.Component {
         }}
         footer={null}
       >
-        <ProTable
+        <ProTable         type='form'
           onSubmit={this.handleSave}
           columns={this.columns}
         />
