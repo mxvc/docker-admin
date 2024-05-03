@@ -42,6 +42,7 @@ export default class extends React.Component {
           {
             key: 'project',
             label: '项目',
+            title:'构建镜像',
             disabled: notPermitted('project:list'),
 
             icon: <ProjectOutlined style={{color: 'green'}}/>
@@ -49,6 +50,7 @@ export default class extends React.Component {
           {
             key: 'app',
             label: '应用',
+            title:'部署容器',
             icon: <AppstoreOutlined style={{color: 'gold'}}/>,
             disabled: notPermitted('app:list'),
           },
