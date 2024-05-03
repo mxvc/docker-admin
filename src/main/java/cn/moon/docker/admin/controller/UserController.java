@@ -1,7 +1,7 @@
 package cn.moon.docker.admin.controller;
 
 import cn.hutool.core.util.StrUtil;
-import cn.moon.base.role.Role;
+import cn.moon.base.Role;
 import cn.moon.docker.admin.entity.Host;
 import cn.moon.docker.admin.entity.User;
 import cn.moon.docker.admin.service.UserService;

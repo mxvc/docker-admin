@@ -2,9 +2,8 @@ package cn.moon.base.shiro;
 
 import cn.moon.docker.admin.dao.UserDao;
 import cn.moon.docker.admin.entity.User;
-import cn.moon.base.role.Role;
+import cn.moon.base.Role;
 import cn.moon.docker.admin.service.DataPermService;
-import cn.moon.lang.web.TreeOption;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
@@ -13,9 +12,7 @@ import org.apache.shiro.subject.PrincipalCollection;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 
 @Component
 public class MyRealm extends AuthorizingRealm {

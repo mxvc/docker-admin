@@ -1,6 +1,6 @@
 package cn.moon.docker.admin.entity;
 
-import cn.moon.base.role.Role;
+import cn.moon.base.Role;
 import cn.moon.lang.web.persistence.BaseEntity;
 import cn.moon.lang.web.persistence.ConvertToListConverter;
 import com.fasterxml.jackson.annotation.JsonProperty;

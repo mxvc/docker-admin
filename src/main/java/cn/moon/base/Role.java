@@ -1,4 +1,4 @@
-package cn.moon.base.role;
+package cn.moon.base;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,7 +13,7 @@ public enum Role {
     admin("管理员",new String[]{"*"}),
 
     simple("普通用户",new String[]{"project:*", "app:*"}),
-    deploy("打包用户",new String[]{"project:list","project:build","app:list", "app:deploy"});
+    deploy("部署用户",new String[]{"project:list","project:build","app:list", "app:deploy"});
 
 
     private final String label;

@@ -4,7 +4,7 @@ import cn.moon.docker.admin.entity.Host;
 import cn.moon.docker.admin.entity.User;
 import cn.moon.docker.admin.service.HostService;
 import cn.moon.docker.admin.service.UserService;
-import cn.moon.base.role.Role;
+import cn.moon.base.Role;
 import cn.moon.docker.sdk.DockerSdkManager;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.ApplicationArguments;

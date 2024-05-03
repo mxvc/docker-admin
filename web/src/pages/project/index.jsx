@@ -92,6 +92,7 @@ export default class extends React.Component {
   componentDidMount() {
     // 检查是否定义注册中心
     hutool.http.get('api/project/check').then(rs=>{
+      debugger
       this.setState({checkResult:rs})
     })
   }
