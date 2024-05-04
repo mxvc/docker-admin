@@ -5,7 +5,7 @@ import {ProTable} from "@ant-design/pro-components";
 import {history} from "umi";
 import {notPermitted} from "../../utils/SysConfig";
 import RemoteSelect from "../../components/RemoteSelect";
-import {hutool} from "@moon-cn/hutool";
+import hutool from "@moon-cn/hutool";
 
 let api = '/api/app/';
 

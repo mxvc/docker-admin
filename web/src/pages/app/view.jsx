@@ -21,7 +21,7 @@ import React from 'react';
 import ConfigForm from "./ConfigForm";
 import {history} from "umi";
 import {isPermitted, notPermitted} from "../../utils/SysConfig";
-import {hutool} from "@moon-cn/hutool";
+import hutool from "@moon-cn/hutool";
 import ContainerLog from "../../components/container/ContainerLog";
 import ContainerCmd from "../../components/container/ContainerCmd";
 import ContainerFile from "../../components/container/ContainerFile";

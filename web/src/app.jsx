@@ -4,7 +4,8 @@
 import {history} from 'umi';
 import {setLogin} from "./utils/SysConfig";
 import {message, Modal} from "antd";
-import {hutool} from "@moon-cn/hutool";
+import hutool from "@moon-cn/hutool";
+
 
 
 hutool.http.setGlobalErrorMessageHandler(msg=>{

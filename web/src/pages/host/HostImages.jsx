@@ -1,6 +1,6 @@
 import {Button, message, Table} from 'antd';
 import React from 'react';
-import {hutool} from "@moon-cn/hutool";
+import hutool from "@moon-cn/hutool";
 
 let api = '/api/host/';
 

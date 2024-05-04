@@ -4,7 +4,7 @@ import {LockOutlined, UserOutlined} from '@ant-design/icons';
 import {setLogin} from "../utils/SysConfig";
 
 import {history} from "umi";
-import {hutool} from "@moon-cn/hutool";
+import hutool from "@moon-cn/hutool";
 
 export default class extends React.Component {
 
@@ -14,7 +14,7 @@ export default class extends React.Component {
 
   onFinish = values => {
     this.setState({loginLoading: true})
-    hutool.http. post('api/login', values).then(rs => {
+    hutool.http.post('api/login', values).then(rs => {
       if (rs.success) {
         setLogin(rs.data)
         history.push('/')

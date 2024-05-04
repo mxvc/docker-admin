@@ -9,7 +9,7 @@ import {
 } from "@ant-design/icons";
 import {ProTable} from "@ant-design/pro-components";
 import moment from "moment";
-import {hutool} from "@moon-cn/hutool";
+import hutool from "@moon-cn/hutool";
 
 let api = '/api/buildLog/';
 

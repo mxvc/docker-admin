@@ -10,7 +10,7 @@ import {
   MinusCircleTwoTone
 } from "@ant-design/icons";
 import {ProTable} from "@ant-design/pro-components";
-import {hutool} from "@moon-cn/hutool";
+import hutool from "@moon-cn/hutool";
 
 let api = '/api/deployLog/';
 

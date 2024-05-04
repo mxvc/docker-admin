@@ -4,7 +4,7 @@ import React from 'react';
 
 import {ProTable} from "@ant-design/pro-components";
 import {history} from "umi";
-import {hutool} from "@moon-cn/hutool";
+import hutool from "@moon-cn/hutool";
 
 let api = '/api/host/';
 

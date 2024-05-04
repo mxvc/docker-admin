@@ -2,7 +2,7 @@ import {DownOutlined, PlusOutlined} from '@ant-design/icons';
 import {Button, Divider, Dropdown, Modal, Popconfirm, Space, Switch, Tag} from 'antd';
 import React from 'react';
 import {ProTable} from "@ant-design/pro-components";
-import {hutool} from "@moon-cn/hutool";
+import hutool from "@moon-cn/hutool";
 
 const addTitle = "添加注册中心"
 const editTitle = '编辑注册中心'

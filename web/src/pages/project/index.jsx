@@ -4,7 +4,7 @@ import React from 'react';
 import {ProTable} from "@ant-design/pro-components";
 import {history} from "umi";
 import {notPermitted} from "../../utils/SysConfig";
-import {hutool} from "@moon-cn/hutool";
+import hutool from "@moon-cn/hutool";
 
 let api = '/api/project/';
 
@@ -92,7 +92,6 @@ export default class extends React.Component {
   componentDidMount() {
     // 检查是否定义注册中心
     hutool.http.get('api/project/check').then(rs=>{
-      debugger
       this.setState({checkResult:rs})
     })
   }

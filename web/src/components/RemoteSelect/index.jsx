@@ -1,7 +1,7 @@
 import {Select} from 'antd';
 
 import React from "react";
-import {hutool} from "@moon-cn/hutool";
+import hutool from "@moon-cn/hutool";
 
 class RemoteSelect extends React.Component {
   constructor(props) {

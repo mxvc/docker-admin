@@ -2,7 +2,7 @@ import {Button, Col, Divider, Input, message, Row, Select, Spin} from "antd";
 import React from "react";
 import EditTable from "../../components/EditTable";
 import CodeMirrorEditor from "../../components/CodeMirrorEditor";
-import {hutool} from "@moon-cn/hutool";
+import hutool from "@moon-cn/hutool";
 
 
 export default class extends React.Component {

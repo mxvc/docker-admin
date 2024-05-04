@@ -4,7 +4,7 @@ import React from 'react';
 
 import {ProTable} from "@ant-design/pro-components";
 import {notPermitted} from "../../../utils/SysConfig";
-import {hutool} from "@moon-cn/hutool";
+import hutool from "@moon-cn/hutool";
 
 const addTitle = "添加项目"
 const editTitle = '编辑项目'

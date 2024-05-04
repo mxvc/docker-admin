@@ -3,7 +3,7 @@ import {Button, Input, message, Modal, Popconfirm, Select, Space, Tree} from 'an
 import React from 'react';
 
 import {ProTable} from "@ant-design/pro-components";
-import {hutool} from "@moon-cn/hutool";
+import hutool from "@moon-cn/hutool";
 
 const addTitle = "添加用户"
 const editTitle = '编辑用户'

@@ -1,6 +1,6 @@
 import React from "react";
 import {Card, Col, message, Row, Table, Tree} from "antd";
-import {hutool} from "@moon-cn/hutool";
+import hutool from "@moon-cn/hutool";
 
 export default class extends React.Component {
 

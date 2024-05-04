@@ -1,7 +1,7 @@
 import {Card, Descriptions, Spin} from 'antd';
 import React from 'react';
 import BuildLogList from "./BuildLogList";
-import {hutool} from "@moon-cn/hutool";
+import hutool from "@moon-cn/hutool";
 
 let api = '/api/project/';
 

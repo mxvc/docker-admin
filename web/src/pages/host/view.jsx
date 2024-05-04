@@ -3,7 +3,7 @@ import React from 'react';
 import HostImages from "./HostImages";
 import HostContainers from "./HostContainers";
 import {Spin} from "antd/lib";
-import {hutool} from "@moon-cn/hutool";
+import hutool from "@moon-cn/hutool";
 
 let api = '/api/host/';
 

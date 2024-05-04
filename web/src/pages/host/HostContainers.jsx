@@ -1,7 +1,7 @@
 import {Button, Divider, Skeleton, Table} from 'antd';
 import React from 'react';
 import {history} from "umi";
-import {hutool} from "@moon-cn/hutool";
+import hutool from "@moon-cn/hutool";
 
 let api = '/api/host/';
 
