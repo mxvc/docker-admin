@@ -3,6 +3,7 @@ import {Layout, Menu, message} from 'antd';
 import {history} from 'umi';
 import {AppstoreOutlined, ClusterOutlined, LogoutOutlined, ProjectOutlined, SettingOutlined} from "@ant-design/icons";
 import {notPermitted} from "../utils/SysConfig";
+import hutool from "@moon-cn/hutool";
 const {Content, Sider} = Layout;
 
 
