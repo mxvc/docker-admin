@@ -7,10 +7,11 @@ import {message, Modal} from "antd";
 import hutool from "@moon-cn/hutool";
 
 
-
-hutool.http.setGlobalErrorMessageHandler(msg=>{
-  message.error(msg)
+hutool.http.init({
+  errorMessageHandler: msg=>message.error(msg),
+  autoReject:true
 })
+
 
 export function render(oldRender) {
   let path = history.location.pathname;

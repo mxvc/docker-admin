@@ -8,7 +8,7 @@
   "dependencies": {
     "@ant-design/icons": "^5.2.6",
     "@ant-design/pro-components": "^2.0.0",
-    "@moon-cn/hutool": "^1.0.0-beta.30",
+    "@moon-cn/hutool": "^1.0.0-beta.38",
     "@xterm/addon-attach": "^0.11.0",
     "antd": "^4.0.0",
     "axios": "^1.6.8",
