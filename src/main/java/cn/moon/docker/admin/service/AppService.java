@@ -1,18 +1,15 @@
 package cn.moon.docker.admin.service;
 
+import cn.hutool.core.util.StrUtil;
+import cn.hutool.extra.spring.SpringUtil;
 import cn.moon.base.tool.YamlTool;
 import cn.moon.docker.admin.BuildSuccessEvent;
 import cn.moon.docker.admin.dao.AppDao;
 import cn.moon.docker.admin.dao.DeployLogDao;
-import cn.moon.docker.admin.entity.App;
-import cn.moon.docker.admin.entity.BuildLog;
-import cn.moon.docker.admin.entity.DeployLog;
-import cn.moon.docker.admin.entity.Host;
+import cn.moon.docker.admin.entity.*;
 import cn.moon.docker.admin.vo.ContainerVo;
-import cn.moon.docker.sdk.DockerSdkManager;
-import cn.hutool.core.util.StrUtil;
-import cn.hutool.extra.spring.SpringUtil;
 import cn.moon.docker.sdk.DefaultCallback;
+import cn.moon.docker.sdk.DockerSdkManager;
 import cn.moon.lang.web.persistence.BaseService;
 import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.command.CreateContainerCmd;
@@ -46,6 +43,9 @@ public class AppService extends BaseService<App> {
     AppDao appDao;
 
 
+    @Resource
+    RegistryService registryService;
+
     @Async
     public void deploy(App app) {
         deployingList.add(app.getId());
@@ -73,9 +73,16 @@ public class AppService extends BaseService<App> {
                 image = app.getProject().getRegistry().getFullUrl() + "/" + app.getProject().getName() + ":" + app.getImageTag();
                 client = dockerManager.getClient(host, app.getProject().getRegistry());
             } else {
-                // 公共镜像
+                // 镜像
                 image = app.getImageUrl() + ":" + app.getImageTag();
-                client = dockerManager.getClient(host);
+
+                Registry registry = registryService.findByUrl(image);
+                if (registry != null) { // 通过镜像地址倒推 注册中心
+                    client = dockerManager.getClient(host, registry);
+                } else {
+                    client = dockerManager.getClient(host);
+                }
+
             }
 
 
@@ -276,11 +283,11 @@ public class AppService extends BaseService<App> {
     }
 
 
-    public ContainerVo getContainerVo(App app){
+    public ContainerVo getContainerVo(App app) {
         Container container = getContainer(app);
         ContainerVo data = new ContainerVo(container);
 
-        if(deployingList.contains(app.getId())){
+        if (deployingList.contains(app.getId())) {
             data.setState("deploying");
             data.setStatus("部署中...");
         }
@@ -309,7 +316,6 @@ public class AppService extends BaseService<App> {
 
         repository.deleteById(id);
     }
-
 
 
     public void updateAppVersion(String id, String tag) {
