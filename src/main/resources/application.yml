@@ -6,9 +6,6 @@ dbname: docker_admin
 
 server:
   port: 7001
-  servlet:
-    session:
-      timeout: 8h
 
 
 # Spring配置
