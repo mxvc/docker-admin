@@ -133,7 +133,10 @@ export default class extends React.Component {
               <>
                 <Form.Item name={['project', 'id']}
                            label='项目' required rules={[{required: true}]}>
-                  <RemoteSelect url='/api/project/options' placeholder='请选择项目'></RemoteSelect>
+                  <RemoteSelect url='/api/project/options'
+                                placeholder='请选择项目'
+                                optionFilterProp="label"
+                  ></RemoteSelect>
                 </Form.Item>
                 <Form.Item name='imageTag' label='版本' required rules={[{required: true}]}>
                   <AutoComplete options={this.state.versions} placeholder='请选择版本'/>
