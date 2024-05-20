@@ -358,17 +358,29 @@ public class AppService extends BaseService<App> {
 
     @EventListener
     public void onBuildSuccess(BuildSuccessEvent event) {
-        log.info("构建成功，开始检测需自动部署的应用");
+        log.info("构建成功，开始检测关联应用");
         BuildLog buildLog = event.getBuildLog();
 
         // 自动部署
         List<App> list = this.findAll();
 
+
         // 让注解生效
         AppService $this = SpringUtil.getBean(getClass());
 
         for (App app : list) {
-            if (app.getAutoDeploy() != null && app.getAutoDeploy() && app.getImageUrl().equals(buildLog.getImageUrl())) {
+            boolean auto = app.getAutoDeploy() != null && app.getAutoDeploy();
+            if (!auto) {
+                continue;
+            }
+            String imageUrl = app.getImageUrl();
+            boolean imageOk = buildLog.getImageUrl().equals(imageUrl);
+            boolean projectOk = false;
+            String projectId = buildLog.getProjectId();
+            if (projectId != null && app.getProject() != null && StrUtil.equals(projectId, app.getProject().getId())) {
+                projectOk = true;
+            }
+            if (imageOk || projectOk) {
                 app.setImageTag(event.getVersion());
                 $this.deploy(app);
             }
