@@ -148,7 +148,7 @@ export default class extends React.Component {
         okText: '强制删除数据',
         cancelText: '取消',
         onOk: () => {
-          get(api + 'delete', {id, force: true}).then(rs => {
+          hutool.http.get(api + 'delete', {id, force: true}).then(rs => {
             message.info(rs.message)
             history.push('/app')
           })
