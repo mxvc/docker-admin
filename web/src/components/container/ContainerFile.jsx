@@ -76,7 +76,7 @@ export default class extends React.Component {
         </Col>
 
         <Col flex='auto'>
-          <Card title='文件列表'>
+          <Card title={'文件列表：' + this.state.curNode?.path}>
             <Table pagination={false}
                    dataSource={this.state.curNode?.fileList}
                    columns={[
