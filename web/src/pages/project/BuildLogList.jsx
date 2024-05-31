@@ -196,7 +196,7 @@ export default class extends React.Component {
         headerTitle='构建记录'
         toolBarRender={() => {
           return <Space><Button onClick={this.triggerPipeline} type="primary">立即构建</Button>
-            <Button onClick={this.cleanError}>清理</Button>
+            <Button onClick={this.cleanError} title='清理失败的记录'>清理</Button>
           </Space>;
         }}
         search={false}
