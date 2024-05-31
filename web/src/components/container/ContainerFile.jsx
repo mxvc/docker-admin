@@ -66,7 +66,7 @@ export default class extends React.Component {
 
     return <div >
       <Row gutter={10} wrap={false}>
-        <Col flex='250px'>
+        <Col flex='400px'>
           <Card style={{height: '80vh', overflowY: "auto"}}>
             <Tree.DirectoryTree
               loadData={this.onLoadData}
