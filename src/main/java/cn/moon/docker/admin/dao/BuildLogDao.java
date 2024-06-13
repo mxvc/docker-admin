@@ -16,4 +16,6 @@ public interface BuildLogDao extends BaseRepository<BuildLog> {
     List<BuildLog> findByProjectIdAndSuccessIsFalse(String projectId);
 
     List<BuildLog> findByProjectId(String projectId);
+
+    List<BuildLog> findByProjectIdAndSuccessIsNull(String projectId);
 }

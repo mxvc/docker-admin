@@ -39,4 +39,9 @@ public class BuildLogService extends BaseService<BuildLog> {
         List<BuildLog> list = dao.findByProjectIdAndSuccessIsFalse(projectId);
         dao.deleteAllInBatch(list);
     }
+
+    public List<BuildLog> findByProjectProcessing(String projectId) {
+        List<BuildLog> list = dao.findByProjectIdAndSuccessIsNull(projectId);
+        return list;
+    }
 }

@@ -35,7 +35,6 @@ import java.util.*;
 public class ProjectService extends BaseService<Project> {
 
 
-
     @Resource
     RegistryService registryService;
 
@@ -62,13 +61,13 @@ public class ProjectService extends BaseService<Project> {
     private final Map<String, DefaultCallback> buildThreadMap = new HashMap<>();
 
 
-    public void stopBuild(String id) throws IOException {
-        DefaultCallback callback = buildThreadMap.get(id);
+    public void stopBuild(String logId) throws IOException {
+        DefaultCallback callback = buildThreadMap.get(logId);
         if (callback != null) {
             callback.close();
         }
 
-        BuildLog buildLog = buildLogService.findOne(id);
+        BuildLog buildLog = buildLogService.findOne(logId);
 
         buildLog.setSuccess(false);
         buildLog.setCompleteTime(new Date());
@@ -88,7 +87,13 @@ public class ProjectService extends BaseService<Project> {
 
     }
 
-    public void buildImage(BuildParam p) {
+    public void buildImage(BuildParam p) throws IOException {
+        List<BuildLog> processing = buildLogService.findByProjectProcessing(p.getProjectId());
+
+        for (BuildLog buildLog : processing) {
+            stopBuild(buildLog.getId());
+        }
+
         new Thread(() -> buildImageJob(p)).start();
     }
 
