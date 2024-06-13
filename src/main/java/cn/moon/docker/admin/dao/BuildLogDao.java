@@ -12,4 +12,8 @@ import java.util.List;
 @Transactional
 public interface BuildLogDao extends BaseRepository<BuildLog> {
     List<BuildLog> findByProjectIdAndSuccessIsTrue(String projectId);
+
+    List<BuildLog> findByProjectIdAndSuccessIsFalse(String projectId);
+
+    List<BuildLog> findByProjectId(String projectId);
 }

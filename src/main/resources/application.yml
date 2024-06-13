@@ -32,7 +32,7 @@ spring:
     hibernate:
       ddl-auto: update
     database: MYSQL
-    show-sql: false
+    show-sql: true
     naming.physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
     open-in-view: false
 

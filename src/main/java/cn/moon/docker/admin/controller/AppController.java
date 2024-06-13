@@ -8,8 +8,6 @@ import cn.moon.lang.web.Option;
 import cn.moon.lang.web.Result;
 import cn.moon.lang.web.persistence.BaseEntity;
 import cn.moon.lang.web.persistence.Query;
-import com.aliyuncs.exceptions.ClientException;
-import com.github.dockerjava.api.model.Container;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -115,7 +113,7 @@ public class AppController {
 
     @RequiresPermissions("app:delete")
     @RequestMapping("delete")
-    public Result delete(String id, Boolean force) throws ClientException {
+    public Result delete(String id, Boolean force)  {
         if (force != null && force) {
             service.deleteById(id);
             return Result.ok().msg("强制删除数据成功");

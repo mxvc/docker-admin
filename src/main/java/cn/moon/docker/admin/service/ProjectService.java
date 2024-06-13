@@ -1,22 +1,21 @@
 package cn.moon.docker.admin.service;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.unit.DataSizeUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.moon.base.tool.GitTool;
+import cn.moon.docker.admin.BuildParam;
 import cn.moon.docker.admin.BuildSuccessEvent;
 import cn.moon.docker.admin.dao.BuildLogDao;
 import cn.moon.docker.admin.dao.ProjectDao;
 import cn.moon.docker.admin.entity.*;
-import cn.moon.docker.sdk.DockerSdkManager;
-import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.core.util.StrUtil;
 import cn.moon.docker.sdk.DefaultCallback;
+import cn.moon.docker.sdk.DockerSdkManager;
 import cn.moon.lang.web.persistence.BaseService;
 import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.command.PushImageCmd;
 import com.github.dockerjava.api.model.BuildResponseItem;
-import com.github.dockerjava.api.model.PushResponseItem;
-import com.google.common.collect.Sets;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.MDC;
@@ -38,8 +37,6 @@ import java.util.*;
 @Slf4j
 public class ProjectService extends BaseService<Project> {
 
-    @Resource
-    BuildLogDao logDao;
 
 
     @Resource
@@ -59,7 +56,7 @@ public class ProjectService extends BaseService<Project> {
     ProjectDao projectDao;
 
     @Resource
-    BuildLogDao buildLogDao;
+    BuildLogService buildLogService;
 
 
     @Resource
@@ -74,12 +71,12 @@ public class ProjectService extends BaseService<Project> {
             callback.close();
         }
 
-        BuildLog buildLog = logDao.findById(id).get();
+        BuildLog buildLog = buildLogService.findOne(id);
 
         buildLog.setSuccess(false);
         buildLog.setCompleteTime(new Date());
         buildLog.setTimeSpend(buildLog.getCompleteTime().getTime() - buildLog.getCreateTime().getTime());
-        logDao.save(buildLog);
+        buildLogService.save(buildLog);
     }
 
 
@@ -94,20 +91,29 @@ public class ProjectService extends BaseService<Project> {
 
     }
 
+
+
     @Async
-    public void buildImage(Project db, String branchOrTag, String version, String context, String dockerfile, boolean useCache) {
+    public void buildImage(BuildParam p) {
+        String version = p.getVersion();
+        String projectId = p.getProjectId();
+        String context = p.getContext();
+        String branchOrTag = p.getBranchOrTag();
+        String dockerfile = p.getDockerfile();
+        boolean useCache = p.isUseCache();
+
+        Project project = projectDao.findById(projectId).get();
         BuildLog buildLog = new BuildLog();
-        buildLog.setProjectId(db.getId());
+        buildLog.setProjectId(project.getId());
         buildLog.setVersion(version);
-        buildLog.setProjectName(db.getName());
-        buildLog.setDockerfile(db.getDockerfile());
-        buildLog.setValue(db.getBranch());
-        buildLog = buildLogDao.save(buildLog);
+        buildLog.setProjectName(project.getName());
+        buildLog.setDockerfile(project.getDockerfile());
+        buildLog.setValue(project.getBranch());
+        buildLog = buildLogService.saveLog(buildLog);
         String logId = buildLog.getId();
 
 
         MDC.put("logFileId", logId);
-        Project project = this.findOne(buildLog.getProjectId());
         try {
 
             log.info("开始构建镜像任务 {} {} {} {}", project.getName(), project.getGitUrl(), branchOrTag, version);
@@ -129,7 +135,7 @@ public class ProjectService extends BaseService<Project> {
             File workDir = cloneResult.getDir();
             log.info("代码下载完毕 " + workDir);
             log.info("提交信息:" + cloneResult.getCodeMessage());
-            log.info("代码文件大小 {}", DataSizeUtil.format( FileUtil.size(workDir)));
+            log.info("代码文件大小 {}", DataSizeUtil.format(FileUtil.size(workDir)));
 
             log.info("dockerfile {}", dockerfile);
             {
@@ -144,7 +150,7 @@ public class ProjectService extends BaseService<Project> {
 
             buildLog.setBuildHostName(host.getName());
             buildLog.setCodeMessage(cloneResult.getCodeMessage());
-            buildLog = logDao.saveAndFlush(buildLog);
+            buildLog = buildLogService.saveLog(buildLog);
 
             Registry registry = registryService.checkAndFindDefault();
             DockerClient client = dockerService.getClient(host, registry);
@@ -167,7 +173,7 @@ public class ProjectService extends BaseService<Project> {
                     .withNetworkMode("host")
                     .withTags(Collections.singleton(imageTag))
                     .withNoCache(!useCache)
-                    .withDockerfile(new File(buildDir,dockerfile))
+                    .withDockerfile(new File(buildDir, dockerfile))
                     .exec(buildCallback).awaitCompletion();
             log.info("镜像构建结束 ");
 
@@ -185,7 +191,7 @@ public class ProjectService extends BaseService<Project> {
             buildLog.setSuccess(true);
             buildLog.setCompleteTime(new Date());
             buildLog.setTimeSpend(buildLog.getCompleteTime().getTime() - buildLog.getCreateTime().getTime());
-            buildLog = logDao.save(buildLog);
+            buildLog = buildLogService.save(buildLog);
             log.info("已更新构建日志{}", buildLog);
 
 
@@ -212,7 +218,7 @@ public class ProjectService extends BaseService<Project> {
             buildLog.setSuccess(false);
             buildLog.setCompleteTime(new Date());
             buildLog.setTimeSpend(buildLog.getCompleteTime().getTime() - buildLog.getCreateTime().getTime());
-            logDao.save(buildLog);
+            buildLogService.save(buildLog);
         }
 
         MDC.remove("logFileId");
@@ -221,11 +227,12 @@ public class ProjectService extends BaseService<Project> {
 
     @Transactional
     public void deleteProject(String id) {
-        BuildLog buildLog = new BuildLog();
-        buildLog.setProjectId(id);
-        List<BuildLog> logList = logDao.findAll(Example.of(buildLog));
+        List<BuildLog> logList = buildLogService.findByProject(id);
 
-        logDao.deleteInBatch(logList);
+        for (BuildLog buildLog : logList) {
+            buildLogService.deleteById(buildLog.getId());
+        }
+
 
         repository.deleteById(id);
     }
@@ -243,13 +250,10 @@ public class ProjectService extends BaseService<Project> {
     }
 
     @Transactional
-    public void cleanErrorLog(String id) {
-        BuildLog buildLog = new BuildLog();
-        buildLog.setProjectId(id);
-        buildLog.setSuccess(false);
-        List<BuildLog> logList = logDao.findAll(Example.of(buildLog));
+    public void cleanErrorLog(String projectId) {
 
-        logDao.deleteAllInBatch(logList);
+
+        buildLogService.cleanErrorLog(projectId);
     }
 
     public Page<Project> findAll(String keyword, Pageable pageable) {

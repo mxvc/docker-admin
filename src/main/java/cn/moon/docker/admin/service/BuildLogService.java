@@ -4,6 +4,7 @@ import cn.moon.docker.admin.dao.BuildLogDao;
 import cn.moon.docker.admin.entity.BuildLog;
 import cn.moon.lang.web.persistence.BaseService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.Collections;
@@ -23,5 +24,19 @@ public class BuildLogService extends BaseService<BuildLog> {
         Collections.sort(versions);
         Collections.reverse(versions);
         return versions;
+    }
+
+    @Transactional
+    public BuildLog saveLog(BuildLog buildLog) {
+        return dao.saveAndFlush(buildLog);
+    }
+
+    public List<BuildLog> findByProject(String projectId) {
+        return  dao.findByProjectId(projectId);
+    }
+
+    public void cleanErrorLog(String projectId) {
+        List<BuildLog> list = dao.findByProjectIdAndSuccessIsFalse(projectId);
+        dao.deleteAllInBatch(list);
     }
 }

@@ -1,25 +1,24 @@
 package cn.moon.docker.admin.controller;
 
+import cn.hutool.core.util.StrUtil;
 import cn.moon.base.shiro.CurrentUser;
-import cn.moon.docker.admin.entity.BuildLog;
+import cn.moon.docker.admin.BuildParam;
 import cn.moon.docker.admin.entity.Project;
 import cn.moon.docker.admin.service.BuildLogService;
 import cn.moon.docker.admin.service.ProjectService;
-import cn.hutool.core.util.StrUtil;
 import cn.moon.docker.admin.service.RegistryService;
 import cn.moon.lang.web.Option;
 import cn.moon.lang.web.Result;
 import cn.moon.lang.web.persistence.BaseEntity;
 import cn.moon.lang.web.persistence.Query;
-import com.aliyuncs.exceptions.ClientException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.subject.Subject;
 import org.eclipse.jgit.api.errors.GitAPIException;
-import org.jetbrains.annotations.NotNull;
-import org.slf4j.MDC;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -72,7 +71,6 @@ public class ProjectController {
         return list;
     }
 
-    @NotNull
     private static Query<Project> getQuery() {
         Query<Project> q = new Query<>();
         Subject subject = SecurityUtils.getSubject();
@@ -101,7 +99,7 @@ public class ProjectController {
 
     @RequiresPermissions("project:delete")
     @RequestMapping("delete")
-    public Result delete(String id) throws ClientException {
+    public Result delete(String id)  {
         Project project = service.findOne(id);
         service.deleteProject(id);
 
@@ -140,7 +138,14 @@ public class ProjectController {
         project = service.save(project);
 
 
-        service.buildImage(project, value, version, context, dockerfile, useCache);
+        BuildParam buildParam = new BuildParam();
+        buildParam.setVersion(version);
+        buildParam.setBranchOrTag(value);
+        buildParam.setProjectId(project.getId());
+        buildParam.setContext(context);
+        buildParam.setDockerfile(dockerfile);
+        buildParam.setUseCache(useCache);
+        service.buildImage(buildParam);
 
 
         return Result.ok();

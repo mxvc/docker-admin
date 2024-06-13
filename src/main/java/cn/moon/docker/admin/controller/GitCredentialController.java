@@ -4,8 +4,6 @@ import cn.moon.docker.admin.entity.GitCredential;
 import cn.moon.docker.admin.service.GitCredentialService;
 import cn.moon.lang.web.Result;
 import cn.moon.lang.web.persistence.BaseEntity;
-import cn.moon.lang.web.persistence.Query;
-import com.aliyuncs.exceptions.ClientException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.data.domain.*;
@@ -53,15 +51,15 @@ public class GitCredentialController {
 
     @RequiresPermissions("gitCredential:delete")
     @RequestMapping("delete")
-    public Result delete( String id) throws ClientException {
+    public Result delete( String id)  {
         service.deleteById(id);
         return Result.ok().msg("删除成功");
     }
 
 
- 
 
-    
 
-  
+
+
+
 }

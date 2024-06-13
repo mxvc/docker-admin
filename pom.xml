@@ -39,17 +39,21 @@
             <artifactId>spring-boot-starter-websocket</artifactId>
         </dependency>
 
+
+
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-            <version>8.0.29</version>
+            <version>8.0.33</version>
         </dependency>
 
         <dependency>
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-all</artifactId>
-            <version>5.8.18</version>
+            <version>5.8.25</version>
         </dependency>
+
+
 
 
         <dependency>
@@ -106,17 +110,9 @@
         </dependency>
 
 
-        <dependency>
-            <groupId>com.aliyun</groupId>
-            <artifactId>aliyun-java-sdk-core</artifactId>
-            <version>4.5.1</version>
-        </dependency>
 
-        <dependency>
-            <groupId>com.tencentcloudapi</groupId>
-            <artifactId>tencentcloud-sdk-java-tcr</artifactId>
-            <version>3.1.913</version>
-        </dependency>
+
+
 
         <dependency>
             <groupId>com.github.kevinsawicki</groupId>

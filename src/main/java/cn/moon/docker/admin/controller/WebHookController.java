@@ -1,5 +1,6 @@
 package cn.moon.docker.admin.controller;
 
+import cn.moon.docker.admin.BuildParam;
 import cn.moon.docker.admin.entity.BuildLog;
 import cn.moon.docker.admin.entity.Project;
 import cn.moon.docker.admin.service.BuildLogService;
@@ -36,9 +37,13 @@ public class WebHookController {
         service.save(db);
 
 
+        BuildParam buildParam = new BuildParam();
+        buildParam.setVersion(version);
+        buildParam.setBranchOrTag(db.getBranch());
+        buildParam.setProjectId(db.getId());
 
 
-        service.buildImage(db, db.getBranch(), version, "/", db.getDockerfile(), true);
+        service.buildImage(buildParam);
 
         return Result.ok().msg("构建命令已发送");
     }
