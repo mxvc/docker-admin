@@ -185,7 +185,7 @@ public class ProjectController {
     }
 
     @RequestMapping("versions")
-    public List<Option> versions(String projectId) throws InterruptedException, IOException, GitAPIException {
+    public List<Option> versions(String projectId) {
         List<String> versions = logService.versions(projectId);
 
         List<Option> options = versions.stream().map(v -> Option.valueLabel(v, v)).collect(Collectors.toList());

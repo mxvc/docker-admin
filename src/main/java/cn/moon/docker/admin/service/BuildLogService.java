@@ -20,7 +20,7 @@ public class BuildLogService extends BaseService<BuildLog> {
         List<BuildLog> list = dao.findByProjectIdAndSuccessIsTrue(projectId);
 
         List<String> versions = list.stream().map(BuildLog::getVersion).distinct().collect(Collectors.toList());
-
+        Collections.sort(versions);
         Collections.reverse(versions);
         return versions;
     }
