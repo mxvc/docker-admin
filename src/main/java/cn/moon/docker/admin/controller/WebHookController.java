@@ -19,37 +19,26 @@ import java.util.Date;
 @RestController
 @Slf4j
 @RequestMapping("hook")
-public class HookController {
+public class WebHookController {
 
 
     @Resource
     private ProjectService service;
-    @Resource
-    private BuildLogService logService;
 
 
     @RequestMapping("build/{id}")
     public Result build(@PathVariable String id) throws IOException, GitAPIException, InterruptedException {
-
-
-        String version = DateUtil.today();
+        String version = "v" + DateUtil.today().replace("-","");
 
         // 更新最近时间,方便排序
         Project db = service.findOne(id);
         db.setModifyTime(new Date());
         service.save(db);
 
-        BuildLog buildLog = new BuildLog();
-        buildLog.setProjectId(id);
-        buildLog.setVersion(version);
-        buildLog.setProjectName(db.getName());
-        buildLog.setDockerfile(db.getDockerfile());
-        buildLog.setValue(db.getBranch());
-        buildLog = logService.save(buildLog);
 
 
 
-        service.buildImage(buildLog.getId(), buildLog.getValue(), version, "/", buildLog.getDockerfile(), true);
+        service.buildImage(db, db.getBranch(), version, "/", db.getDockerfile(), true);
 
         return Result.ok().msg("构建命令已发送");
     }

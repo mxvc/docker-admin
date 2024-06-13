@@ -137,19 +137,10 @@ public class ProjectController {
 
         // 更新最近时间,方便排序
         project.setModifyTime(new Date());
-        service.save(project);
+        project = service.save(project);
 
-        BuildLog buildLog = new BuildLog();
-        buildLog.setProjectId(projectId);
-        buildLog.setVersion(version);
-        buildLog.setProjectName(project.getName());
-        buildLog.setDockerfile(dockerfile);
-        buildLog.setValue(value);
-        buildLog = logService.save(buildLog);
 
-        MDC.put("logFileId", buildLog.getId());
-        log.info("控制层收到构建指令，开始异步调用服务");
-        service.buildImage(buildLog.getId(), value, version, context, dockerfile, useCache);
+        service.buildImage(project, value, version, context, dockerfile, useCache);
 
 
         return Result.ok();

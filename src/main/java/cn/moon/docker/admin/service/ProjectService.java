@@ -58,6 +58,9 @@ public class ProjectService extends BaseService<Project> {
     @Resource
     ProjectDao projectDao;
 
+    @Resource
+    BuildLogDao buildLogDao;
+
 
     @Resource
     private ApplicationEventPublisher applicationEventPublisher;
@@ -92,9 +95,18 @@ public class ProjectService extends BaseService<Project> {
     }
 
     @Async
-    public void buildImage(String buildlogFileId, String branchOrTag, String version, String context, String dockerfile, boolean useCache) {
-        MDC.put("logFileId", buildlogFileId);
-        BuildLog buildLog = logDao.findById(buildlogFileId).orElseGet(null);
+    public void buildImage(Project db, String branchOrTag, String version, String context, String dockerfile, boolean useCache) {
+        BuildLog buildLog = new BuildLog();
+        buildLog.setProjectId(db.getId());
+        buildLog.setVersion(version);
+        buildLog.setProjectName(db.getName());
+        buildLog.setDockerfile(db.getDockerfile());
+        buildLog.setValue(db.getBranch());
+        buildLog = buildLogDao.save(buildLog);
+        String logId = buildLog.getId();
+
+
+        MDC.put("logFileId", logId);
         Project project = this.findOne(buildLog.getProjectId());
         try {
 
@@ -147,8 +159,8 @@ public class ProjectService extends BaseService<Project> {
             File buildDir = new File(workDir, context);
 
             log.info("向docker发送构建指令");
-            DefaultCallback<BuildResponseItem> buildCallback = new DefaultCallback<>(buildlogFileId);
-            buildThreadMap.put(buildLog.getId(), buildCallback);
+            DefaultCallback<BuildResponseItem> buildCallback = new DefaultCallback<>(logId);
+            buildThreadMap.put(logId, buildCallback);
             client.buildImageCmd(buildDir)
                     // 删除构建产生的容器
                     .withForcerm(true)
@@ -159,12 +171,12 @@ public class ProjectService extends BaseService<Project> {
                     .exec(buildCallback).awaitCompletion();
             log.info("镜像构建结束 ");
 
-            buildThreadMap.remove(buildLog.getId());
+            buildThreadMap.remove(logId);
 
             // 推送
             log.info("推送镜像 {}", imageTag);
             PushImageCmd pushImageCmd = client.pushImageCmd(imageTag);
-            pushImageCmd.exec(new DefaultCallback<>(buildlogFileId)).awaitCompletion();
+            pushImageCmd.exec(new DefaultCallback<>(logId)).awaitCompletion();
             log.info("推送镜像结束 {}", imageTag);
 
             client.close();
