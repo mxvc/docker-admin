@@ -7,7 +7,6 @@ import cn.hutool.core.util.StrUtil;
 import cn.moon.base.tool.GitTool;
 import cn.moon.docker.admin.BuildParam;
 import cn.moon.docker.admin.BuildSuccessEvent;
-import cn.moon.docker.admin.dao.BuildLogDao;
 import cn.moon.docker.admin.dao.ProjectDao;
 import cn.moon.docker.admin.entity.*;
 import cn.moon.docker.sdk.DefaultCallback;
@@ -20,10 +19,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.MDC;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
@@ -91,10 +88,12 @@ public class ProjectService extends BaseService<Project> {
 
     }
 
-
-
-    @Async
     public void buildImage(BuildParam p) {
+        new Thread(() -> buildImageJob(p)).start();
+    }
+
+
+    public void buildImageJob(BuildParam p) {
         String version = p.getVersion();
         String projectId = p.getProjectId();
         String context = p.getContext();
