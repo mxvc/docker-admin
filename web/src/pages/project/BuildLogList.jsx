@@ -220,7 +220,7 @@ export default class extends React.Component {
           labelCol={{flex: '100px'}}
           initialValues={{
             value: project.branch || 'master',
-            version: project.defaultVersion || 'v' + moment().format('YYYYMMDD'),
+            version:  'v' + moment().format('YYYYMMDD'),
             dockerfile: project.dockerfile || 'Dockerfile',
             projectId: project.id
           }}

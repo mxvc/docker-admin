@@ -33,7 +33,6 @@ export default class extends React.Component {
           <Descriptions.Item label='id'>{project.id}</Descriptions.Item>
           <Descriptions.Item label='代码源'>{project.gitUrl}</Descriptions.Item>
           <Descriptions.Item label='dockerfile'>{project.dockerfile}</Descriptions.Item>
-          <Descriptions.Item label='默认版本'>{project.defaultVersion}</Descriptions.Item>
           <Descriptions.Item label='分支'>{project.branch}</Descriptions.Item>
           <Descriptions.Item label='创建时间'>{project.createTime}</Descriptions.Item>
         </Descriptions>
