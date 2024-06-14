@@ -128,4 +128,15 @@ public class HostController {
         return Result.ok();
     }
 
+    @RequestMapping("syncImageToHost")
+    public Result syncImageToHost(String hostId,String src, String image) {
+        try {
+            service.syncImageToHost(hostId,src, image);
+        } catch (Exception e) {
+            return Result.err().msg("同步镜像失败" + e.getMessage());
+        }
+        return Result.ok();
+    }
+
+
 }

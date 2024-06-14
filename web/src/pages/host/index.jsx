@@ -55,6 +55,7 @@ export default class extends React.Component {
     {
       title: '是否构建主机',
       dataIndex: 'isRunner',
+      sorter:true,
       renderFormItem() {
         return <Radio.Group>
           <Radio value={true}>是</Radio>
@@ -105,9 +106,6 @@ export default class extends React.Component {
     let {formOpen, showEditForm} = this.state
     return (<>
 
-      <Card>
-
-      </Card>
 
 
       <ProTable

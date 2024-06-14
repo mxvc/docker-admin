@@ -62,7 +62,7 @@ public class ProjectService extends BaseService<Project> {
 
 
     public void stopBuild(String logId) throws IOException {
-        DefaultCallback callback = buildThreadMap.get(logId);
+        DefaultCallback callback = buildThreadMap.remove(logId);
         if (callback != null) {
             callback.close();
         }
@@ -73,6 +73,8 @@ public class ProjectService extends BaseService<Project> {
         buildLog.setCompleteTime(new Date());
         buildLog.setTimeSpend(buildLog.getCompleteTime().getTime() - buildLog.getCreateTime().getTime());
         buildLogService.save(buildLog);
+
+
     }
 
 
@@ -179,8 +181,15 @@ public class ProjectService extends BaseService<Project> {
                     .withNoCache(!useCache)
                     .withDockerfile(new File(buildDir, dockerfile))
                     .exec(buildCallback).awaitCompletion();
-            log.info("镜像构建结束 ");
 
+
+            // 判断是构建被中途取消，如手动取消，重复构建取消
+            if(!buildThreadMap.containsKey(logId)){
+                log.info("构建被取消");
+                MDC.remove("logFileId");
+                return;
+            }
+            log.info("镜像构建结束 ");
             buildThreadMap.remove(logId);
 
             // 推送

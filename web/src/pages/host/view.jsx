@@ -1,4 +1,4 @@
-import {Badge, Card, Descriptions, Skeleton, Tabs} from 'antd';
+import {AutoComplete, Badge, Button, Card, Descriptions, Form, Input, message, Modal, Tabs} from 'antd';
 import React from 'react';
 import HostImages from "./HostImages";
 import HostContainers from "./HostContainers";
@@ -16,11 +16,19 @@ export default class extends React.Component {
     loading: true,
 
     runtimeLoading: true,
+
+    pullOpen:false,
   }
 
 
   componentDidMount() {
+    this.loadData()
+  }
+
+  loadData = ()=>{
     let {id} = this.props.location.query;
+
+    this.setState({ runtimeLoading: true})
 
     hutool.http.get(api + "get", {id})
       .then(rs => {
@@ -31,10 +39,7 @@ export default class extends React.Component {
       .then(rs => {
         this.setState({info: rs.data, runtimeLoading: false})
       })
-
-
   }
-
 
   render() {
     const {host, info, loading} = this.state;
@@ -47,12 +52,17 @@ export default class extends React.Component {
       <Card >
         <Descriptions title={host.name } >
           <Descriptions.Item label="操作系统">{info.operatingSystem}</Descriptions.Item>
-          <Descriptions.Item label="内存"> {(info.memTotal / 1024 / 1024 / 1024).toFixed(1)} G</Descriptions.Item>
+          <Descriptions.Item label="内存"> {(info.memTotal / 1024 / 1024 / 1024).toFixed(2)} G</Descriptions.Item>
 
-          <Descriptions.Item label="根目录">{info.dockerRootDir}</Descriptions.Item>
-          <Descriptions.Item label="版本">{info.serverVersion}</Descriptions.Item>
+          <Descriptions.Item label="存储目录">{info.dockerRootDir}</Descriptions.Item>
+          <Descriptions.Item label="docker版本">{info.serverVersion}</Descriptions.Item>
           <Descriptions.Item label="系统时间">{info.systemTime}</Descriptions.Item>
         </Descriptions>
+
+        <div style={{display:"flex",justifyContent:'end'}}>
+          <Button onClick={()=>this.setState({pullOpen:true})}>同步镜像</Button>
+        </div>
+
       </Card>
 
       <Card className='mt-2'>
@@ -65,10 +75,43 @@ export default class extends React.Component {
           </Tabs.TabPane>
         </Tabs>
       </Card>
+
+      <Modal title='同步镜像到主机' open={this.state.pullOpen} destroyOnClose onCancel={()=>this.setState({pullOpen:false})} maskClosable={false} footer={null}>
+        <Form labelCol={{flex:'100px'}} onFinish={this.sync}>
+          <Form.Item label='镜像' name='image'>
+            <AutoComplete options={[
+              {value:'nginx:latest'},
+              {value:'node:14-alpine'},
+              {value:'node:16-alpine'},
+              {value:'node:18-alpine'},
+              {value:'openjdk:8-alpine'},
+              {value:'openjdk:17-alpine'},
+              {value:'ubuntu:latest'},
+            ]}></AutoComplete>
+          </Form.Item>
+          <Form.Item label='仓库源' name='src' initialValue='registry.cn-hangzhou.aliyuncs.com/commons-hub'>
+            <Input ></Input>
+          </Form.Item>
+
+          <Button htmlType='submit' type='primary'>开始</Button>
+        </Form>
+
+
+      </Modal>
     </>)
   }
 
 
+  sync = values => {
+    let {id} = this.props.location.query;
+    values.hostId = id;
+    const hide = message.loading("同步中,请勿退出...",0)
+    hutool.http.postForm('api/host/syncImageToHost', values).then((rs)=>{
+      hide();
+      message.success(rs.message)
+      this.loadData()
+    })
+  };
 }
 
 

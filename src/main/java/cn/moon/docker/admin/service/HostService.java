@@ -1,5 +1,6 @@
 package cn.moon.docker.admin.service;
 
+import cn.moon.docker.admin.ImageSyncToHostTool;
 import cn.moon.docker.admin.dao.HostDao;
 import cn.moon.docker.admin.entity.Host;
 import cn.moon.docker.sdk.DockerSdkManager;
@@ -72,5 +73,12 @@ public class HostService extends BaseService<Host> {
     public long count() {
 
         return hostDao.count();
+    }
+
+    public void syncImageToHost(String hostId, String src, String image) throws InterruptedException {
+        Host db = this.findOne(hostId);
+        DockerClient client = dockerService.getClient(db);
+
+        ImageSyncToHostTool.syncImageToHost(client, src, image);
     }
 }
