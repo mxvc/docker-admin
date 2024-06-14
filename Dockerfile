@@ -12,7 +12,11 @@ FROM maven:3-openjdk-8 as java
 WORKDIR /tmp/build
 
 ADD pom.xml ./pom.xml
+RUN mvn dependency:resolve
+
+
 ADD src ./src
+
 
 #  将WEB界面融合到一起
 COPY --from=WEB /tmp/build/dist/ src/main/resources/static/
