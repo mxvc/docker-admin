@@ -32,6 +32,5 @@ build/
 ### VS Code ###
 .vscode/
 *.log
-/bin/frpc.ini
 /docker-admin-logs/
 *.temp
