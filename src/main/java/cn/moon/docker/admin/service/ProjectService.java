@@ -108,6 +108,8 @@ public class ProjectService extends BaseService<Project> {
         String dockerfile = p.getDockerfile();
         boolean useCache = p.isUseCache();
 
+
+
         Project project = projectDao.findById(projectId).get();
         BuildLog buildLog = new BuildLog();
         buildLog.setProjectId(project.getId());
@@ -125,7 +127,12 @@ public class ProjectService extends BaseService<Project> {
             log.info("开始构建镜像任务 {} {} {} {}", project.getName(), project.getGitUrl(), branchOrTag, version);
             Host host;
             if (p.getHostId().equals("default")) {
-                host = hostService.getDefaultDockerRunner();
+                BuildLog preLog = buildLogService.findTop1ByProject(projectId);
+                if(preLog != null && preLog.getBuildHostId() != null){
+                    host = hostService.findOne(preLog.getBuildHostId());
+                }else {
+                    host = hostService.getDefaultDockerRunner();
+                }
             } else {
                 host = hostService.findOne(p.getHostId());
             }
