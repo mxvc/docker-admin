@@ -121,7 +121,9 @@ public class ProjectController {
                         String version,
                         @RequestParam(defaultValue = "/") String context,
                         @RequestParam(defaultValue = "Dockerfile") String dockerfile,
-                        @RequestParam(defaultValue = "true") Boolean useCache) throws InterruptedException, IOException, GitAPIException {
+                        @RequestParam(defaultValue = "true") Boolean useCache,
+                        String buildHostId
+    ) throws InterruptedException, IOException, GitAPIException {
 
         Assert.notNull(value, "请输入branch或tag");
         if (StrUtil.isEmpty(version)) {
@@ -145,6 +147,7 @@ public class ProjectController {
         buildParam.setContext(context);
         buildParam.setDockerfile(dockerfile);
         buildParam.setUseCache(useCache);
+        buildParam.setHostId(buildHostId);
         service.buildImage(buildParam);
 
 

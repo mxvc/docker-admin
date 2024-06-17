@@ -1,4 +1,4 @@
-import {Button, Form, Input, Modal, Space, Switch, Tooltip} from 'antd';
+import {Button, Form, Input, Modal, Select, Space, Switch, Tooltip} from 'antd';
 import React from 'react';
 import {
   CheckCircleFilled,
@@ -42,6 +42,8 @@ export default class extends React.Component {
     curRow: {},
 
     showTrigger: false,
+
+    hostOptions:[]
   }
   actionRef = React.createRef();
 
@@ -161,6 +163,15 @@ export default class extends React.Component {
     }, 1000 * 30)
 
 
+    hutool.http.get('/api/host/options?onlyRunner=true').then(rs=>{
+      let hostOptions = rs;
+      hostOptions.unshift({
+        label:'自动',
+        value: 'default'
+      })
+      this.setState({hostOptions: hostOptions})
+    })
+
   }
 
   componentWillUnmount() {
@@ -238,6 +249,10 @@ export default class extends React.Component {
           </Form.Item>
           <Form.Item name="useCache" label="使用缓存">
             <Switch defaultChecked/>
+          </Form.Item>
+
+          <Form.Item name="buildHostId" label="构建服务器" rules={[{required:true}]} initialValue='default'>
+            <Select options={this.state.hostOptions}></Select>
           </Form.Item>
 
           <div style={{display: 'flex', justifyContent: 'end'}}>

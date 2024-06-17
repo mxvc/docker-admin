@@ -17,6 +17,8 @@ public class BuildParam {
     String dockerfile = "Dockerfile";
     boolean useCache = true;
 
+    String hostId = "default";
+
     public Map<String,Object> toMap(){
        return BeanUtil.beanToMap(this);
     }

@@ -123,8 +123,13 @@ public class ProjectService extends BaseService<Project> {
         try {
 
             log.info("开始构建镜像任务 {} {} {} {}", project.getName(), project.getGitUrl(), branchOrTag, version);
+            Host host;
+            if (p.getHostId().equals("default")) {
+                host = hostService.getDefaultDockerRunner();
+            } else {
+                host = hostService.findOne(p.getHostId());
+            }
 
-            Host host = hostService.getDefaultDockerRunner();
             Assert.notNull(host, "无构建主机");
             log.info("构建主机： {} {} {}", host.getName(), host.getDockerHost(), StrUtil.emptyIfNull(host.getRemark()));
 
@@ -155,6 +160,7 @@ public class ProjectService extends BaseService<Project> {
 
 
             buildLog.setBuildHostName(host.getName());
+            buildLog.setBuildHostId(host.getId());
             buildLog.setCodeMessage(cloneResult.getCodeMessage());
             buildLog = buildLogService.saveLog(buildLog);
 
@@ -184,7 +190,7 @@ public class ProjectService extends BaseService<Project> {
 
 
             // 判断是构建被中途取消，如手动取消，重复构建取消
-            if(!buildThreadMap.containsKey(logId)){
+            if (!buildThreadMap.containsKey(logId)) {
                 log.info("构建被取消");
                 MDC.remove("logFileId");
                 return;

@@ -23,6 +23,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
@@ -78,11 +79,14 @@ public class HostController {
 
 
     @RequestMapping("options")
-    public List<Option> options() {
+    public List<Option> options(@RequestParam(defaultValue = "false") boolean onlyRunner) {
         Query<Host> q = getHostQuery();
         List<Host> list = service.findAll(q, Sort.by(Host.Fields.name));
         List<Option> options = new ArrayList<>();
         for (Host h : list) {
+            if(onlyRunner && !h.getIsRunner() ){
+                continue;
+            }
             options.add(Option.valueLabel(h.getId(), h.getName()));
         }
         return options;
