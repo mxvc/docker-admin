@@ -2,9 +2,10 @@
 FROM node:14-alpine as WEB
 WORKDIR /tmp/build
 
+ADD web/package.json ./
+RUN npm install --registry=https://registry.npmmirror.com
 
 ADD web .
-RUN npm install
 RUN npm run build
 
 # 步骤2 后端打包
