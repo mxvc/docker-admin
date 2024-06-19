@@ -82,6 +82,9 @@ export default class extends React.Component {
     {
       title: '代码日志',
       dataIndex: 'codeMessage',
+      render(v){
+        return hutool.str.ellipsis(v,20)
+      }
     },
     {
       title: '构建主机',
