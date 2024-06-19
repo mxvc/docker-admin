@@ -46,7 +46,7 @@ public class BuildLogService extends BaseService<BuildLog> {
     }
 
     public BuildLog findTop1ByProject(String projectId) {
-        BuildLog buildLog = dao.findTop1ByProjectIdOrderByCreatTimeDesc(projectId);
+        BuildLog buildLog = dao.findTop1ByProjectIdOrderByCreateTimeDesc(projectId);
         return buildLog;
     }
 }

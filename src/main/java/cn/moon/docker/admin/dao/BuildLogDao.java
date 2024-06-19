@@ -18,5 +18,5 @@ public interface BuildLogDao extends BaseRepository<BuildLog> {
 
     List<BuildLog> findByProjectIdAndSuccessIsNull(String projectId);
 
-    BuildLog findTop1ByProjectIdOrderByCreatTimeDesc(String projectId);
+    BuildLog findTop1ByProjectIdOrderByCreateTimeDesc(String projectId);
 }
