@@ -68,7 +68,7 @@ export default class extends React.Component {
       title: '镜像Tag',
       dataIndex: 'RepoTags',
       render(tags, row) {
-        return tags.map(tag => <div>{tag}</div>)
+        return tags && tags.map(tag => <div>{tag}</div>)
       }
     },
 
