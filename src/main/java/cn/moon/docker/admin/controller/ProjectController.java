@@ -147,7 +147,7 @@ public class ProjectController {
         buildParam.setContext(context);
         buildParam.setDockerfile(dockerfile);
         buildParam.setUseCache(useCache);
-        buildParam.setHostId(buildHostId);
+        buildParam.setBuildHostId(buildHostId);
         service.buildImage(buildParam);
 
 

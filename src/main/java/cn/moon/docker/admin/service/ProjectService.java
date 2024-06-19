@@ -126,7 +126,7 @@ public class ProjectService extends BaseService<Project> {
 
             log.info("开始构建镜像任务 {} {} {} {}", project.getName(), project.getGitUrl(), branchOrTag, version);
             Host host;
-            if (p.getHostId().equals("default")) {
+            if ("default".equals(p.getBuildHostId())) {
                 BuildLog preLog = buildLogService.findTop1ByProject(projectId);
                 if(preLog != null && preLog.getBuildHostId() != null){
                     host = hostService.findOne(preLog.getBuildHostId());
@@ -134,7 +134,7 @@ public class ProjectService extends BaseService<Project> {
                     host = hostService.getDefaultDockerRunner();
                 }
             } else {
-                host = hostService.findOne(p.getHostId());
+                host = hostService.findOne(p.getBuildHostId());
             }
 
             Assert.notNull(host, "无构建主机");

@@ -7,6 +7,7 @@ import lombok.ToString;
 import lombok.experimental.FieldNameConstants;
 
 import javax.persistence.Entity;
+import javax.persistence.Lob;
 import javax.persistence.Transient;
 import java.util.Date;
 
@@ -16,6 +17,8 @@ import java.util.Date;
 @FieldNameConstants
 @ToString
 public class BuildLog extends BaseEntity {
+
+    @Lob
     String codeMessage;
 
     String buildHostName;
