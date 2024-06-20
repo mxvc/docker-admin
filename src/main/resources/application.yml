@@ -7,7 +7,10 @@ dbname: docker_admin
 
 server:
   port: 7001
-
+  servlet:
+    session:
+      cookie:
+        same-site: strict
 
 # Spring配置
 spring:
