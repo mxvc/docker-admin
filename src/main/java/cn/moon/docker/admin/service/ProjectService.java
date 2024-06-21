@@ -172,11 +172,12 @@ public class ProjectService extends BaseService<Project> {
             buildLog = buildLogService.saveLog(buildLog);
 
             Registry registry = registryService.checkAndFindDefault();
+            log.info("注册中心：{}", registry.getFullUrl());
             DockerClient client = dockerService.getClient(host, registry);
 
             String imageUrl = registry.getUrl() + "/" + registry.getNamespace() + "/" + project.getName();
             String imageTag = imageUrl + ":" + version;
-            log.info("镜像 {}", imageTag);
+            log.info("目标镜像： {}", imageTag);
 
             Assert.state(!StrUtil.containsBlank(imageUrl), "镜像路径不能包含空格");
 
@@ -229,7 +230,7 @@ public class ProjectService extends BaseService<Project> {
             event.setVersion(version);
 
             applicationEventPublisher.publishEvent(event);
-            log.info("已抛出事件{}", event);
+            log.info("抛出构建事件 {}", event.getBuildLog().getProjectName());
 
             log.info("构建阶段结束");
         } catch (Exception e) {
