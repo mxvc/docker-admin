@@ -246,7 +246,7 @@ export default class extends React.Component {
             <Switch />
           </Form.Item>
 
-          <Form.Item name="buildHostId" label="构建节点" rules={[{required:true}]} initialValue='default'>
+          <Form.Item name="buildHostId" label="构建节点" rules={[{required:true}]} >
             <Select options={this.state.hostOptions}></Select>
           </Form.Item>
 
