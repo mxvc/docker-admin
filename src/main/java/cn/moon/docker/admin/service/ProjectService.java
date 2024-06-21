@@ -109,7 +109,6 @@ public class ProjectService extends BaseService<Project> {
         boolean useCache = p.isUseCache();
 
 
-
         Project project = projectDao.findById(projectId).get();
         BuildLog buildLog = new BuildLog();
         buildLog.setProjectId(project.getId());
@@ -167,9 +166,14 @@ public class ProjectService extends BaseService<Project> {
             DockerClient client = dockerService.getClient(host, registry);
 
             String imageUrl = registry.getUrl() + "/" + registry.getNamespace() + "/" + project.getName();
-            String imageTag = imageUrl + ":" + version;
-            log.info("目标镜像： {}", imageTag);
 
+            Set<String> imageTags = new HashSet<>();
+            imageTags.add(imageUrl + ":" + version);
+            if(project.isAutoUpdateLatest()){
+                imageTags.add(imageUrl + ":latest" );
+            }
+
+            log.info("目标镜像： {}", imageTags);
             Assert.state(!StrUtil.containsBlank(imageUrl), "镜像路径不能包含空格");
 
             buildLog.setImageUrl(imageUrl);
@@ -184,7 +188,7 @@ public class ProjectService extends BaseService<Project> {
                     .withForcerm(true)
                     .withPull(p.isPull())
                     .withNetworkMode("host")
-                    .withTags(Collections.singleton(imageTag))
+                    .withTags(imageTags)
                     .withNoCache(!useCache)
                     .withDockerfile(new File(buildDir, dockerfile))
                     .exec(buildCallback).awaitCompletion();
@@ -200,10 +204,13 @@ public class ProjectService extends BaseService<Project> {
             buildThreadMap.remove(logId);
 
             // 推送
-            log.info("推送镜像 {}", imageTag);
-            PushImageCmd pushImageCmd = client.pushImageCmd(imageTag);
-            pushImageCmd.exec(new DefaultCallback<>(logId)).awaitCompletion();
-            log.info("推送镜像结束 {}", imageTag);
+            for (String imageTag : imageTags) {
+                log.info("推送镜像 {}", imageTag);
+                PushImageCmd pushImageCmd = client.pushImageCmd(imageTag);
+                pushImageCmd.exec(new DefaultCallback<>(logId)).awaitCompletion();
+                log.info("推送镜像结束 {}", imageTag);
+            }
+
 
             client.close();
 
@@ -281,5 +288,11 @@ public class ProjectService extends BaseService<Project> {
             return projectDao.findByNameLike("%" + keyword.trim() + "%", pageable);
         }
         return projectDao.findAll(pageable);
+    }
+
+    @Transactional
+    public void updateAutoUpdateLatest(String id, boolean value) {
+        Project project = projectDao.findById(id).get();
+        project.setAutoUpdateLatest(value);
     }
 }

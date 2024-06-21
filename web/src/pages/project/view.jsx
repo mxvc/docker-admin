@@ -1,4 +1,4 @@
-import {Card, Descriptions, Spin} from 'antd';
+import {Card, Descriptions, Spin, Switch} from 'antd';
 import React from 'react';
 import BuildLogList from "./BuildLogList";
 import hutool from "@moon-cn/hutool";
@@ -35,6 +35,9 @@ export default class extends React.Component {
           <Descriptions.Item label='dockerfile'>{project.dockerfile}</Descriptions.Item>
           <Descriptions.Item label='分支'>{project.branch}</Descriptions.Item>
           <Descriptions.Item label='创建时间'>{project.createTime}</Descriptions.Item>
+
+          <Descriptions.Item label='自动更新latest版本'><Switch size="small" checked={project.autoUpdateLatest}
+                                                                onChange={this.onAutoUpdateLatestChange}/></Descriptions.Item>
         </Descriptions>
       </Card>
 
@@ -46,6 +49,12 @@ export default class extends React.Component {
   }
 
 
+  onAutoUpdateLatestChange = value => {
+    const id = this.props.location.query.id
+    hutool.http.postForm(api + 'updateAutoUpdateLatest', {id, value}).then(rs => {
+      this.setState({project: rs})
+    })
+  };
 }
 
 

@@ -158,6 +158,12 @@ public class ProjectController {
         return Result.ok();
     }
 
+    @RequestMapping("updateAutoUpdateLatest")
+    public Result updateAutoUpdateLatest(@RequestParam String id, boolean value) {
+        service.updateAutoUpdateLatest(id,value);
+        return Result.ok();
+    }
+
 
     @RequestMapping("options")
     public List<Option> options() throws InterruptedException, IOException, GitAPIException {

@@ -40,6 +40,9 @@ public class Project extends BaseEntity {
     @ManyToOne
     Registry registry;
 
+    // 自动更新latest版本
+    boolean autoUpdateLatest;
+
 
     public Registry getRegistry() {
         if(registry == null){
