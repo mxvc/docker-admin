@@ -38,9 +38,15 @@ export default class extends React.Component {
       hideInTable: true,
     },
     {
-      title: '镜像',
+      title: '镜像 / 项目',
       dataIndex: 'imageUrl',
       sorter: true,
+      render: (_, record) => {
+        if (record.imageUrl){
+          return record.imageUrl
+        }
+        return <a onClick={() => history.push('project/view?id=' + record.project.id)}>{record.project.name}</a>
+    }
     },
     {
       title: '版本',

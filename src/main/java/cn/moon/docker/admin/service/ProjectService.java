@@ -187,6 +187,7 @@ public class ProjectService extends BaseService<Project> {
             log.info("向docker发送构建指令");
             DefaultCallback<BuildResponseItem> buildCallback = new DefaultCallback<>(logId);
             buildThreadMap.put(logId, buildCallback);
+
             client.buildImageCmd(buildDir)
                     // 删除构建产生的容器
                     .withForcerm(true)
