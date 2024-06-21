@@ -168,10 +168,6 @@ export default class extends React.Component {
 
     hutool.http.get('/api/host/options?onlyRunner=true').then(rs=>{
       let hostOptions = rs;
-      hostOptions.unshift({
-        label:'自动',
-        value: 'default'
-      })
       this.setState({hostOptions: hostOptions})
     })
 
