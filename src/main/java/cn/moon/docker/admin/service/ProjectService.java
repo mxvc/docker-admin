@@ -183,6 +183,7 @@ public class ProjectService extends BaseService<Project> {
             DefaultCallback<BuildResponseItem> buildCallback = new DefaultCallback<>(logId);
             buildThreadMap.put(logId, buildCallback);
 
+            log.info("withPull {}", p.isPull());
             client.buildImageCmd(buildDir)
                     // 删除构建产生的容器
                     .withForcerm(true)
