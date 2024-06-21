@@ -235,7 +235,6 @@ export default class extends React.Component {
           initialValues={{
             value: project.branch || 'master',
             version:  'v' + moment().format('YYYYMMDD'),
-            dockerfile: project.dockerfile || 'Dockerfile',
             projectId: project.id
           }}
           preserve={false}>
@@ -246,6 +245,9 @@ export default class extends React.Component {
           </Form.Item>
           <Form.Item name="useCache" label="使用缓存">
             <Switch defaultChecked/>
+          </Form.Item>
+          <Form.Item name="pull" label="pull镜像" initialValue={false}>
+            <Switch />
           </Form.Item>
 
           <Form.Item name="buildHostId" label="构建节点" rules={[{required:true}]} initialValue='default'>

@@ -19,6 +19,9 @@ public class BuildParam {
 
     String buildHostId = "default";
 
+    // 构建时是否拉取最近镜像
+    boolean pull = false;
+
     public Map<String,Object> toMap(){
        return BeanUtil.beanToMap(this);
     }

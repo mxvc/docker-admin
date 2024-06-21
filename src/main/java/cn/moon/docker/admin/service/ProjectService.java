@@ -191,6 +191,7 @@ public class ProjectService extends BaseService<Project> {
             client.buildImageCmd(buildDir)
                     // 删除构建产生的容器
                     .withForcerm(true)
+                    .withPull(p.isPull())
                     .withNetworkMode("host")
                     .withTags(Collections.singleton(imageTag))
                     .withNoCache(!useCache)
