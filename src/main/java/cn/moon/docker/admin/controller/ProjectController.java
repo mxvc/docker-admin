@@ -116,9 +116,9 @@ public class ProjectController {
 
     @RequiresPermissions("project:build")
     @RequestMapping("build")
-    public Result build(@RequestParam String projectId,
-                        String version,
-                        @RequestParam(defaultValue = "true") Boolean useCache,
+    public Result build(
+            BuildParam buildParam,
+            @RequestParam String projectId,
                         String buildHostId
     ) throws InterruptedException, IOException, GitAPIException {
 
@@ -131,13 +131,9 @@ public class ProjectController {
         project.setModifyTime(new Date());
         project = service.save(project);
 
-
-        BuildParam buildParam = new BuildParam();
-        buildParam.setVersion(version);
         buildParam.setBranchOrTag(project.getBranch());
         buildParam.setProjectId(project.getId());
         buildParam.setDockerfile(project.getDockerfile());
-        buildParam.setUseCache(useCache);
         buildParam.setBuildHostId(buildHostId);
         service.buildImage(buildParam);
 
