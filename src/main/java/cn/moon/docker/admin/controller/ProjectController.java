@@ -117,18 +117,10 @@ public class ProjectController {
     @RequiresPermissions("project:build")
     @RequestMapping("build")
     public Result build(@RequestParam String projectId,
-                        String value,
                         String version,
-                        @RequestParam(defaultValue = "/") String context,
-                        @RequestParam(defaultValue = "Dockerfile") String dockerfile,
                         @RequestParam(defaultValue = "true") Boolean useCache,
                         String buildHostId
     ) throws InterruptedException, IOException, GitAPIException {
-
-        Assert.notNull(value, "请输入branch或tag");
-        if (StrUtil.isEmpty(version)) {
-            version = value;
-        }
 
 
         Project project = service.findOne(projectId);
@@ -142,10 +134,9 @@ public class ProjectController {
 
         BuildParam buildParam = new BuildParam();
         buildParam.setVersion(version);
-        buildParam.setBranchOrTag(value);
+        buildParam.setBranchOrTag(project.getBranch());
         buildParam.setProjectId(project.getId());
-        buildParam.setContext(context);
-        buildParam.setDockerfile(dockerfile);
+        buildParam.setDockerfile(project.getDockerfile());
         buildParam.setUseCache(useCache);
         buildParam.setBuildHostId(buildHostId);
         service.buildImage(buildParam);

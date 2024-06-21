@@ -241,13 +241,7 @@ export default class extends React.Component {
           preserve={false}>
           <Form.Item name="projectId" hidden>
           </Form.Item>
-          <Form.Item name="value" label="分支、标签">
-            <Input/>
-          </Form.Item>
           <Form.Item name="version" label="版本">
-            <Input/>
-          </Form.Item>
-          <Form.Item name="dockerfile" label="dockerfile">
             <Input/>
           </Form.Item>
           <Form.Item name="useCache" label="使用缓存">
