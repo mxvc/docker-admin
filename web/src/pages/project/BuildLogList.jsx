@@ -1,4 +1,4 @@
-import {AutoComplete, Button, Checkbox, Form, Input, Modal, Select, Space, Switch, Tooltip} from 'antd';
+import {AutoComplete, Button, Checkbox, Form, Modal, Select, Space, Tooltip} from 'antd';
 import React from 'react';
 import {
   CheckCircleFilled,
@@ -43,7 +43,7 @@ export default class extends React.Component {
 
     showTrigger: false,
 
-    hostOptions:[]
+    hostOptions: []
   }
   actionRef = React.createRef();
 
@@ -60,7 +60,7 @@ export default class extends React.Component {
       title: '开始时间',
       dataIndex: 'createTime',
       render(_, row) {
-        return <Tooltip title={row.createTime}> { hutool.date.friendlyTime(row.createTime)}</Tooltip>
+        return <Tooltip title={row.createTime}> {hutool.date.friendlyTime(row.createTime)}</Tooltip>
       }
     },
     {
@@ -82,8 +82,8 @@ export default class extends React.Component {
     {
       title: '代码日志',
       dataIndex: 'codeMessage',
-      render(v){
-        return hutool.str.ellipsis(v,20)
+      render(v) {
+        return hutool.str.ellipsis(v, 20)
       }
     },
     {
@@ -142,7 +142,7 @@ export default class extends React.Component {
   ]
 
   retry = row => {
-   hutool.http. get("/api/project/build", row).then(rs => {
+    hutool.http.get("/api/project/build", row).then(rs => {
       this.reload()
     })
   }
@@ -166,7 +166,7 @@ export default class extends React.Component {
     }, 1000 * 30)
 
 
-    hutool.http.get('/api/host/options?onlyRunner=true').then(rs=>{
+    hutool.http.get('/api/host/options?onlyRunner=true').then(rs => {
       let hostOptions = rs;
       this.setState({hostOptions: hostOptions})
     })
@@ -231,7 +231,7 @@ export default class extends React.Component {
           labelCol={{flex: '100px'}}
           initialValues={{
             value: project.branch || 'master',
-            version:  todayVersion,
+            version: todayVersion,
             projectId: project.id
           }}
           preserve={false}>
@@ -239,24 +239,24 @@ export default class extends React.Component {
           </Form.Item>
           <Form.Item name="version" label="版本">
             <AutoComplete options={[
-              {label:'latest',value:'latest'},
-              {label:todayVersion,value:todayVersion}
+              {label: 'latest', value: 'latest'},
+              {label: todayVersion, value: todayVersion}
             ]}></AutoComplete>
           </Form.Item>
 
 
-
-          <Form.Item name="buildHostId" label="构建节点" rules={[{required:true,message:"请选择构建节点"}]}  initialValue={this.state.hostOptions[0]?.value}>
+          <Form.Item name="buildHostId" label="构建节点" rules={[{required: true, message: "请选择构建节点"}]}
+                     initialValue={this.state.hostOptions[0]?.value}>
             <Select options={this.state.hostOptions}></Select>
           </Form.Item>
 
 
-          <div style={{display: 'flex',gap:12}}>
-            <Form.Item name="useCache" label="使用缓存">
-              <Checkbox defaultChecked/>
+          <div style={{display: 'flex', gap: 24}}>
+            <Form.Item name="useCache" label="使用缓存" initialValue={true} valuePropName='checked'>
+              <Checkbox/>
             </Form.Item>
-            <Form.Item name="pull" label="拉基础镜像" initialValue={false}>
-              <Checkbox />
+            <Form.Item name="pull" label="拉基础镜像" initialValue={false} valuePropName='checked'>
+              <Checkbox/>
             </Form.Item>
 
           </div>
@@ -266,8 +266,6 @@ export default class extends React.Component {
           </div>
         </Form>
       </Modal>
-
-
 
 
     </>)
