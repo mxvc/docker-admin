@@ -1,4 +1,4 @@
-import {Button, Checkbox, Form, Input, Modal, Select, Space, Switch, Tooltip} from 'antd';
+import {AutoComplete, Button, Checkbox, Form, Input, Modal, Select, Space, Switch, Tooltip} from 'antd';
 import React from 'react';
 import {
   CheckCircleFilled,
@@ -200,6 +200,7 @@ export default class extends React.Component {
     const {project} = this.props;
     const {showTrigger} = this.state
 
+    let todayVersion = 'v' + moment().format('YYYYMMDD');
     return (<>
 
       <ProTable
@@ -230,14 +231,17 @@ export default class extends React.Component {
           labelCol={{flex: '100px'}}
           initialValues={{
             value: project.branch || 'master',
-            version:  'v' + moment().format('YYYYMMDD'),
+            version:  todayVersion,
             projectId: project.id
           }}
           preserve={false}>
           <Form.Item name="projectId" hidden>
           </Form.Item>
           <Form.Item name="version" label="版本">
-            <Input/>
+            <AutoComplete options={[
+              {label:'latest',value:'latest'},
+              {label:todayVersion,value:todayVersion}
+            ]}></AutoComplete>
           </Form.Item>
 
 
