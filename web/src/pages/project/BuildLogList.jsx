@@ -1,4 +1,4 @@
-import {Button, Form, Input, Modal, Select, Space, Switch, Tooltip} from 'antd';
+import {Button, Checkbox, Form, Input, Modal, Select, Space, Switch, Tooltip} from 'antd';
 import React from 'react';
 import {
   CheckCircleFilled,
@@ -239,16 +239,23 @@ export default class extends React.Component {
           <Form.Item name="version" label="版本">
             <Input/>
           </Form.Item>
-          <Form.Item name="useCache" label="使用缓存">
-            <Switch defaultChecked/>
-          </Form.Item>
-          <Form.Item name="pull" label="pull镜像" initialValue={false}>
-            <Switch />
-          </Form.Item>
 
-          <Form.Item name="buildHostId" label="构建节点" rules={[{required:true}]} >
+
+
+          <Form.Item name="buildHostId" label="构建节点" rules={[{required:true,message:"请选择构建节点"}]}  initialValue={this.state.hostOptions[0]?.value}>
             <Select options={this.state.hostOptions}></Select>
           </Form.Item>
+
+
+          <div style={{display: 'flex',gap:12}}>
+            <Form.Item name="useCache" label="使用缓存">
+              <Checkbox defaultChecked/>
+            </Form.Item>
+            <Form.Item name="pull" label="拉基础镜像" initialValue={false}>
+              <Checkbox />
+            </Form.Item>
+
+          </div>
 
           <div style={{display: 'flex', justifyContent: 'end'}}>
             <Button type='primary' htmlType="submit">确定</Button>
