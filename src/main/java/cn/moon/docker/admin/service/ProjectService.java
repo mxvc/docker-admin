@@ -106,7 +106,6 @@ public class ProjectService extends BaseService<Project> {
         String context = p.getContext();
         String branchOrTag = p.getBranchOrTag();
         String dockerfile = p.getDockerfile();
-        boolean useCache = p.isUseCache();
 
 
         Project project = projectDao.findById(projectId).get();
@@ -169,7 +168,7 @@ public class ProjectService extends BaseService<Project> {
 
             Set<String> imageTags = new HashSet<>();
             imageTags.add(imageUrl + ":" + version);
-            if(project.isautoPushLatest()){
+            if(project.isAutoPushLatest()){
                 imageTags.add(imageUrl + ":latest" );
             }
 
@@ -183,14 +182,15 @@ public class ProjectService extends BaseService<Project> {
             DefaultCallback<BuildResponseItem> buildCallback = new DefaultCallback<>(logId);
             buildThreadMap.put(logId, buildCallback);
 
-            log.info("withPull {}", p.isPull());
+            log.info("是否拉取基础镜像 withPull {}", p.isPull());
+            log.info("是否使用缓存 {}", p.isUseCache());
             client.buildImageCmd(buildDir)
                     // 删除构建产生的容器
                     .withForcerm(true)
                     .withPull(p.isPull())
                     .withNetworkMode("host")
                     .withTags(imageTags)
-                    .withNoCache(!useCache)
+                    .withNoCache(!p.isUseCache())
                     .withDockerfile(new File(buildDir, dockerfile))
                     .exec(buildCallback).awaitCompletion();
 
@@ -292,8 +292,8 @@ public class ProjectService extends BaseService<Project> {
     }
 
     @Transactional
-    public void updateautoPushLatest(String id, boolean value) {
+    public void updateAutoPushLatest(String id, boolean value) {
         Project project = projectDao.findById(id).get();
-        project.setautoPushLatest(value);
+        project.setAutoPushLatest(value);
     }
 }

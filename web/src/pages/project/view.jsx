@@ -37,7 +37,7 @@ export default class extends React.Component {
           <Descriptions.Item label='创建时间'>{project.createTime}</Descriptions.Item>
 
           <Descriptions.Item label='自动推送latest版本'><Switch size="small" checked={project.autoPushLatest}
-                                                                onChange={this.onautoPushLatestChange}/></Descriptions.Item>
+                                                                onChange={this.onAutoPushLatestChange}/></Descriptions.Item>
         </Descriptions>
       </Card>
 
@@ -49,9 +49,9 @@ export default class extends React.Component {
   }
 
 
-  onautoPushLatestChange = value => {
+  onAutoPushLatestChange = value => {
     const id = this.props.location.query.id
-    hutool.http.postForm(api + 'updateautoPushLatest', {id, value}).then(rs => {
+    hutool.http.postForm(api + 'updateAutoPushLatest', {id, value}).then(rs => {
       this.setState({project: rs})
     })
   };
