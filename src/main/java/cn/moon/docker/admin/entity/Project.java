@@ -41,7 +41,7 @@ public class Project extends BaseEntity {
     Registry registry;
 
     // 自动更新latest版本
-    boolean autoUpdateLatest;
+    boolean autoPushLatest;
 
 
     public Registry getRegistry() {

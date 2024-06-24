@@ -169,7 +169,7 @@ public class ProjectService extends BaseService<Project> {
 
             Set<String> imageTags = new HashSet<>();
             imageTags.add(imageUrl + ":" + version);
-            if(project.isAutoUpdateLatest()){
+            if(project.isautoPushLatest()){
                 imageTags.add(imageUrl + ":latest" );
             }
 
@@ -292,8 +292,8 @@ public class ProjectService extends BaseService<Project> {
     }
 
     @Transactional
-    public void updateAutoUpdateLatest(String id, boolean value) {
+    public void updateautoPushLatest(String id, boolean value) {
         Project project = projectDao.findById(id).get();
-        project.setAutoUpdateLatest(value);
+        project.setautoPushLatest(value);
     }
 }

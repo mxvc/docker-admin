@@ -154,9 +154,9 @@ public class ProjectController {
         return Result.ok();
     }
 
-    @RequestMapping("updateAutoUpdateLatest")
-    public Result updateAutoUpdateLatest(@RequestParam String id, boolean value) {
-        service.updateAutoUpdateLatest(id,value);
+    @RequestMapping("updateautoPushLatest")
+    public Result updateautoPushLatest(@RequestParam String id, boolean value) {
+        service.updateautoPushLatest(id,value);
         return Result.ok();
     }
 
