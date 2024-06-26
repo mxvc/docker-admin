@@ -52,7 +52,6 @@ export default class extends React.Component {
   onAutoPushLatestChange = value => {
     const id = this.props.location.query.id
     hutool.http.postForm(api + 'updateAutoPushLatest', {id, value}).then(rs => {
-      this.setState({project: rs})
     })
   };
 }
