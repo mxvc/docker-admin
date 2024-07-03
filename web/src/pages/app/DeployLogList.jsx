@@ -164,7 +164,10 @@ export default class extends React.Component {
               <LazyLog url={curRow.logUrl}
                        fetchOptions={{credentials:'include'}}
                        websocket
-                       stream follow={follow} onScroll={onScroll}/>
+                       stream
+                       selectableLines={true}
+                       follow={follow}
+                       onScroll={onScroll}/>
             )}
           />}
 
