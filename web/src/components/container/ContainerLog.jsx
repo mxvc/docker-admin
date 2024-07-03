@@ -32,7 +32,10 @@ export default class ContainerLog extends React.Component {
           return (
             <LazyLog url={url}
                      fetchOptions={{credentials: 'include'}}
-                     stream follow={follow} onScroll={onScroll}/>
+                     selectableLines={true}
+                     stream
+                     follow={follow}
+                     onScroll={onScroll}/>
           );
         }}
       />
