@@ -143,13 +143,13 @@
         </plugins>
     </build>
 
-    <repositories>
+<!--    <repositories>
         <repository>
             <id>central</id>
             <name>aliyun maven</name>
             <url>https://maven.aliyun.com/repository/public/</url>
         </repository>
-    </repositories>
+    </repositories>-->
     <pluginRepositories>
         <pluginRepository>
             <id>alimaven</id>
