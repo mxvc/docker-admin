@@ -48,7 +48,6 @@ public class TerminalHandler extends AbstractWebSocketHandler {
         } else {
             send(session, "与容器的连接异常");
         }
-
     }
 
 
@@ -56,7 +55,7 @@ public class TerminalHandler extends AbstractWebSocketHandler {
     public void afterConnectionEstablished(WebSocketSession session) {
         log.info("打开连接 {} {}", session.getId(), session.getUri());
 
-        send(session, "服务器连接成功\n");
+        send(session, "websocket connected\n");
 
         String query = session.getUri().getQuery();
 
@@ -74,7 +73,7 @@ public class TerminalHandler extends AbstractWebSocketHandler {
 
         Host host = hostService.findOne(hostId);
 
-        send(session, "连接容器[" + host.getName() + "]中...\n");
+        send(session, String.format("send command connect to docker [%s][%s]...\n", host.getName(), containerId));
 
         DockerClient client = dockerManager.getClient(host);
 
@@ -110,14 +109,13 @@ public class TerminalHandler extends AbstractWebSocketHandler {
 
                     @Override
                     public void onStart(Closeable closeable) {
-                        send(session, "连接容器成功 " + DateUtil.now() + "\n");
+                        send(session, "connect to docker start... \n");
                     }
 
 
                     @Override
                     public void onError(Throwable throwable) {
                         System.out.println("onError");
-
                         throwable.printStackTrace();
                         send(session, "异常: " + throwable.getMessage());
                     }
@@ -125,7 +123,7 @@ public class TerminalHandler extends AbstractWebSocketHandler {
                     @Override
                     public void onComplete() {
                         System.out.println("onComplete");
-                        send(session, "连接任务完成\n");
+                        send(session, "connect to docker complete\n");
                     }
 
                     @Override
@@ -135,7 +133,7 @@ public class TerminalHandler extends AbstractWebSocketHandler {
                     }
                 });
 
-        closeableMap.put(session.getId(), new Closeable[] {callback, client});
+        closeableMap.put(session.getId(), new Closeable[]{callback, client});
 
     }
 
@@ -152,9 +150,7 @@ public class TerminalHandler extends AbstractWebSocketHandler {
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) {
         log.info("关闭连接 {} {}", session.getId(), status);
 
-
         IOUtils.closeQuietly(streamMap.get(session.getId()));
-
         IOUtils.closeQuietly(closeableMap.get(session.getId()));
 
         streamMap.remove(session.getId());
