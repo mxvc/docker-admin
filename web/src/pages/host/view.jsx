@@ -68,7 +68,7 @@ export default class extends React.Component {
         </Descriptions>
 
         <div style={{display: "flex", justifyContent: 'end', gap: 8}}>
-          <Button onClick={this.cleanImage} title='清理超过15天的未使用镜像'>清理镜像</Button>
+          <Button onClick={this.cleanImage} title='清理未使用镜像'>清理镜像</Button>
           <Button onClick={() => this.setState({pullOpen: true})}>同步镜像</Button>
         </div>
 

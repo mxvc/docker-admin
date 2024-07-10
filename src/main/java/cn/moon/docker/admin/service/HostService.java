@@ -89,7 +89,6 @@ public class HostService extends BaseService<Host> {
         DockerClient client = sdkManager.getClient(db);
         client.pruneCmd(PruneType.IMAGES)
                 .withDangling(false) //  无名镜像
-                .withUntilFilter( (15 * 24) + "h") // 超过x天
                 .exec();
         client.close();
         log.info("清理完成");
