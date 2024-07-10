@@ -6,13 +6,13 @@ import cn.moon.docker.admin.entity.Host;
 import cn.moon.docker.sdk.DockerSdkManager;
 import cn.moon.lang.web.persistence.BaseService;
 import com.github.dockerjava.api.DockerClient;
-import com.github.dockerjava.api.model.Container;
-import com.github.dockerjava.api.model.Image;
-import com.github.dockerjava.api.model.Info;
+import com.github.dockerjava.api.model.*;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.io.IOException;
 import java.util.List;
 
 @Slf4j
@@ -21,7 +21,7 @@ public class HostService extends BaseService<Host> {
 
 
     @Resource
-    DockerSdkManager dockerService;
+    DockerSdkManager sdkManager;
 
     @Resource
     HostDao hostDao;
@@ -38,7 +38,7 @@ public class HostService extends BaseService<Host> {
 
 
     public Info getDockerInfo(Host host) {
-        DockerClient client = dockerService.getClient(host);
+        DockerClient client = sdkManager.getClient(host);
         Info info = client.infoCmd().exec();
 
         return info;
@@ -47,7 +47,7 @@ public class HostService extends BaseService<Host> {
 
     public List<Container> getContainers(String id) {
         Host db = this.findOne(id);
-        DockerClient client = dockerService.getClient(db);
+        DockerClient client = sdkManager.getClient(db);
 
         List<Container> list = client.listContainersCmd().withShowAll(true).exec();
         return list;
@@ -55,7 +55,7 @@ public class HostService extends BaseService<Host> {
 
     public List<Image> getImages(String id) {
         Host db = this.findOne(id);
-        DockerClient client = dockerService.getClient(db);
+        DockerClient client = sdkManager.getClient(db);
 
         List<Image> list = client.listImagesCmd().withShowAll(true).exec();
         return list;
@@ -63,7 +63,7 @@ public class HostService extends BaseService<Host> {
 
     public void deleteImage(String hostId, String imageId) {
         Host db = this.findOne(hostId);
-        DockerClient client = dockerService.getClient(db);
+        DockerClient client = sdkManager.getClient(db);
 
         client.removeImageCmd(imageId).exec();
 
@@ -77,8 +77,21 @@ public class HostService extends BaseService<Host> {
 
     public void syncImageToHost(String hostId, String src, String image) throws InterruptedException {
         Host db = this.findOne(hostId);
-        DockerClient client = dockerService.getClient(db);
+        DockerClient client = sdkManager.getClient(db);
 
         ImageSyncToHostTool.syncImageToHost(client, src, image);
+    }
+
+    @Async
+    public void cleanImage(String hostId) throws IOException {
+        Host db = this.findOne(hostId);
+        log.info("开始清理主机镜像 {}", db.getName());
+        DockerClient client = sdkManager.getClient(db);
+        client.pruneCmd(PruneType.IMAGES)
+                .withDangling(false) //  无名镜像
+                .withUntilFilter( (15 * 24) + "h") // 超过x天
+                .exec();
+        client.close();
+        log.info("清理完成");
     }
 }

@@ -27,7 +27,7 @@ public class CleanImageJob {
 
 
 
-    @Scheduled(fixedRate = 30, initialDelay = 30, timeUnit = TimeUnit.DAYS)
+    @Scheduled(fixedRate = 1, initialDelay = 1, timeUnit = TimeUnit.DAYS)
     public void run() {
         log.info("开始清理资源");
 
@@ -43,12 +43,10 @@ public class CleanImageJob {
 
                 PruneResponse response = client.pruneCmd(PruneType.IMAGES)
                         .withDangling(false) //  无名镜像
-                        .withUntilFilter( (60 * 24) + "h") // 超过x天
+                        .withUntilFilter( (30 * 24) + "h") // 超过x天
                         .exec();
-
                 log.info(" raw values {}", response.getRawValues());
                 log.info("{} 回收空间  {}", host.getName(), response.getSpaceReclaimed());
-
 
                 client.close();
 
@@ -57,10 +55,5 @@ public class CleanImageJob {
             }
 
         }
-
-
-
-
-
     }
 }

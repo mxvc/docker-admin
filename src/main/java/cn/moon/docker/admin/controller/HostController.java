@@ -132,6 +132,16 @@ public class HostController {
         return Result.ok();
     }
 
+    @RequestMapping("cleanImage")
+    public Result cleanImage(String id) {
+        try {
+            service.cleanImage(id);
+        } catch (Exception e) {
+            return Result.err().msg("清理镜像失败" + e.getMessage());
+        }
+        return Result.ok();
+    }
+
     @RequestMapping("syncImageToHost")
     public Result syncImageToHost(String hostId,String src, String image) {
         try {
