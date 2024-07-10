@@ -98,7 +98,6 @@ public class AppService extends BaseService<App> {
 
 
             for (Container container : containers) {
-
                 log.info("容器状态 {}", container.getState());
                 if (container.getState().equals("running")) {
                     log.info("停止容器{}", container.getNames());
@@ -322,8 +321,6 @@ public class AppService extends BaseService<App> {
         Assert.hasLength(tag, "tag不能为空");
         // 远程删除应用
         App app = this.findOne(id);
-        this.deleteContainer(app);
-
         app.setImageTag(tag);
         save(app);
 
