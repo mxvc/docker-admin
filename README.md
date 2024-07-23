@@ -5,14 +5,6 @@
 - 支持跨网络
 
 # 安装
-## docker 命令行安装
-
-需准备一个mysql数据库
-
-```
-docker run -d -p 7001:7001  -e dbip=127.0.0.1 -dbport=3306 -e dbpwd=123456  -v /var/run/docker.sock:/var/run/docker.sock mooncn/docker-admin
-```
-
 
 ## docker-compose 安装， 包含mysql数据库
 ```
@@ -20,7 +12,7 @@ version: '3'
 
 services:
   admin:
-    image: mooncn/docker-admin:latest
+    image: docker-admin:latest
     restart: always
     ports:
       - "7001:7001" # 主机端口:容器端口
@@ -56,7 +48,3 @@ services:
 
 ## 使用
 访问 http://127.0.0.1:7001 账号：admin 密码：123456
-
-
-
-

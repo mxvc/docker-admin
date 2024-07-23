@@ -2,6 +2,7 @@ package cn.moon;
 
 import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.command.SearchImagesCmd;
+import com.github.dockerjava.api.model.Image;
 import com.github.dockerjava.api.model.SearchItem;
 import com.github.dockerjava.core.DefaultDockerClientConfig;
 import com.github.dockerjava.core.DockerClientConfig;
@@ -26,22 +27,22 @@ public class DockerSdkTest {
                 .dockerHost(config.getDockerHost())
                 .sslConfig(config.getSSLConfig())
                 .build();
-        DockerClient dockerClient = DockerClientImpl.getInstance(config, httpClient);
+        DockerClient cli = DockerClientImpl.getInstance(config, httpClient);
 
-        SearchImagesCmd cmd = dockerClient.searchImagesCmd("mooncn/docker-admin");
+        System.err.println("------------------------------------------");
 
-
-
-        List<SearchItem> list = cmd.exec();
-
-        for (SearchItem searchItem : list) {
-            System.out.println(searchItem);
-        }
+        run(cli);
 
 
+        System.err.println("------------------------------------------");
+        cli.close();
 
 
-        dockerClient.close();
+    }
+
+    private static void run(DockerClient cli) {
+
+        List<Image> list = cli.listImagesCmd().exec();
 
 
     }

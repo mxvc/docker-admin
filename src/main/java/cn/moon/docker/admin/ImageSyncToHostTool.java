@@ -17,24 +17,6 @@ import java.util.List;
 public class ImageSyncToHostTool {
 
 
-    public static void main(String[] args) throws InterruptedException {
-         String srcUrl = "registry.cn-hangzhou.aliyuncs.com/commons-hub";
-        String dockerHost = "tcp://10.79.10.222:2375";
-        DefaultDockerClientConfig.Builder builder = DefaultDockerClientConfig.createDefaultConfigBuilder()
-                .withDockerHost(dockerHost);
-
-
-        DockerClientConfig config = builder.build();
-
-        DockerHttpClient httpClient = new ApacheDockerHttpClient.Builder()
-                .dockerHost(config.getDockerHost())
-                .sslConfig(config.getSSLConfig())
-
-                .build();
-        DockerClient dockerClient = DockerClientImpl.getInstance(config, httpClient);
-
-        syncImageToHost(dockerClient,  srcUrl,"centos");
-    }
 
     public static void syncImageToHost(DockerClient dockerClient, String src, String hubImage) throws InterruptedException {
         if(!hubImage.contains(":")){

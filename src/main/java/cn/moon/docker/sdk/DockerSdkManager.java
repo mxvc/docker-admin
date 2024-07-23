@@ -48,9 +48,9 @@ public class DockerSdkManager {
         DockerHttpClient httpClient = new ApacheDockerHttpClient.Builder()
                 .dockerHost(config.getDockerHost())
                 .sslConfig(config.getSSLConfig())
-
                 .virtualHost(dockerHostHeader) // 使用dockerId 作为路由转发的标识
                 .build();
+
         DockerClient dockerClient = DockerClientImpl.getInstance(config, httpClient);
 
         return dockerClient;
