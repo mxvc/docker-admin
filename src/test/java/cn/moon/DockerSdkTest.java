@@ -1,7 +1,6 @@
 package cn.moon;
 
 import com.github.dockerjava.api.DockerClient;
-import com.github.dockerjava.api.command.SearchImagesCmd;
 import com.github.dockerjava.api.model.Image;
 import com.github.dockerjava.api.model.SearchItem;
 import com.github.dockerjava.core.DefaultDockerClientConfig;
@@ -29,12 +28,12 @@ public class DockerSdkTest {
                 .build();
         DockerClient cli = DockerClientImpl.getInstance(config, httpClient);
 
-        System.err.println("------------------------------------------");
+        System.out.println("------------------------------------------");
 
         run(cli);
 
 
-        System.err.println("------------------------------------------");
+        System.out.println("------------------------------------------");
         cli.close();
 
 
@@ -42,7 +41,11 @@ public class DockerSdkTest {
 
     private static void run(DockerClient cli) {
 
-        List<Image> list = cli.listImagesCmd().exec();
+        List<SearchItem> list = cli.searchImagesCmd("nginx").exec();
+
+        for (SearchItem searchItem : list) {
+            System.out.println("搜索结果："+searchItem);
+        }
 
 
     }

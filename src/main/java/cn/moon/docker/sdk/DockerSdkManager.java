@@ -8,7 +8,7 @@ import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.core.DefaultDockerClientConfig;
 import com.github.dockerjava.core.DockerClientConfig;
 import com.github.dockerjava.core.DockerClientImpl;
-import com.github.dockerjava.httpclient5.ApacheDockerHttpClient;
+import com.github.dockerjava.httpclient5.MyDockerHttpClient;
 import com.github.dockerjava.transport.DockerHttpClient;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -28,10 +28,10 @@ public class DockerSdkManager {
 
     public DockerClient getClient(Host host, Registry registry) {
         String dockerHost = getLocalDockerHost();
-        String dockerHostHeader = null;
+        String virtualHost = null;
         if (host != null && StrUtil.isNotEmpty(host.getDockerHost())) {
             dockerHost = host.getDockerHost();
-            dockerHostHeader = host.getDockerHostHeader();
+            virtualHost = host.getDockerHostHeader();
         }
 
 
@@ -45,11 +45,7 @@ public class DockerSdkManager {
 
         DockerClientConfig config = builder.build();
 
-        DockerHttpClient httpClient = new ApacheDockerHttpClient.Builder()
-                .dockerHost(config.getDockerHost())
-                .sslConfig(config.getSSLConfig())
-                .virtualHost(dockerHostHeader) // 使用dockerId 作为路由转发的标识
-                .build();
+        DockerHttpClient httpClient = new MyDockerHttpClient(config.getDockerHost(), config.getSSLConfig(), virtualHost);
 
         DockerClient dockerClient = DockerClientImpl.getInstance(config, httpClient);
 

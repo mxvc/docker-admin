@@ -1,4 +1,4 @@
-package cn;
+package cn.moon;
 
 
 import cn.moon.docker.admin.service.UserService;
