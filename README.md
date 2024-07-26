@@ -21,12 +21,12 @@ services:
     environment:
       dbip: 127.0.0.1 
       dbport: 3305
-      dbpwd: 2zbdWEs6vRHe8wc # 密码
+      dbpwd: YOUR_PASSWORD # 数据库密码
   mysql:
     image: mysql:5.7.35
     privileged: true
     environment:
-      MYSQL_ROOT_PASSWORD: 2zbdWEs6vRHe8wc
+      MYSQL_ROOT_PASSWORD: YOUR_PASSWORD # 数据库密码
       MYSQL_DATABASE: docker_admin
       TZ: Asia/Shanghai
     command:
