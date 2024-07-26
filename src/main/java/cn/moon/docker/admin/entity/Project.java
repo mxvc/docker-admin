@@ -41,7 +41,7 @@ public class Project extends BaseEntity {
     Registry registry;
 
     // 自动更新latest版本
-    boolean autoPushLatest;
+    Boolean autoPushLatest;
 
 
     public Registry getRegistry() {
@@ -51,6 +51,11 @@ public class Project extends BaseEntity {
         return registry;
     }
 
-
-
+    @Override
+    public void prePersist() {
+        super.prePersist();
+        if(autoPushLatest == null){
+            autoPushLatest = false;
+        }
+    }
 }
