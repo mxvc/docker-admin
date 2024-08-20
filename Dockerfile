@@ -4,7 +4,7 @@ WORKDIR /tmp/build
 
 
 ADD web .
-RUN npm run build
+RUN npm install && npm run build
 
 # 步骤2 后端打包
 FROM maven:3-openjdk-8 as java
