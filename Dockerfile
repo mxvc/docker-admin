@@ -2,8 +2,6 @@
 FROM node:14-alpine as WEB
 WORKDIR /tmp/build
 
-ADD web/package.json ./
-RUN npm install --registry=https://registry.npmmirror.com
 
 ADD web .
 RUN npm run build
@@ -13,9 +11,6 @@ FROM maven:3-openjdk-8 as java
 WORKDIR /tmp/build
 
 ADD pom.xml ./pom.xml
-RUN mvn dependency:resolve
-
-
 ADD src ./src
 
 
