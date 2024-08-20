@@ -168,7 +168,7 @@ public class ProjectService extends BaseService<Project> {
 
             Set<String> imageTags = new HashSet<>();
             imageTags.add(imageUrl + ":" + version);
-            if(project.isAutoPushLatest()){
+            if(project.getAutoPushLatest() != null && project.getAutoPushLatest()){
                 imageTags.add(imageUrl + ":latest" );
             }
 

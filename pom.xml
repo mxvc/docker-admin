@@ -8,7 +8,7 @@
         <version>2.7.18</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>cn.jiangtao</groupId>
+    <groupId>io.github.mxvc</groupId>
     <artifactId>docker-admin</artifactId>
     <version>1.0.0</version>
     <name>docker-admin</name>
