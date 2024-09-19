@@ -12,7 +12,7 @@ version: '3'
 
 services:
   admin:
-    image: docker-admin:latest
+    image: mxvc/docker-admin:latest
     restart: always
     ports:
       - "7001:7001" # 主机端口:容器端口
