@@ -2,6 +2,7 @@ dbip: 127.0.0.1
 dbpwd: 123456
 dbport: 3306
 dbname: docker_admin
+dbusername: root
 
 
 
@@ -45,7 +46,7 @@ spring:
   datasource:
     driverClassName: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://${dbip}:${dbport}/${dbname}?allowPublicKeyRetrieval=true&useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&serverTimezone=GMT%2B8&useSSL=false
-    username: root
+    username: ${dbusername}
     password: ${dbpwd}
     hikari:
       minimum-idle: 3

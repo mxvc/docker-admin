@@ -1,0 +1,5 @@
+dbip: mysql.sqlpub.com
+dbname: jttest
+dbusername: jttest
+dbpwd: 123456
+
