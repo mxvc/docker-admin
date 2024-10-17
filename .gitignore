@@ -34,3 +34,4 @@ build/
 *.log
 /docker-admin-logs/
 *.temp
+/web/node_modules/
