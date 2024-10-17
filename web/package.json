@@ -1,33 +1,28 @@
 {
-  "private": true,
-  "scripts": {
-    "start": "umi dev",
-    "build": "umi build",
-    "tailwindcss": "npx tailwindcss -i ./src/input.css -o ./src/tailwind-dist.css --watch"
-  },
-  "dependencies": {
-    "@ant-design/icons": "^5.2.6",
-    "@ant-design/pro-components": "^2.0.0",
-    "@moon-cn/hutool": "^1.0.0-beta.38",
-    "@xterm/addon-attach": "^0.11.0",
-    "antd": "^4.0.0",
-    "axios": "^1.6.8",
-    "codemirror": "^5.0.0",
-    "react": "18.x",
-    "react-dom": "18.x",
-    "react-lazylog": "^4.5.3",
-    "umi": "^3.0.0",
-    "xterm": "^5.3.0",
-    "xterm-addon-fit": "^0.8.0"
-  },
   "devDependencies": {
+    "@types/lodash": "^4.14.200",
     "@types/react": "^18.0.0",
     "@types/react-dom": "^18.0.0",
-    "@umijs/preset-react": "1.x",
-    "lint-staged": "^10.0.7",
-    "prettier": "^2.2.0",
-    "tailwindcss": "^3.3.5",
-    "typescript": "^4.1.2",
-    "yorkie": "^2.0.0"
+    "@types/react-lazylog": "^4.5.1",
+    "@umijs/plugins": "^4.3.17",
+    "typescript": "^4.1.2"
+  },
+  "scripts": {
+    "dev": "umi dev",
+    "build": "umi build"
+  },
+  "dependencies": {
+    "@ant-design/icons": "^5.4.0",
+    "@tinymce/tinymce-react": "^5.0.0",
+    "@tmgg/pro-table": "^5.0.3",
+    "@tmgg/tmgg-base": "0.1.41",
+    "@tmgg/tmgg-system": "0.1.41",
+    "@tmgg/tmgg-system-job": "0.1.41",
+    "antd": "^5.20.3",
+    "antd-img-crop": "^4.23.0",
+    "dayjs": "^1.11.13",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "umi": "^4.0.0"
   }
 }
