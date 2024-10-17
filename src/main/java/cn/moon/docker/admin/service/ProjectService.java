@@ -261,8 +261,7 @@ public class ProjectService extends BaseService<Project> {
             buildLogService.deleteById(buildLog.getId());
         }
 
-
-        repository.deleteById(id);
+        projectDao.deleteById(id);
     }
 
     @Transactional
@@ -273,7 +272,7 @@ public class ProjectService extends BaseService<Project> {
             project.setBranch(project.getBranch().trim());
         }
 
-        project = repository.save(project);
+        project = projectDao.save(project);
         return project;
     }
 

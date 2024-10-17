@@ -33,7 +33,7 @@ public class YamlTool {
     }
 
     private static Yaml createYaml() {
-        return new Yaml(new Constructor());
+        return new Yaml();
     }
 
     private static Map<String, Object> getFlattenedMap(Map<String, Object> source) {

@@ -20,6 +20,7 @@ import org.slf4j.MDC;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import jakarta.annotation.Resource;
@@ -52,9 +53,9 @@ public class AppService extends BaseService<App> {
         MDC.put("logFileId", app.getId());
 
         // 修改更新时间
-        app.setModifyTime(new Date());
+        app.setUpdateTime(new Date());
         this.save(app);
-        app = appDao.findById(app.getId()).orElse(null); // 确保关联对象都取出来
+        app = appDao.findOne(app.getId()); // 确保关联对象都取出来
 
         DeployLog deployLog = new DeployLog();
         deployLog.setAppId(app.getId());
@@ -308,12 +309,13 @@ public class AppService extends BaseService<App> {
         return null;
     }
 
+    @Transactional
     public void deleteApp(String id) {
         // 远程删除应用
         App app = this.findOne(id);
         deleteContainer(app);
 
-        repository.deleteById(id);
+        this.deleteById(id);
     }
 
 

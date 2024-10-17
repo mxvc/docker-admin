@@ -35,14 +35,14 @@ public class BuildLogService extends BaseService<BuildLog> {
         return  dao.findByProjectId(projectId);
     }
 
+    @Transactional
     public void cleanErrorLog(String projectId) {
         List<BuildLog> list = dao.findByProjectIdAndSuccessIsFalse(projectId);
-        dao.deleteAllInBatch(list);
+        dao.deleteAll(list);
     }
 
     public List<BuildLog> findByProjectProcessing(String projectId) {
-        List<BuildLog> list = dao.findByProjectIdAndSuccessIsNull(projectId);
-        return list;
+        return dao.findByProjectIdAndSuccessIsNull(projectId);
     }
 
     public BuildLog findTop1ByProject(String projectId) {
