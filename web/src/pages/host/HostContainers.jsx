@@ -1,7 +1,7 @@
 import {Button, Divider, Skeleton, Table} from 'antd';
 import React from 'react';
 import {history} from "umi";
-import hutool from "@moon-cn/hutool";
+
 
 let api = '/api/host/';
 
@@ -19,7 +19,7 @@ export default class extends React.Component {
 
   loadData = () => {
     this.setState({loading: true})
-    hutool.http.get(api + "containers", {id: this.props.id}).then(rs => {
+    HttpUtil.get(api + "containers", {id: this.props.id}).then(rs => {
       this.setState({list:rs.data})
     }).finally(() => {
       this.setState({loading: false})
@@ -28,15 +28,15 @@ export default class extends React.Component {
 
   remove = (id) => {
     let params = this.props;
-    hutool.http.get("/api/container/remove", {hostId: params.id, containerId: id}).then(this.loadData)
+    HttpUtil.get("/api/container/remove", {hostId: params.id, containerId: id}).then(this.loadData)
   }
   stop = (id) => {
     let params = this.props;
-    hutool.http.get("/api/container/stop", {hostId: params.id, containerId: id}).then(this.loadData)
+    HttpUtil.get("/api/container/stop", {hostId: params.id, containerId: id}).then(this.loadData)
   }
   start = (id) => {
     let params = this.props;
-    hutool.http.get("/api/container/start", {hostId: params.id, containerId: id}).then(this.loadData)
+    HttpUtil.get("/api/container/start", {hostId: params.id, containerId: id}).then(this.loadData)
   }
 
   columns = [

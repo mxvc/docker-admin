@@ -4,9 +4,9 @@ db_port: 3306
 db_ip: mysql.sqlpub.com
 db_database: jttest
 
-server:
-  port: 7001
 
 spring:
   datasource:
     username: jttest
+server:
+  port: 8080

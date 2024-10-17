@@ -3,7 +3,7 @@ import React from 'react';
 import HostImages from "./HostImages";
 import HostContainers from "./HostContainers";
 import {Spin} from "antd/lib";
-import hutool from "@moon-cn/hutool";
+
 
 let api = '/api/host/';
 
@@ -30,12 +30,12 @@ export default class extends React.Component {
 
     this.setState({runtimeLoading: true})
 
-    hutool.http.get(api + "get", {id})
+    HttpUtil.get(api + "get", {id})
       .then(rs => {
         this.setState({host: rs, loading: false})
       })
 
-    hutool.http.get(api + "runtime/get", {id})
+    HttpUtil.get(api + "runtime/get", {id})
       .then(rs => {
         this.setState({info: rs.data, runtimeLoading: false})
       })
@@ -45,7 +45,7 @@ export default class extends React.Component {
   cleanImage = () => {
      message.loading('清理中...')
     let {id} = this.props.location.query;
-    hutool.http.get(api + "cleanImage", {id}).then(rs => {
+    HttpUtil.get(api + "cleanImage", {id}).then(rs => {
     })
   }
 
@@ -116,7 +116,7 @@ export default class extends React.Component {
     let {id} = this.props.location.query;
     values.hostId = id;
     const hide = message.loading("同步中,请勿退出...", 0)
-    hutool.http.postForm('api/host/syncImageToHost', values).then((rs) => {
+    HttpUtil.postForm('api/host/syncImageToHost', values).then((rs) => {
       hide();
       message.success(rs.message)
       this.loadData()

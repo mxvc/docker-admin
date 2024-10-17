@@ -2,9 +2,9 @@ import {PlusOutlined} from '@ant-design/icons';
 import {Button, Card, Divider, message, Modal, Popconfirm, Radio} from 'antd';
 import React from 'react';
 
-import {ProTable} from "@ant-design/pro-components";
+import {ProTable} from "@tmgg/pro-table";
 import {history} from "umi";
-import hutool from "@moon-cn/hutool";
+
 
 let api = '/api/host/';
 
@@ -85,7 +85,7 @@ export default class extends React.Component {
     },
   ];
   handleDelete = row => {
-    hutool.http.post(api + 'delete', row).then(rs => {
+    HttpUtil.post(api + 'delete', row).then(rs => {
       message.success(rs.message)
       this.actionRef.current.reload();
     }).catch(rs => {
@@ -95,7 +95,7 @@ export default class extends React.Component {
 
   handleSave = value => {
     value.id = this.state.formValues.id
-    hutool.http.post(api + 'save', value).then(rs => {
+    HttpUtil.post(api + 'save', value).then(rs => {
       this.setState({formOpen: false})
       this.actionRef.current.reload();
     })
@@ -117,7 +117,7 @@ export default class extends React.Component {
             <PlusOutlined/> 新增
           </Button>,
         ]}
-        request={(params, sort) => hutool.http.requestAntdSpringPageData(api + "list", params, sort)}
+        request={(params, sort) => HttpUtil.requestAntdSpringPageData(api + "list", params, sort)}
 
         columns={this.columns}
         rowSelection={false}

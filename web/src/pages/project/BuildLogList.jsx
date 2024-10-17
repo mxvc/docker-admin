@@ -7,9 +7,9 @@ import {
   Loading3QuartersOutlined,
   MinusCircleTwoTone
 } from "@ant-design/icons";
-import {ProTable} from "@ant-design/pro-components";
+import {ProTable} from "@tmgg/pro-table";
 import moment from "moment";
-import hutool from "@moon-cn/hutool";
+
 
 let api = '/api/buildLog/';
 
@@ -142,13 +142,13 @@ export default class extends React.Component {
   ]
 
   retry = row => {
-    hutool.http.get("/api/project/build", row).then(rs => {
+    HttpUtil.get("/api/project/build", row).then(rs => {
       this.reload()
     })
   }
 
   stop = row => {
-    hutool.http.get("/api/project/stopBuild", row).then(rs => {
+    HttpUtil.get("/api/project/stopBuild", row).then(rs => {
       this.reload()
     })
   }
@@ -166,7 +166,7 @@ export default class extends React.Component {
     }, 1000 * 30)
 
 
-    hutool.http.get('/api/host/options?onlyRunner=true').then(rs => {
+    HttpUtil.get('/api/host/options?onlyRunner=true').then(rs => {
       let hostOptions = rs;
       this.setState({hostOptions: hostOptions})
     })
@@ -185,13 +185,13 @@ export default class extends React.Component {
 
 
   submitTrigger = (values) => {
-    hutool.http.get("/api/project/build", values).then(rs => {
+    HttpUtil.get("/api/project/build", values).then(rs => {
       this.setState({showTrigger: false})
       this.actionRef.current.reload()
     })
   }
   cleanError = () => {
-    hutool.http.get("/api/project/cleanErrorLog", {id: this.projectId}).then(rs => {
+    HttpUtil.get("/api/project/cleanErrorLog", {id: this.projectId}).then(rs => {
       this.actionRef.current.reload()
     })
   }
@@ -212,7 +212,7 @@ export default class extends React.Component {
         }}
         search={false}
         actionRef={this.actionRef}
-        request={(params, sort) => hutool.http.requestAntdSpringPageData(this.listURL, params, sort)}
+        request={(params, sort) => HttpUtil.requestAntdSpringPageData(this.listURL, params, sort)}
         columns={this.columns}
         rowSelection={false}
         scroll={{x: 'max-content'}}

@@ -1,8 +1,8 @@
 import {DownOutlined, PlusOutlined} from '@ant-design/icons';
 import {Button, Divider, Dropdown, Modal, Popconfirm, Space, Switch, Tag} from 'antd';
 import React from 'react';
-import {ProTable} from "@ant-design/pro-components";
-import hutool from "@moon-cn/hutool";
+import {ProTable} from "@tmgg/pro-table";
+
 
 const addTitle = "添加注册中心"
 const editTitle = '编辑注册中心'
@@ -78,7 +78,7 @@ export default class extends React.Component {
     },
   ];
   handleSave = value => {
-    hutool.http.post(api + 'save', value).then(rs => {
+    HttpUtil.post(api + 'save', value).then(rs => {
       this.state.showAddForm = false;
       this.setState(this.state)
       this.actionRef.current.reload();
@@ -87,7 +87,7 @@ export default class extends React.Component {
 
   handleUpdate = value => {
     let params = {...this.state.formValues, ...value};
-    hutool.http.post(api + 'update', params).then(rs => {
+    HttpUtil.post(api + 'update', params).then(rs => {
       this.state.showEditForm = false;
       this.setState(this.state)
       this.actionRef.current.reload();
@@ -97,7 +97,7 @@ export default class extends React.Component {
 
   handleDelete = record => {
 
-    hutool.http.post(api + 'delete', {id:record.id}).then(rs => {
+    HttpUtil.post(api + 'delete', {id:record.id}).then(rs => {
       this.actionRef.current.reload();
     })
   }
@@ -140,7 +140,7 @@ export default class extends React.Component {
               </a>
             </Dropdown>
           </Space>}
-          request={(params, sort) => hutool.http.requestAntdSpringPageData(api + 'list', params, sort)}
+          request={(params, sort) => HttpUtil.requestAntdSpringPageData(api + 'list', params, sort)}
           columns={this.columns}
           rowSelection={false}
           search={false}

@@ -1,7 +1,7 @@
 import {Card, Descriptions, Spin, Switch} from 'antd';
 import React from 'react';
 import BuildLogList from "./BuildLogList";
-import hutool from "@moon-cn/hutool";
+
 
 let api = '/api/project/';
 
@@ -17,7 +17,7 @@ export default class extends React.Component {
 
   componentDidMount() {
     this.id = this.props.location.query.id
-    hutool.http.get(api + 'get', {id: this.id}).then(rs => this.setState({project: rs}))
+    HttpUtil.get(api + 'get', {id: this.id}).then(rs => this.setState({project: rs}))
   }
 
   render() {
@@ -50,7 +50,7 @@ export default class extends React.Component {
 
   onAutoPushLatestChange = value => {
     const id = this.props.location.query.id
-    hutool.http.postForm(api + 'updateAutoPushLatest', {id, value}).then(rs => {
+    HttpUtil.postForm(api + 'updateAutoPushLatest', {id, value}).then(rs => {
     })
   };
 }

@@ -1,11 +1,12 @@
-import Admin from "./admin";
+import React from "react";
+import {Layouts} from "@tmgg/tmgg-system";
 
-export default function (props){
-  const {pathname} = props.location
-  if(pathname === '/login'){
-    return props.children;
+export default class extends React.Component {
+
+
+  render() {
+    return <Layouts {...this.props}></Layouts>
   }
 
-  return <Admin {...props} />
 
 }

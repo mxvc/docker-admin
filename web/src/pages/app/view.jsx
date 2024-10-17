@@ -21,10 +21,10 @@ import React from 'react';
 import ConfigForm from "./ConfigForm";
 import {history} from "umi";
 import {isPermitted, notPermitted} from "../../utils/SysConfig";
-import hutool from "@moon-cn/hutool";
+
 import ContainerLog from "../../components/container/ContainerLog";
-import ContainerCmd from "../../components/container/ContainerCmd";
 import ContainerFile from "../../components/container/ContainerFile";
+import {HttpUtil} from "@tmgg/tmgg-base";
 
 let api = '/api/app/';
 
@@ -55,7 +55,7 @@ export default class extends React.Component {
     let id = this.props.location.query.id;
     this.id = id;
 
-    hutool.http.get('api/app/get', {id: id}).then(rs => {
+    HttpUtil.get('api/app/get', {id: id}).then(rs => {
       this.setState({app: rs, loading: false});
       this.loadTagOptions(rs)
     })
@@ -70,7 +70,7 @@ export default class extends React.Component {
   loadContainer = () => {
     console.log('loadContainer')
     this.setState({containerLoading: true})
-    hutool.http.get("/api/app/container", {id: this.id}).then(rs => {
+    HttpUtil.get("/api/app/container", {id: this.id}).then(rs => {
       const container = rs.data;
       this.setState({container})
 
@@ -86,7 +86,7 @@ export default class extends React.Component {
 
   loadTagOptions(app) {
     if(app.project){
-      hutool.http.get('api/project/versions', {projectId:app.project.id}).then(rs => {
+      HttpUtil.get('api/project/versions', {projectId:app.project.id}).then(rs => {
         this.setState({tagOptions: rs})
       })
     }
@@ -97,34 +97,34 @@ export default class extends React.Component {
     const {container} = this.state
     container.state = 'deploying'
     this.setState({container})
-    hutool.http.post('api/app/deploy/' + this.state.app.id).then(rs => {
+    HttpUtil.post('api/app/deploy/' + this.state.app.id).then(rs => {
       message.success('部署指令已发送，异步执行中...')
       this.loadContainer()
     })
   }
   start = () => {
-    hutool.http.post('api/app/start/' + this.state.app.id).then(() => {
+    HttpUtil.post('api/app/start/' + this.state.app.id).then(() => {
       this.loadContainer()
     })
   }
   stop = () => {
-    hutool.http.post('api/app/stop/' + this.state.app.id).then(() => {
+    HttpUtil.post('api/app/stop/' + this.state.app.id).then(() => {
       this.loadContainer()
     })
   }
 
   setAutoDeploy = (id, autoDeploy) => {
-    hutool.http.get("/api/app/autoDeploy", {id, autoDeploy})
+    HttpUtil.get("/api/app/autoDeploy", {id, autoDeploy})
   }
   setAutoRestart = (id, autoRestart) => {
-    hutool.http.get("/api/app/autoRestart", {id, autoRestart})
+    HttpUtil.get("/api/app/autoRestart", {id, autoRestart})
   }
 
 
   updateVersion = () => {
     const id = this.state.app.id;
     const tag = this.state.publishApp.targetVersion;
-    hutool.http.get("/api/app/updateVersion", {id, version: tag}).then(rs => {
+    HttpUtil.get("/api/app/updateVersion", {id, version: tag}).then(rs => {
       message.success(rs.message)
       window.location.reload(true)
     })
@@ -134,7 +134,7 @@ export default class extends React.Component {
   handleDelete = () => {
     const id = this.state.app.id
     const hide = message.loading('删除中...')
-    hutool.http.get(api + 'delete', {id}).then(rs => {
+    HttpUtil.get(api + 'delete', {id}).then(rs => {
       message.info(rs.message)
       hide();
 
@@ -148,7 +148,7 @@ export default class extends React.Component {
         okText: '强制删除数据',
         cancelText: '取消',
         onOk: () => {
-          hutool.http.get(api + 'delete', {id, force: true}).then(rs => {
+          HttpUtil.get(api + 'delete', {id, force: true}).then(rs => {
             message.info(rs.message)
             history.push('/app')
           })
@@ -162,7 +162,7 @@ export default class extends React.Component {
     let appId = this.state.app.id;
     let {newName} = this.state;
     const hide = message.loading('指令发送中...')
-    hutool.http.post(api + 'rename', {appId, newName}).then(rs => {
+    HttpUtil.post(api + 'rename', {appId, newName}).then(rs => {
 
       message.success(rs.message)
       this.setState({app: rs.data, showEditName: false})
@@ -252,11 +252,7 @@ export default class extends React.Component {
         children: <ContainerLog hostId={hostId} containerId={containerId}/>
       })
 
-      items.push({
-        key: 'terminal',
-        label: '终端',
-        children: <ContainerCmd hostId={hostId} containerId={containerId}/>
-      })
+
 
       items.push({
         key: 'file',

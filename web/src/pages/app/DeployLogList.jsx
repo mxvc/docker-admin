@@ -9,8 +9,7 @@ import {
   Loading3QuartersOutlined,
   MinusCircleTwoTone
 } from "@ant-design/icons";
-import {ProTable} from "@ant-design/pro-components";
-import hutool from "@moon-cn/hutool";
+import {ProTable} from "@tmgg/pro-table";
 
 let api = '/api/deployLog/';
 
@@ -133,7 +132,7 @@ export default class extends React.Component {
       <ProTable
         search={false}
         actionRef={this.actionRef}
-        request={(params, sort) => hutool.http.requestAntdSpringPageData(this.listURL, params, sort)}
+        request={(params, sort) => HttpUtil.requestAntdSpringPageData(this.listURL, params, sort)}
         columns={this.columns}
         rowSelection={false}
         toolBarRender={false}

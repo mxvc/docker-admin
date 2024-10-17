@@ -1,11 +1,10 @@
 import {AutoComplete, Button, Form, Input, message, Modal, Radio} from 'antd';
 import React from 'react';
 import ContainerStatus from "../../components/ContainerStatus";
-import {ProTable} from "@ant-design/pro-components";
 import {history} from "umi";
 import {notPermitted} from "../../utils/SysConfig";
-import RemoteSelect from "../../components/RemoteSelect";
-import hutool from "@moon-cn/hutool";
+import {FieldRemoteSelect, HttpUtil} from "@tmgg/tmgg-base";
+import {ProTable} from "@tmgg/pro-table";
 
 let api = '/api/app/';
 
@@ -80,13 +79,13 @@ export default class extends React.Component {
   }
 
   loadVersions = projectId => {
-    hutool.http. get('api/project/versions', {projectId}).then(rs => {
+    HttpUtil. get('api/project/versions', {projectId}).then(rs => {
       this.setState({versions: rs})
     })
   };
 
   handleSave = value => {
-    hutool.http.post(api + 'save', value).then(rs => {
+    HttpUtil.post(api + 'save', value).then(rs => {
       message.success(rs.message)
       this.reload()
       this.setState({deployVisible:false})
@@ -108,7 +107,7 @@ export default class extends React.Component {
               新增
             </Button>,
           ]}
-          request={(params, sort) => hutool.http.requestAntdSpringPageData(api + 'list', params, sort)}
+          request={(params, sort) => HttpUtil.requestAntdSpringPageData(api + 'list', params, sort)}
           columns={this.columns}
           rowSelection={false}
           rowKey="id"
@@ -162,7 +161,7 @@ export default class extends React.Component {
 
 
             <Form.Item name={['host', 'id']} label='部署主机' required rules={[{required: true}]}>
-              <RemoteSelect showSearch url="/api/host/options"/>
+              <FieldRemoteSelect showSearch url="/api/host/options"/>
             </Form.Item>
 
 
