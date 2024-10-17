@@ -14,7 +14,7 @@ import com.github.dockerjava.api.model.Image;
 import com.github.dockerjava.api.model.Info;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.apache.shiro.authz.annotation.HasPermission;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.util.*;
 
 @RestController
@@ -38,7 +38,7 @@ public class HostController {
     @Resource
     private HostService service;
 
-    @RequiresPermissions("host:list")
+    @HasPermission("host:list")
     @RequestMapping("list")
     public Page<Host> list(String searchText, @PageableDefault(sort = BaseEntity.Fields.modifyTime, direction = Sort.Direction.DESC) Pageable pageable) {
         Query<Host> q = getHostQuery();

@@ -5,7 +5,7 @@ import cn.moon.docker.admin.service.UserService;
 import cn.moon.docker.admin.service.ProjectService;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 @SpringBootTest
 public class ProjectTest {

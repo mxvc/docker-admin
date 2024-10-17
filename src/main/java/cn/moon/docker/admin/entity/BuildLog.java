@@ -1,14 +1,15 @@
 package cn.moon.docker.admin.entity;
 
-import cn.moon.lang.web.persistence.BaseEntity;
+import io.tmgg.lang.dao.BaseEntity;
+import jakarta.persistence.Entity;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.FieldNameConstants;
 
-import javax.persistence.Entity;
-import javax.persistence.Lob;
-import javax.persistence.Transient;
+
+import jakarta.persistence.Lob;
+import jakarta.persistence.Transient;
 import java.util.Date;
 
 @Entity

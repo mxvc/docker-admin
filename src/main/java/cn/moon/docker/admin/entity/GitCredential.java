@@ -4,7 +4,7 @@ import cn.moon.lang.web.persistence.BaseEntity;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Entity;
+import jakarta.persistence.Entity;
 import javax.validation.constraints.NotNull;
 
 @Entity

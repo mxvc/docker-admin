@@ -13,7 +13,7 @@ import cn.moon.lang.web.persistence.BaseEntity;
 import cn.moon.lang.web.persistence.Query;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.apache.shiro.authz.annotation.HasPermission;
 import org.apache.shiro.subject.Subject;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.springframework.data.domain.Page;
@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -61,7 +61,7 @@ public class ProjectController {
 
 
 
-    @RequiresPermissions("project:list")
+    @HasPermission("project:list")
     @RequestMapping("list")
     public Page<Project> list(String keyword, @PageableDefault(sort = BaseEntity.Fields.modifyTime, direction = Sort.Direction.DESC) Pageable pageable) {
         Query<Project> q = getQuery();
@@ -82,14 +82,14 @@ public class ProjectController {
         return q;
     }
 
-    @RequiresPermissions("project:save")
+    @HasPermission("project:save")
     @RequestMapping("save")
     public Result save(@RequestBody @Valid Project project) {
         service.saveProject(project);
         return Result.ok().msg("保存成功");
     }
 
-    @RequiresPermissions("project:save")
+    @HasPermission("project:save")
     @RequestMapping("update")
     public Result update(@RequestBody @Valid Project project) {
         service.saveProject(project);
@@ -97,7 +97,7 @@ public class ProjectController {
     }
 
 
-    @RequiresPermissions("project:delete")
+    @HasPermission("project:delete")
     @RequestMapping("delete")
     public Result delete(String id)  {
         Project project = service.findOne(id);
@@ -107,14 +107,14 @@ public class ProjectController {
     }
 
 
-    @RequiresPermissions("project:list")
+    @HasPermission("project:list")
     @RequestMapping("get")
     public Project get(String id) {
         return service.findOne(id);
     }
 
 
-    @RequiresPermissions("project:build")
+    @HasPermission("project:build")
     @RequestMapping("build")
     public Result build(
             BuildParam buildParam,

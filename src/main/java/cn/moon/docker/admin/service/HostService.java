@@ -4,14 +4,14 @@ import cn.moon.docker.admin.ImageSyncToHostTool;
 import cn.moon.docker.admin.dao.HostDao;
 import cn.moon.docker.admin.entity.Host;
 import cn.moon.docker.sdk.DockerSdkManager;
-import cn.moon.lang.web.persistence.BaseService;
 import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.model.*;
+import io.tmgg.lang.dao.BaseService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.io.IOException;
 import java.util.List;
 

@@ -1,15 +1,15 @@
 package cn.moon.docker.admin.entity;
 
 import cn.moon.docker.admin.entity.converter.AppConfigConverter;
-import cn.moon.lang.web.persistence.BaseEntity;
 import cn.moon.validation.StartWithLetter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import io.tmgg.lang.dao.BaseEntity;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
+import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 

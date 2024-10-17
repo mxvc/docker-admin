@@ -5,14 +5,14 @@ import cn.moon.docker.admin.service.GitCredentialService;
 import cn.moon.lang.web.Result;
 import cn.moon.lang.web.persistence.BaseEntity;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.apache.shiro.authz.annotation.HasPermission;
 import org.springframework.data.domain.*;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 @RestController
 @Slf4j
@@ -24,14 +24,14 @@ public class GitCredentialController {
     private GitCredentialService service;
 
 
-    @RequiresPermissions("gitCredential:list")
+    @HasPermission("gitCredential:list")
     @RequestMapping("list")
     public Page<GitCredential> list(@PageableDefault(sort = BaseEntity.Fields.modifyTime, direction = Sort.Direction.DESC) Pageable pageable) {
         Page<GitCredential> list = service.findAll(pageable);
         return list;
     }
 
-    @RequiresPermissions("gitCredential:save")
+    @HasPermission("gitCredential:save")
     @RequestMapping("save")
     public Result save(@RequestBody GitCredential gitCredential) {
         GitCredential db = service.save(gitCredential);
@@ -40,7 +40,7 @@ public class GitCredentialController {
         return rs;
     }
 
-    @RequiresPermissions("gitCredential:save")
+    @HasPermission("gitCredential:save")
     @RequestMapping("update")
     public Result update(@RequestBody GitCredential gitCredential) {
         service.save(gitCredential);
@@ -49,7 +49,7 @@ public class GitCredentialController {
 
 
 
-    @RequiresPermissions("gitCredential:delete")
+    @HasPermission("gitCredential:delete")
     @RequestMapping("delete")
     public Result delete( String id)  {
         service.deleteById(id);

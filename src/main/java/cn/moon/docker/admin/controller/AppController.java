@@ -1,24 +1,20 @@
 package cn.moon.docker.admin.controller;
 
-import cn.moon.base.shiro.CurrentUser;
 import cn.moon.docker.admin.vo.ContainerVo;
 import cn.moon.docker.admin.entity.App;
 import cn.moon.docker.admin.service.AppService;
-import cn.moon.lang.web.Option;
-import cn.moon.lang.web.Result;
-import cn.moon.lang.web.persistence.BaseEntity;
-import cn.moon.lang.web.persistence.Query;
+import io.tmgg.lang.dao.BaseEntity;
+import io.tmgg.lang.dao.specification.JpaQuery;
+import io.tmgg.web.annotion.HasPermission;
+import io.tmgg.web.perm.SecurityUtils;
+import io.tmgg.web.perm.Subject;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.apache.shiro.subject.Subject;
 import org.springframework.data.domain.*;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
-import javax.servlet.http.HttpSession;
+import jakarta.annotation.Resource;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,10 +31,10 @@ public class AppController {
     private AppService service;
 
 
-    @RequiresPermissions("app:list")
+    @HasPermission("app:list")
     @RequestMapping("list")
-    public Page<App> list(String keyword, @PageableDefault(sort = BaseEntity.Fields.modifyTime, direction = Sort.Direction.DESC) Pageable pageable, HttpSession session) {
-        Query<App> q = new Query<>();
+    public Page<App> list(String keyword, @PageableDefault(sort = "updateTime", direction = Sort.Direction.DESC) Pageable pageable, HttpSession session) {
+        JpaQuery<App> q = new JpaQuery<>();
         q.like("name", keyword);
 
 
@@ -78,7 +74,7 @@ public class AppController {
     }
 
 
-    @RequiresPermissions("app:save")
+    @HasPermission("app:save")
     @RequestMapping("save")
     public Result save(@RequestBody App app) {
          service.save(app);
@@ -86,14 +82,14 @@ public class AppController {
     }
 
 
-    @RequiresPermissions("app:save")
+    @HasPermission("app:save")
     @RequestMapping("update")
     public Result update(@RequestBody App project) {
         service.save(project);
         return Result.ok().msg("修改成功");
     }
 
-    @RequiresPermissions("app:config")
+    @HasPermission("app:config")
     @RequestMapping("updateConfig")
     public Result updateConfig(String id, @RequestBody App.AppConfig appConfig) {
         App app = service.updateConfig(id, appConfig);
@@ -102,7 +98,7 @@ public class AppController {
         return Result.ok().msg("修改成功，应用会自动重启").data(app);
     }
 
-    @RequiresPermissions("app:update")
+    @HasPermission("app:update")
     @RequestMapping("updateVersion")
     public Result updateVersion(String id, String version) {
         service.updateAppVersion(id, version);
@@ -111,7 +107,7 @@ public class AppController {
     }
 
 
-    @RequiresPermissions("app:delete")
+    @HasPermission("app:delete")
     @RequestMapping("delete")
     public Result delete(String id, Boolean force)  {
         if (force != null && force) {
@@ -132,7 +128,7 @@ public class AppController {
     }
 
 
-    @RequiresPermissions("app:deploy")
+    @HasPermission("app:deploy")
     @RequestMapping("deploy/{id}")
     public Result deploy(@PathVariable String id) {
         log.info("开始部署");
@@ -144,7 +140,7 @@ public class AppController {
     }
 
 
-    @RequiresPermissions("app:deploy")
+    @HasPermission("app:deploy")
     @RequestMapping("autoDeploy")
     public Result autoDeploy(String id, boolean autoDeploy) throws InterruptedException {
 
@@ -159,7 +155,7 @@ public class AppController {
     }
 
 
-    @RequiresPermissions("app:start")
+    @HasPermission("app:start")
     @RequestMapping("autoRestart")
     public Result autoRestart(String id, boolean autoRestart) throws InterruptedException {
 
@@ -177,21 +173,21 @@ public class AppController {
 
 
 
-    @RequiresPermissions("app:start")
+    @HasPermission("app:start")
     @RequestMapping("start/{appId}")
     public Result start(@PathVariable String appId) {
         service.start(appId);
         return Result.ok().msg("启动指令已发送");
     }
 
-    @RequiresPermissions("app:stop")
+    @HasPermission("app:stop")
     @RequestMapping("stop/{appId}")
     public Result stop(@PathVariable String appId) {
         service.stop(appId);
         return Result.ok().msg("停止指令已发送");
     }
 
-    @RequiresPermissions("app:config")
+    @HasPermission("app:config")
     @RequestMapping("rename")
     public Result rename(@RequestBody Map<String, String> map) {
         String appId = map.get("appId");

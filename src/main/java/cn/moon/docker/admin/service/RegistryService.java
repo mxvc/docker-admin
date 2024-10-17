@@ -5,7 +5,7 @@ import cn.moon.docker.admin.entity.Registry;
 import cn.moon.lang.web.persistence.BaseService;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.util.List;
 
 @Service

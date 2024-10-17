@@ -1,14 +1,14 @@
 package cn.moon.docker.admin.entity;
 
-import cn.moon.lang.web.persistence.BaseEntity;
+import io.tmgg.lang.dao.BaseEntity;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.FieldNameConstants;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.validation.constraints.NotNull;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
 
 /**
  * 主机信息
