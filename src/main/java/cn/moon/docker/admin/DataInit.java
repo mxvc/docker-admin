@@ -20,9 +20,6 @@ public class DataInit implements ApplicationRunner {
 
 
     @Resource
-    UserService userService;
-
-    @Resource
     HostService hostService;
 
     @Resource
@@ -30,16 +27,6 @@ public class DataInit implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        if (userService.count() == 0) {
-            User user = new User();
-            user.setUsername("admin");
-            user.setPassword("123456");
-            user.setRole(Role.admin);
-            user.setName("超级管理员");
-            userService.save(user);
-            log.info("创建默认账号 {}", user);
-        }
-
         if (hostService.count() == 0) {
             Host host = new Host();
             host.setName("默认主机");
@@ -48,7 +35,5 @@ public class DataInit implements ApplicationRunner {
             hostService.save(host);
             log.info("创建默认主机配置 {}", host);
         }
-
-
     }
 }

@@ -2,11 +2,11 @@ package cn.moon.docker.admin.controller;
 
 import cn.moon.docker.admin.entity.Registry;
 import cn.moon.docker.admin.service.RegistryService;
-import cn.moon.lang.web.Option;
-import cn.moon.lang.web.Result;
-import cn.moon.lang.web.persistence.BaseEntity;
+import io.tmgg.lang.dao.BaseEntity;
+import io.tmgg.lang.obj.AjaxResult;
+import io.tmgg.lang.obj.Option;
+import io.tmgg.web.annotion.HasPermission;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.shiro.authz.annotation.HasPermission;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -30,20 +30,20 @@ public class RegistryController {
 
     @HasPermission("registry:list")
     @RequestMapping("list")
-    public Page<Registry> list(@PageableDefault(sort = BaseEntity.Fields.modifyTime, direction = Sort.Direction.DESC) Pageable pageable) {
+    public Page<Registry> list(@PageableDefault(sort = BaseEntity.Fields.updateTime, direction = Sort.Direction.DESC) Pageable pageable) {
         Page<Registry> list = service.findAll(pageable);
 
         return list;
     }
 
     @RequestMapping("save")
-    public Result save(@RequestBody Registry registry) {
+    public AjaxResult save(@RequestBody Registry registry) {
         service.save(registry);
         return AjaxResult.ok().msg("保存");
     }
 
     @RequestMapping("update")
-    public Result update(@RequestBody Registry u) {
+    public AjaxResult update(@RequestBody Registry u) {
         Registry db = service.findOne(u.getId());
 
         service.save(u);
@@ -52,20 +52,20 @@ public class RegistryController {
 
 
     @RequestMapping("delete")
-    public Result delete(String id) {
+    public AjaxResult delete(String id) {
         service.deleteById(id);
         return AjaxResult.ok().msg("删除成功");
     }
 
 
     @RequestMapping("options")
-    public Result options() {
+    public AjaxResult options() {
         List<Option> list = new ArrayList<>();
 
         List<Registry> values = service.findAll();
 
         for (Registry t : values) {
-            list.add( Option.valueLabel(t.getId(), t.getFullUrl()));
+            list.add( new Option(t.getFullUrl(), t.getId()));
         }
 
         return AjaxResult.ok().data( list);

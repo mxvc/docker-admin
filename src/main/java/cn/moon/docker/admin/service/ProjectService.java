@@ -15,6 +15,7 @@ import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.command.PushImageCmd;
 import com.github.dockerjava.api.model.BuildResponseItem;
 import io.tmgg.lang.dao.BaseService;
+import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.MDC;
@@ -107,7 +108,7 @@ public class ProjectService extends BaseService<Project> {
         String dockerfile = p.getDockerfile();
 
 
-        Project project = projectDao.findById(projectId).get();
+        Project project = projectDao.findOne(projectId);
         BuildLog buildLog = new BuildLog();
         buildLog.setProjectId(project.getId());
         buildLog.setVersion(version);
@@ -292,7 +293,7 @@ public class ProjectService extends BaseService<Project> {
 
     @Transactional
     public void updateAutoPushLatest(String id, boolean value) {
-        Project project = projectDao.findById(id).get();
+        Project project = projectDao.findOne(id);
         project.setAutoPushLatest(value);
     }
 }
