@@ -1,9 +1,9 @@
 package cn.moon.docker.admin.entity.converter;
 
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.json.JSONUtil;
 import cn.moon.docker.admin.entity.App;
 
+import io.tmgg.lang.JsonTool;
 import jakarta.persistence.AttributeConverter;
 
 public class AppConfigConverter implements AttributeConverter<App.AppConfig, String> {
@@ -15,7 +15,7 @@ public class AppConfigConverter implements AttributeConverter<App.AppConfig, Str
             return null;
         }
 
-        return JSONUtil.toJsonStr(obj);
+        return JsonTool.toJsonQuietly(obj);
 
     }
 
@@ -25,7 +25,7 @@ public class AppConfigConverter implements AttributeConverter<App.AppConfig, Str
             return null;
         }
         try {
-            return JSONUtil.toBean(dbData, App.AppConfig.class);
+            return JsonTool.jsonToBean(dbData, App.AppConfig.class);
 
         } catch (Exception e) {
             e.printStackTrace();
