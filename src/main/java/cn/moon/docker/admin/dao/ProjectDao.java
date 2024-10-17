@@ -1,17 +1,24 @@
 package cn.moon.docker.admin.dao;
 
 import cn.moon.docker.admin.entity.Project;
-import cn.moon.lang.web.persistence.BaseRepository;
+import io.tmgg.lang.dao.BaseDao;
+import io.tmgg.lang.dao.specification.JpaQuery;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface ProjectDao extends BaseRepository<Project> {
+public class ProjectDao extends BaseDao<Project> {
 
 
-    Project findByName(String name);
+    public Project findByName(String name) {
+        return this.findOneByField("name", name);
+    }
 
-    Page<Project> findByNameLike(String keyword, Pageable pageable);
+    public Page<Project> findByNameLike(String keyword, Pageable pageable) {
+        JpaQuery<Project> q= new JpaQuery<>();
+        q.like("name", keyword);
+        return findAll(q, pageable);
+    }
 }

@@ -2,8 +2,10 @@ package cn.moon.docker.admin.entity;
 
 import cn.moon.docker.admin.entity.converter.AppConfigConverter;
 import cn.moon.validation.StartWithLetter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.tmgg.lang.dao.BaseEntity;
+import io.tmgg.sys.org.entity.SysOrg;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.Getter;
@@ -22,6 +24,10 @@ public class App extends BaseEntity {
     @NotNull
     @Column(unique = true)
     String name;
+
+    @JsonIgnore
+    @ManyToOne
+    SysOrg sysOrg;
 
 
     @NotNull

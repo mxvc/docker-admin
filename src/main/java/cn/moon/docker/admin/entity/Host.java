@@ -1,6 +1,8 @@
 package cn.moon.docker.admin.entity;
 
 import io.tmgg.lang.dao.BaseEntity;
+import io.tmgg.sys.org.entity.SysOrg;
+import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
@@ -24,6 +26,10 @@ public class Host extends BaseEntity {
     @Column(unique = true)
     String name;
     Boolean isRunner;
+
+
+    @ManyToOne
+    SysOrg sysOrg;
 
 
     String dockerHost;

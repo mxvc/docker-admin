@@ -1,21 +1,20 @@
 package cn.moon.docker.admin.controller;
 
 import cn.hutool.core.util.StrUtil;
-import cn.moon.base.shiro.CurrentUser;
 import cn.moon.docker.admin.entity.Host;
 import cn.moon.docker.admin.service.HostService;
 import cn.moon.docker.admin.vo.DockerInfo;
-import cn.moon.lang.web.Option;
-import cn.moon.lang.web.Result;
-import cn.moon.lang.web.persistence.BaseEntity;
-import cn.moon.lang.web.persistence.Query;
 import com.github.dockerjava.api.exception.ConflictException;
 import com.github.dockerjava.api.model.Image;
 import com.github.dockerjava.api.model.Info;
+import io.tmgg.lang.dao.BaseEntity;
+import io.tmgg.lang.dao.specification.JpaQuery;
+import io.tmgg.lang.obj.AjaxResult;
+import io.tmgg.lang.obj.Option;
+import io.tmgg.web.annotion.HasPermission;
+import io.tmgg.web.perm.SecurityUtils;
+import io.tmgg.web.perm.Subject;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authz.annotation.HasPermission;
-import org.apache.shiro.subject.Subject;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -40,54 +39,48 @@ public class HostController {
 
     @HasPermission("host:list")
     @RequestMapping("list")
-    public Page<Host> list(String searchText, @PageableDefault(sort = BaseEntity.Fields.modifyTime, direction = Sort.Direction.DESC) Pageable pageable) {
-        Query<Host> q = getHostQuery();
+    public Page<Host> list(String searchText, @PageableDefault(sort = BaseEntity.Fields.updateTime, direction = Sort.Direction.DESC) Pageable pageable) {
+        JpaQuery<Host> q = getHostQuery();
 
         if (StrUtil.isNotBlank(searchText)) {
             q.like("name", searchText.trim());
         }
 
 
-        Page<Host> list = service.findAll(q, pageable);
-
-        return list;
+        return service.findAll(q, pageable);
     }
 
-    private static Query<Host> getHostQuery() {
-        Query<Host> q = new Query<>();
+    private  JpaQuery<Host> getHostQuery() {
+        JpaQuery<Host> q = new JpaQuery<>();
         Subject subject = SecurityUtils.getSubject();
-        if (!subject.hasRole("admin")) {
-            CurrentUser user = (CurrentUser) subject.getPrincipal();
-            Set<String> perms = user.getDataPerms().get("H");
-            q.in("id", perms);
-        }
+            q.in("sysOrg.id", subject.getOrgPermissions());
         return q;
     }
 
     @RequestMapping("save")
-    public Result update(@RequestBody Host host) {
+    public AjaxResult update(@RequestBody Host host) {
         service.save(host);
-        return Result.ok().msg("保存成功");
+        return AjaxResult.ok().msg("保存成功");
     }
 
 
     @RequestMapping("delete")
-    public Result delete(@RequestBody Host host) {
+    public AjaxResult delete(@RequestBody Host host) {
         service.deleteById(host.getId());
-        return Result.ok().msg("删除成功");
+        return AjaxResult.ok().msg("删除成功");
     }
 
 
     @RequestMapping("options")
     public List<Option> options(@RequestParam(defaultValue = "false") boolean onlyRunner) {
-        Query<Host> q = getHostQuery();
+        JpaQuery<Host> q = getHostQuery();
         List<Host> list = service.findAll(q, Sort.by(Host.Fields.name));
         List<Option> options = new ArrayList<>();
         for (Host h : list) {
             if(onlyRunner && !h.getIsRunner() ){
                 continue;
             }
-            options.add(Option.valueLabel(h.getId(), h.getName()));
+            options.add(new Option(h.getName(), h.getId()));
         }
         return options;
     }
@@ -100,7 +93,7 @@ public class HostController {
     }
 
     @RequestMapping("runtime/get")
-    public Result runtime(String id) {
+    public AjaxResult runtime(String id) {
         Host host = service.findOne(id);
 
             Info info = service.getDockerInfo(host);
@@ -108,13 +101,13 @@ public class HostController {
             DockerInfo dockerInfo = new DockerInfo();
             BeanUtils.copyProperties(info, dockerInfo);
 
-            return Result.ok().data(dockerInfo);
+            return AjaxResult.ok().data(dockerInfo);
     }
 
 
     @RequestMapping("containers")
-    public Result containers(String id) {
-            return Result.ok().data(service.getContainers(id));
+    public AjaxResult containers(String id) {
+            return AjaxResult.ok().data(service.getContainers(id));
     }
 
     @RequestMapping("images")
@@ -123,33 +116,33 @@ public class HostController {
     }
 
     @RequestMapping("deleteImage")
-    public Result deleteImage(String id, String imageId) {
+    public AjaxResult deleteImage(String id, String imageId) {
         try {
             service.deleteImage(id, imageId);
         } catch (ConflictException e) {
-            return Result.err().msg("删除镜像失败" + e.getMessage());
+            return AjaxResult.err().msg("删除镜像失败" + e.getMessage());
         }
-        return Result.ok();
+        return AjaxResult.ok();
     }
 
     @RequestMapping("cleanImage")
-    public Result cleanImage(String id) {
+    public AjaxResult cleanImage(String id) {
         try {
             service.cleanImage(id);
         } catch (Exception e) {
-            return Result.err().msg("清理镜像失败" + e.getMessage());
+            return AjaxResult.err().msg("清理镜像失败" + e.getMessage());
         }
-        return Result.ok();
+        return AjaxResult.ok();
     }
 
     @RequestMapping("syncImageToHost")
-    public Result syncImageToHost(String hostId,String src, String image) {
+    public AjaxResult syncImageToHost(String hostId,String src, String image) {
         try {
             service.syncImageToHost(hostId,src, image);
         } catch (Exception e) {
-            return Result.err().msg("同步镜像失败" + e.getMessage());
+            return AjaxResult.err().msg("同步镜像失败" + e.getMessage());
         }
-        return Result.ok();
+        return AjaxResult.ok();
     }
 
 

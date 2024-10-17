@@ -54,7 +54,7 @@ public class WebHookController {
         buildParam.setBuildHostId(host.getId());
         service.buildImage(buildParam);
 
-        return Result.ok().msg("构建命令已发送");
+        return AjaxResult.ok().msg("构建命令已发送");
     }
 
 

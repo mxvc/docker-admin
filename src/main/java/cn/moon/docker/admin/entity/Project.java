@@ -2,8 +2,10 @@ package cn.moon.docker.admin.entity;
 
 import cn.hutool.extra.spring.SpringUtil;
 import cn.moon.docker.admin.service.RegistryService;
-import cn.moon.lang.web.persistence.BaseEntity;
 import cn.moon.validation.StartWithLetter;
+import io.tmgg.lang.dao.BaseEntity;
+import io.tmgg.sys.org.entity.SysOrg;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldNameConstants;
@@ -11,7 +13,6 @@ import lombok.experimental.FieldNameConstants;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
-import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter
@@ -23,6 +24,9 @@ public class Project extends BaseEntity {
     @NotNull
     @Column(unique = true)
     String name;
+
+    @ManyToOne
+    SysOrg sysOrg;
 
 
     //默认的dockerfile

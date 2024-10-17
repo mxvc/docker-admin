@@ -3,11 +3,9 @@ package cn.moon.docker.admin.service;
 import cn.moon.docker.admin.dao.AppDao;
 import cn.moon.docker.admin.dao.HostDao;
 import cn.moon.docker.admin.dao.ProjectDao;
-import cn.moon.docker.admin.dao.UserDao;
 import cn.moon.docker.admin.entity.App;
 import cn.moon.docker.admin.entity.Host;
 import cn.moon.docker.admin.entity.Project;
-import cn.moon.docker.admin.entity.User;
 import cn.moon.lang.web.TreeOption;
 import org.springframework.stereotype.Service;
 

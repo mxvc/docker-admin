@@ -7,9 +7,6 @@ import cn.hutool.core.util.StrUtil;
 import cn.moon.docker.admin.entity.Host;
 import cn.moon.docker.admin.service.ContainerService;
 import cn.moon.docker.sdk.DockerSdkManager;
-import cn.moon.lang.json.JsonTool;
-import cn.moon.lang.web.Result;
-import cn.moon.lang.web.ServletTool;
 import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.async.ResultCallback;
 import com.github.dockerjava.api.command.ExecCreateCmdResponse;
@@ -19,6 +16,9 @@ import com.github.dockerjava.api.model.*;
 import com.github.dockerjava.core.async.ResultCallbackTemplate;
 import com.github.dockerjava.core.command.ExecStartResultCallback;
 import com.github.dockerjava.core.command.LogContainerResultCallback;
+import io.tmgg.lang.ResponseTool;
+import io.tmgg.lang.obj.AjaxResult;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FilenameUtils;
@@ -28,7 +28,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.annotation.Resource;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -83,7 +82,7 @@ public class ContainerController {
         DockerClient client = dockerManager.getClient(host);
 
 
-        ServletTool.setDownloadFileHeader(containerId + ".log", response);
+        ResponseTool.setDownloadHeader(containerId + ".log", null, response);
 
         OutputStream out = response.getOutputStream();
         client.logContainerCmd(containerId)
@@ -120,7 +119,7 @@ public class ContainerController {
         InputStream is = client.copyArchiveFromContainerCmd(containerId, file).exec();
 
 
-        ServletTool.setDownloadFileHeader(FilenameUtils.getName(file) + ".tar", response);
+        ResponseTool.setDownloadHeader(FilenameUtils.getName(file) + ".tar", null, response);
 
         IoUtil.copy(is, response.getOutputStream());
         is.close();
@@ -130,7 +129,7 @@ public class ContainerController {
 
 
     @RequestMapping("remove")
-    public Result removeContainer(String hostId, String containerId) throws IOException {
+    public AjaxResult removeContainer(String hostId, String containerId) throws IOException {
         Host host = hostService.findOne(hostId);
         DockerClient client = dockerManager.getClient(host);
 
@@ -138,22 +137,22 @@ public class ContainerController {
                 .exec();
 
         client.close();
-        return Result.ok().msg("删除容器成功");
+        return AjaxResult.ok().msg("删除容器成功");
 
     }
 
     @RequestMapping("stop")
-    public Result stop(String hostId, String containerId) throws IOException {
+    public AjaxResult stop(String hostId, String containerId) throws IOException {
         Host host = hostService.findOne(hostId);
         DockerClient client = dockerManager.getClient(host);
         client.stopContainerCmd(containerId)
                 .exec();
         client.close();
-        return Result.ok().msg("停止容器成功");
+        return AjaxResult.ok().msg("停止容器成功");
     }
 
     @RequestMapping("start")
-    public Result start(String hostId, String containerId) throws IOException {
+    public AjaxResult start(String hostId, String containerId) throws IOException {
         Host host = hostService.findOne(hostId);
 
         DockerClient client = dockerManager.getClient(host);
@@ -161,11 +160,11 @@ public class ContainerController {
         client.startContainerCmd(containerId)
                 .exec();
         client.close();
-        return Result.ok().msg("启动容器成功");
+        return AjaxResult.ok().msg("启动容器成功");
     }
 
     @RequestMapping("status")
-    public Result status(String hostId, String appName) {
+    public AjaxResult status(String hostId, String appName) {
         Host host = hostService.findOne(hostId);
 
 
@@ -177,22 +176,22 @@ public class ContainerController {
             List<Container> list = client.listContainersCmd().withLabelFilter(appLabelFilter).withShowAll(true).exec();
             client.close();
             if (list.isEmpty()) {
-                return Result.ok().msg("未知");
+                return AjaxResult.ok().msg("未知");
             }
 
             Container container = list.get(0);
 
-            return Result.ok().msg(container.getStatus());
+            return AjaxResult.ok().msg(container.getStatus());
         } catch (Exception e) {
 
-            return Result.ok().msg("未知");
+            return AjaxResult.ok().msg("未知");
         }
 
     }
 
 
     @RequestMapping("file")
-    public Result file(String hostId, String containerId, @RequestParam(defaultValue = "/", required = false) String path) throws Exception {
+    public AjaxResult file(String hostId, String containerId, @RequestParam(defaultValue = "/", required = false) String path) throws Exception {
         Host host = hostService.findOne(hostId);
 
         DockerClient client = dockerManager.getClient(host);
@@ -265,7 +264,7 @@ public class ContainerController {
         data.put("dirs", dirs);
         data.put("files", files);
 
-        return Result.ok().msg("获取文件列表成功").data(data);
+        return AjaxResult.ok().msg("获取文件列表成功").data(data);
     }
 
 

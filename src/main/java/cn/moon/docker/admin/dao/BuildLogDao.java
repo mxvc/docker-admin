@@ -1,22 +1,37 @@
 package cn.moon.docker.admin.dao;
 
 import cn.moon.docker.admin.entity.BuildLog;
-import cn.moon.lang.web.persistence.BaseRepository;
+import io.tmgg.lang.dao.BaseDao;
+import io.tmgg.lang.dao.BaseEntity;
+import io.tmgg.lang.dao.specification.JpaQuery;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Repository
-@Transactional
-public interface BuildLogDao extends BaseRepository<BuildLog> {
-    List<BuildLog> findByProjectIdAndSuccessIsTrue(String projectId);
+public class BuildLogDao extends BaseDao<BuildLog> {
 
-    List<BuildLog> findByProjectIdAndSuccessIsFalse(String projectId);
+    public List<BuildLog> findByProjectIdAndSuccessIsTrue(String projectId) {
 
-    List<BuildLog> findByProjectId(String projectId);
+        return findAllByField(BuildLog.Fields.projectId,projectId, BuildLog.Fields.success, true);
+    }
 
-    List<BuildLog> findByProjectIdAndSuccessIsNull(String projectId);
+    public List<BuildLog> findByProjectIdAndSuccessIsFalse(String projectId) {
+        return findAllByField(BuildLog.Fields.projectId,projectId, BuildLog.Fields.success, false);
+    }
 
-    BuildLog findTop1ByProjectIdOrderByCreateTimeDesc(String projectId);
+    public List<BuildLog> findByProjectId(String projectId) {
+        return findAllByField(BuildLog.Fields.projectId,projectId);
+    }
+
+    public List<BuildLog> findByProjectIdAndSuccessIsNull(String projectId) {
+        return findAllByField(BuildLog.Fields.projectId,projectId, BuildLog.Fields.success,null);
+    }
+
+    public BuildLog findTop1ByProjectIdOrderByCreateTimeDesc(String projectId) {
+        JpaQuery<BuildLog> q= new JpaQuery<>();
+        q.eq(BuildLog.Fields.projectId,projectId);
+        return findTop1(q, Sort.by(BaseEntity.Fields.createTime));
+    }
 }

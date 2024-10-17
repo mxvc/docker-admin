@@ -1,6 +1,6 @@
 package cn.moon.docker.admin.entity;
 
-import cn.moon.lang.web.persistence.BaseEntity;
+import io.tmgg.lang.dao.BaseEntity;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldNameConstants;

@@ -2,7 +2,7 @@ package cn.moon.docker.admin.service;
 
 import cn.moon.docker.admin.dao.BuildLogDao;
 import cn.moon.docker.admin.entity.BuildLog;
-import cn.moon.lang.web.persistence.BaseService;
+import io.tmgg.lang.dao.BaseService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

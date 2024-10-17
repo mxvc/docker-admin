@@ -5,9 +5,12 @@ import cn.moon.docker.admin.entity.App;
 import cn.moon.docker.admin.service.AppService;
 import io.tmgg.lang.dao.BaseEntity;
 import io.tmgg.lang.dao.specification.JpaQuery;
+import io.tmgg.lang.obj.AjaxResult;
+import io.tmgg.lang.obj.Option;
 import io.tmgg.web.annotion.HasPermission;
 import io.tmgg.web.perm.SecurityUtils;
 import io.tmgg.web.perm.Subject;
+import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.*;
 import org.springframework.data.web.PageableDefault;
@@ -15,11 +18,11 @@ import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.annotation.Resource;
+
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+
+import static io.tmgg.sys.entity.SysRole.Fields.perms;
 
 @RestController
 @Slf4j
@@ -37,25 +40,20 @@ public class AppController {
         JpaQuery<App> q = new JpaQuery<>();
         q.like("name", keyword);
 
-
         Subject subject = SecurityUtils.getSubject();
-        if(!subject.hasRole("admin")){
-            CurrentUser user = (CurrentUser) subject.getPrincipal();
-            Set<String> perms = user.getDataPerms().get("A");
-            q.in("id", perms);
-        }
+        Collection<String> orgIds = subject.getOrgPermissions();
+        q.in("id", orgIds);
 
-        Page<App> list = service.findAll(q, pageable);
-        return list;
+       return service.findAll(q, pageable);
     }
 
     @RequestMapping("get")
     public App view(String id) throws UnsupportedEncodingException {
         App app = service.findOne(id);
 
-        if(app.getImageUrl() == null){
+        if (app.getImageUrl() == null) {
             String fullUrl = app.getProject().getRegistry().getFullUrl();
-            app.setImageUrl(fullUrl +"/" + app.getProject().getName());
+            app.setImageUrl(fullUrl + "/" + app.getProject().getName());
         }
 
         String url = LogUrlTool.getLogViewUrl(id);
@@ -64,55 +62,55 @@ public class AppController {
     }
 
     @RequestMapping("container")
-    public Result container(String id) {
+    public AjaxResult container(String id) {
         App app = service.findOne(id);
         Assert.state(app != null, "应用不存在");
         ContainerVo container = service.getContainerVo(app);
 
 
-        return Result.ok().msg("获取容器信息成功").data(container);
+        return AjaxResult.ok().msg("获取容器信息成功").data(container);
     }
 
 
     @HasPermission("app:save")
     @RequestMapping("save")
-    public Result save(@RequestBody App app) {
-         service.save(app);
-        return Result.ok().msg("保存成功");
+    public AjaxResult save(@RequestBody App app) {
+        service.save(app);
+        return AjaxResult.ok().msg("保存成功");
     }
 
 
     @HasPermission("app:save")
     @RequestMapping("update")
-    public Result update(@RequestBody App project) {
+    public AjaxResult update(@RequestBody App project) {
         service.save(project);
-        return Result.ok().msg("修改成功");
+        return AjaxResult.ok().msg("修改成功");
     }
 
     @HasPermission("app:config")
     @RequestMapping("updateConfig")
-    public Result updateConfig(String id, @RequestBody App.AppConfig appConfig) {
+    public AjaxResult updateConfig(String id, @RequestBody App.AppConfig appConfig) {
         App app = service.updateConfig(id, appConfig);
         service.deploy(app);
 
-        return Result.ok().msg("修改成功，应用会自动重启").data(app);
+        return AjaxResult.ok().msg("修改成功，应用会自动重启").data(app);
     }
 
     @HasPermission("app:update")
     @RequestMapping("updateVersion")
-    public Result updateVersion(String id, String version) {
+    public AjaxResult updateVersion(String id, String version) {
         service.updateAppVersion(id, version);
 
-        return Result.ok().msg("更新指定已发布");
+        return AjaxResult.ok().msg("更新指定已发布");
     }
 
 
     @HasPermission("app:delete")
     @RequestMapping("delete")
-    public Result delete(String id, Boolean force)  {
+    public AjaxResult delete(String id, Boolean force) {
         if (force != null && force) {
             service.deleteById(id);
-            return Result.ok().msg("强制删除数据成功");
+            return AjaxResult.ok().msg("强制删除数据成功");
         }
 
         try {
@@ -120,29 +118,28 @@ public class AppController {
         } catch (Exception e) {
             log.error("删除应用失败", e);
 
-            return Result.err().msg("删除失败");
+            return AjaxResult.err().msg("删除失败");
         }
 
-
-        return Result.ok();
+        return AjaxResult.ok();
     }
 
 
     @HasPermission("app:deploy")
     @RequestMapping("deploy/{id}")
-    public Result deploy(@PathVariable String id) {
+    public AjaxResult deploy(@PathVariable String id) {
         log.info("开始部署");
         App app = service.findOne(id);
 
         service.deploy(app);
         log.info("部署指令已发送");
-        return Result.ok();
+        return AjaxResult.ok();
     }
 
 
     @HasPermission("app:deploy")
     @RequestMapping("autoDeploy")
-    public Result autoDeploy(String id, boolean autoDeploy) throws InterruptedException {
+    public AjaxResult autoDeploy(String id, boolean autoDeploy) throws InterruptedException {
 
         App db = service.findOne(id);
         db.setAutoDeploy(autoDeploy);
@@ -150,14 +147,13 @@ public class AppController {
         service.save(db);
 
 
-        Result rs = Result.ok().msg("自动部署:" + (autoDeploy ? "启用" : "停用"));
-        return rs;
+      return AjaxResult.ok().msg("自动部署:" + (autoDeploy ? "启用" : "停用"));
     }
 
 
     @HasPermission("app:start")
     @RequestMapping("autoRestart")
-    public Result autoRestart(String id, boolean autoRestart) throws InterruptedException {
+    public AjaxResult autoRestart(String id, boolean autoRestart) throws InterruptedException {
 
         App db = service.findOne(id);
         db.setAutoRestart(autoRestart);
@@ -167,29 +163,27 @@ public class AppController {
         service.deploy(db);
 
 
-        Result rs = Result.ok().msg("自动重启:" + (autoRestart ? "启用" : "停用"));
-        return rs;
+        return   AjaxResult.ok().msg("自动重启:" + (autoRestart ? "启用" : "停用"));
     }
-
 
 
     @HasPermission("app:start")
     @RequestMapping("start/{appId}")
-    public Result start(@PathVariable String appId) {
+    public AjaxResult start(@PathVariable String appId) {
         service.start(appId);
-        return Result.ok().msg("启动指令已发送");
+        return AjaxResult.ok().msg("启动指令已发送");
     }
 
     @HasPermission("app:stop")
     @RequestMapping("stop/{appId}")
-    public Result stop(@PathVariable String appId) {
+    public AjaxResult stop(@PathVariable String appId) {
         service.stop(appId);
-        return Result.ok().msg("停止指令已发送");
+        return AjaxResult.ok().msg("停止指令已发送");
     }
 
     @HasPermission("app:config")
     @RequestMapping("rename")
-    public Result rename(@RequestBody Map<String, String> map) {
+    public AjaxResult rename(@RequestBody Map<String, String> map) {
         String appId = map.get("appId");
         String newName = map.get("newName");
         Assert.hasText(appId, "appId不能为空");
@@ -197,24 +191,23 @@ public class AppController {
         App app = service.rename(appId, newName);
 
 
-        return Result.ok().msg("部署指令已发送").data(app);
+        return AjaxResult.ok().msg("部署指令已发送").data(app);
     }
 
 
     @RequestMapping("options")
-    public Result options() {
+    public AjaxResult options() {
         List<Option> list = new ArrayList<>();
-        Sort sort = Sort.by(Sort.Direction.DESC, BaseEntity.Fields.modifyTime);
+        Sort sort = Sort.by(Sort.Direction.DESC, BaseEntity.Fields.updateTime);
 
         List<App> all = service.findAll(sort);
 
         for (App app : all) {
-            list.add(Option.valueLabel(app.getId(), app.getName()));
+            list.add(new Option(app.getName(), app.getId()));
         }
 
-        return Result.ok().data(list);
+        return AjaxResult.ok().data(list);
     }
-
 
 
 }

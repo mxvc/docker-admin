@@ -1,11 +1,12 @@
 package cn.moon.docker.admin.dao;
 
 import cn.moon.docker.admin.entity.Registry;
-import cn.moon.lang.web.persistence.BaseRepository;
-import org.springframework.data.jpa.repository.JpaRepository;
+import io.tmgg.lang.dao.BaseDao;
 
-public interface RegistryDao extends BaseRepository<Registry> {
+public class RegistryDao extends BaseDao<Registry> {
 
-    Registry findByDefaultRegistryIsTrue();
+    public Registry findByDefaultRegistryIsTrue() {
+        return this.findOneByField(Registry.Fields.defaultRegistry, true);
+    }
 
 }

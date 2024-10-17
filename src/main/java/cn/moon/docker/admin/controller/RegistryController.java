@@ -39,7 +39,7 @@ public class RegistryController {
     @RequestMapping("save")
     public Result save(@RequestBody Registry registry) {
         service.save(registry);
-        return Result.ok().msg("保存");
+        return AjaxResult.ok().msg("保存");
     }
 
     @RequestMapping("update")
@@ -47,14 +47,14 @@ public class RegistryController {
         Registry db = service.findOne(u.getId());
 
         service.save(u);
-        return Result.ok().msg("保存");
+        return AjaxResult.ok().msg("保存");
     }
 
 
     @RequestMapping("delete")
     public Result delete(String id) {
         service.deleteById(id);
-        return Result.ok().msg("删除成功");
+        return AjaxResult.ok().msg("删除成功");
     }
 
 
@@ -68,7 +68,7 @@ public class RegistryController {
             list.add( Option.valueLabel(t.getId(), t.getFullUrl()));
         }
 
-        return Result.ok().data( list);
+        return AjaxResult.ok().data( list);
     }
 
 

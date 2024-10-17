@@ -5,8 +5,8 @@ import cn.hutool.core.net.URLEncodeUtil;
 import cn.hutool.core.util.URLUtil;
 import cn.moon.docker.admin.entity.BuildLog;
 import cn.moon.docker.admin.service.BuildLogService;
-import cn.moon.lang.web.persistence.BaseEntity;
-import cn.moon.lang.web.persistence.Query;
+import io.tmgg.lang.dao.BaseEntity;
+import io.tmgg.lang.dao.specification.JpaQuery;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -33,7 +33,7 @@ public class BuildLogController {
 
     @RequestMapping("list")
     public Page<BuildLog> list(String projectId, @PageableDefault(sort = BaseEntity.Fields.createTime, direction = Sort.Direction.DESC) Pageable pageable) throws UnsupportedEncodingException {
-        Query<BuildLog> q = new Query<>();
+        JpaQuery<BuildLog> q = new JpaQuery<>();
         q.eq("projectId", projectId);
         Page<BuildLog> page = service.findAll(q, pageable);
 

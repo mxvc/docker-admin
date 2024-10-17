@@ -6,10 +6,12 @@ import lombok.Getter;
 import lombok.Setter;
 
 import jakarta.persistence.Entity;
+import lombok.experimental.FieldNameConstants;
 
 @Getter
 @Setter
 @Entity
+@FieldNameConstants
 public class Registry extends BaseEntity {
 
     @NotNull

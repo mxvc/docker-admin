@@ -3,8 +3,6 @@ package cn.moon.docker.admin.controller;
 import cn.hutool.core.util.StrUtil;
 import cn.moon.base.Role;
 import cn.moon.docker.admin.entity.Host;
-import cn.moon.docker.admin.entity.User;
-import cn.moon.docker.admin.service.UserService;
 import cn.moon.lang.web.Option;
 import cn.moon.lang.web.Result;
 import cn.moon.lang.web.persistence.BaseEntity;
@@ -49,7 +47,7 @@ public class UserController {
     public Result save(@RequestBody User user) {
 
         service.save(user);
-        return Result.ok().msg("保存");
+        return AjaxResult.ok().msg("保存");
     }
 
     @RequestMapping("update")
@@ -60,14 +58,14 @@ public class UserController {
         }
 
         service.save(input);
-        return Result.ok().msg("保存");
+        return AjaxResult.ok().msg("保存");
     }
 
 
     @RequestMapping("delete")
     public Result delete(String id) {
         service.deleteById(id);
-        return Result.ok().msg("删除成功");
+        return AjaxResult.ok().msg("删除成功");
     }
 
 
@@ -81,7 +79,7 @@ public class UserController {
             list.add( Option.valueLabel(role.name(), role.getLabel()));
         }
 
-        return Result.ok().data(list);
+        return AjaxResult.ok().data(list);
     }
 
 

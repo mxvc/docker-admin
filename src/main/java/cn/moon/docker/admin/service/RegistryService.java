@@ -2,7 +2,7 @@ package cn.moon.docker.admin.service;
 
 import cn.moon.docker.admin.dao.RegistryDao;
 import cn.moon.docker.admin.entity.Registry;
-import cn.moon.lang.web.persistence.BaseService;
+import io.tmgg.lang.dao.BaseService;
 import org.springframework.stereotype.Service;
 
 import jakarta.annotation.Resource;
