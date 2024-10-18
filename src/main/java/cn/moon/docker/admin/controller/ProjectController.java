@@ -5,6 +5,7 @@ import cn.moon.docker.admin.entity.Project;
 import cn.moon.docker.admin.service.BuildLogService;
 import cn.moon.docker.admin.service.ProjectService;
 import cn.moon.docker.admin.service.RegistryService;
+import io.tmgg.lang.dao.BaseCURDController;
 import io.tmgg.lang.dao.BaseEntity;
 import io.tmgg.lang.dao.specification.JpaQuery;
 import io.tmgg.lang.obj.AjaxResult;
@@ -32,9 +33,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@Slf4j
 @RequestMapping("project")
-public class ProjectController {
+public class ProjectController extends BaseCURDController<Project> {
+
+
 
 
     @Resource
@@ -43,27 +45,8 @@ public class ProjectController {
     @Resource
     private BuildLogService logService;
 
-    @Resource
-    private RegistryService registryService;
-
-    @RequestMapping("check")
-    public AjaxResult check() {
-        long count = registryService.countEnabled();
-        if (count == 0) {
-            return AjaxResult.err().msg("请先定义注册中心！");
-        }
-        return AjaxResult.ok();
-    }
 
 
-    @HasPermission("project:list")
-    @RequestMapping("list")
-    public Page<Project> list(String keyword, @PageableDefault(sort = BaseEntity.Fields.updateTime, direction = Sort.Direction.DESC) Pageable pageable) {
-        JpaQuery<Project> q = getQuery();
-        q.like(Project.Fields.name, keyword);
-
-        return service.findAll(q, pageable);
-    }
 
     private JpaQuery<Project> getQuery() {
         JpaQuery<Project> q = new JpaQuery<>();
@@ -72,29 +55,6 @@ public class ProjectController {
         return q;
     }
 
-    @HasPermission("project:save")
-    @RequestMapping("save")
-    public AjaxResult save(@RequestBody @Valid Project project) {
-        service.saveProject(project);
-        return AjaxResult.ok().msg("保存成功");
-    }
-
-    @HasPermission("project:save")
-    @RequestMapping("update")
-    public AjaxResult update(@RequestBody @Valid Project project) {
-        service.saveProject(project);
-        return AjaxResult.ok().msg("修改成功");
-    }
-
-
-    @HasPermission("project:delete")
-    @RequestMapping("delete")
-    public AjaxResult delete(String id) {
-        Project project = service.findOne(id);
-        service.deleteProject(id);
-
-        return AjaxResult.ok().msg("删除成功");
-    }
 
 
     @HasPermission("project:list")

@@ -3,6 +3,7 @@ package cn.moon.docker.admin.entity;
 import cn.hutool.extra.spring.SpringUtil;
 import cn.moon.docker.admin.service.RegistryService;
 import cn.moon.validation.StartWithLetter;
+import io.tmgg.lang.ann.Remark;
 import io.tmgg.lang.dao.BaseEntity;
 import io.tmgg.sys.org.entity.SysOrg;
 import jakarta.validation.constraints.NotNull;
@@ -14,19 +15,27 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
 
+@Remark("项目")
 @Getter
 @Setter
 @Entity
 @FieldNameConstants
 public class Project extends BaseEntity {
 
+    @Remark("组织")
+    @ManyToOne
+    SysOrg sysOrg;
+
+
+    @Remark("名称")
     @StartWithLetter
     @NotNull
     @Column(unique = true)
     String name;
 
-    @ManyToOne
-    SysOrg sysOrg;
+    @NotNull
+    String gitUrl;
+
 
 
     //默认的dockerfile
@@ -34,18 +43,25 @@ public class Project extends BaseEntity {
     String dockerfile;
 
     // 默认分支
+    @Remark("默认分支")
     @NotNull
     String branch;
 
-    @NotNull
-    String gitUrl;
 
 
+
+
+
+    @Remark("注册中心")
     @ManyToOne
     Registry registry;
 
     // 自动更新latest版本
+    @Remark("维护latest")
     Boolean autoPushLatest;
+
+
+    String remark;
 
 
     public Registry getRegistry() {

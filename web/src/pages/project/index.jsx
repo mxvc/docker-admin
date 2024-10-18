@@ -1,187 +1,179 @@
-import {Button, Form, message, Modal, Popconfirm, Result, Skeleton} from 'antd';
-import React from 'react';
+import {PlusOutlined} from '@ant-design/icons'
+import {Button, Divider, Form, Input, Modal, Popconfirm} from 'antd'
+import React from 'react'
 
-import {ProTable} from "@tmgg/pro-table";
-import {history} from "umi";
-import {notPermitted} from "../../utils/SysConfig";
-import {HttpUtil} from "@tmgg/tmgg-base";
-
-
-let api = 'project/';
+import {ProTable} from '@tmgg/pro-table'
+import {ButtonList, FieldRadioBoolean, FieldRemoteSelect, HttpUtil} from "@tmgg/tmgg-base"
 
 
 export default class extends React.Component {
 
-  state = {
-    checkResult:null, // success, message
+    state = {
+        formValues: {},
+        formOpen: false
+    }
 
-    formOpen: false,
-    showEditForm: false,
-    formValues: {},
+    formRef = React.createRef()
+    tableRef = React.createRef()
 
-  }
-  actionRef = React.createRef();
-  columns = [
-    {
-      title: '项目名称',
-      dataIndex: 'name',
-      sorter: 1,
+    columns = [
 
-      render: (name, row) => {
-        return <a onClick={() => history.push('project/view?id=' + row.id)}>{name}</a>
-      },
-
-      formItemProps: {
-        rules: [{required: true}]
-      }
-    },
-
-    {
-      title: 'git仓库',
-      dataIndex: 'gitUrl',
-      width: 250,
-      sorter: true,
-      formItemProps: {
-        rules: [{required: true}],
-      }
-    },
+        {
+            title: '组织',
+            dataIndex: 'sysOrg',
 
 
-    {
-      title: '分支',
-      dataIndex: 'branch',
-    },
+        },
 
-    {
-      title: 'dockerfile',
-      dataIndex: 'dockerfile',
-    },
+        {
+            title: '名称',
+            dataIndex: 'name',
 
-    {
-      title: '最近更新',
-      dataIndex: 'modifyTime',
-      sorter: true,
-      hideInSearch: true,
-      hideInForm: true,
-    },
-    {
-      title: '操作',
-      dataIndex: 'option',
-      valueType: 'option',
-      render: (_, row) => {
+
+        },
+
+        {
+            title: 'gitUrl',
+            dataIndex: 'gitUrl',
+
+
+        },
+
+        {
+            title: 'dockerfile',
+            dataIndex: 'dockerfile',
+
+
+        },
+
+        {
+            title: '默认分支',
+            dataIndex: 'branch',
+
+
+        },
+
+        {
+            title: '注册中心',
+            dataIndex: 'registry',
+
+
+        },
+
+        {
+            title: '维护latest',
+            dataIndex: 'autoPushLatest',
+
+            valueType: 'boolean',
+
+        },
+
+        {
+            title: '操作',
+            dataIndex: 'option',
+            valueType: 'option',
+            render: (_, record) => (
+                <ButtonList>
+                    <a perm='project:save' onClick={() => this.handleEdit(record)}> 修改 </a>
+                    <Popconfirm perm='project:delete' title='是否确定删除项目'
+                                onConfirm={() => this.handleDelete(record)}>
+                        <a>删除</a>
+                    </Popconfirm>
+                </ButtonList>
+            ),
+        },
+    ]
+
+    handleAdd = () => {
+        this.setState({formOpen: true, formValues: {}})
+    }
+
+    handleEdit = record => {
+        this.setState({formOpen: true, formValues: record})
+    }
+
+
+    onFinish = values => {
+        HttpUtil.post('project/save', values).then(rs => {
+            this.setState({formOpen: false})
+            this.tableRef.current.reload()
+        })
+    }
+
+
+    handleDelete = record => {
+        HttpUtil.post('project/delete', {id: record.id}).then(rs => {
+            this.tableRef.current.reload()
+        })
+    }
+
+    render() {
         return <>
-          <Button
-            type='link'
-            disabled={notPermitted('project:save')}
-            onClick={() => {
-              this.setState({
-                formOpen: true,
-                formValues: row
-              })
-            }}>编辑</Button>
-          &nbsp;
-          <Popconfirm disabled={notPermitted('project:delete')} title="确定删除，删除后将不可恢复"
-                      onConfirm={() => this.handleDelete(row)}>
-            <a disabled={notPermitted('project:delete')}>删除</a>
-          </Popconfirm>
+            <ProTable
+                actionRef={this.tableRef}
+                toolBarRender={() => {
+                    return <ButtonList>
+                        <Button perm='project:save' type='primary' onClick={this.handleAdd}>
+                            <PlusOutlined/> 新增
+                        </Button>
+                    </ButtonList>
+                }}
+                request={(jobParamDescs, sort) => HttpUtil.pageData('project/page', jobParamDescs, sort)}
+                columns={this.columns}
+                rowKey='id'
+            />
 
+            <Modal title='项目'
+                   open={this.state.formOpen}
+                   onOk={() => this.formRef.current.submit()}
+                   onCancel={() => this.setState({formOpen: false})}
+                   destroyOnClose
+
+            >
+
+                <Form ref={this.formRef} labelCol={{flex: '100px'}}
+                      initialValues={this.state.formValues}
+                      onFinish={this.onFinish}>
+                    <Form.Item name='id' noStyle></Form.Item>
+
+                    <Form.Item label='组织' name='sysOrg' rules={[{required: true}]}>
+                        <Input/>
+                    </Form.Item>
+                    <Form.Item label='名称' name='name' rules={[{required: true}]}>
+                        <Input/>
+                    </Form.Item>
+                    <Form.Item label='gitUrl' name='gitUrl' rules={[{required: true}]}>
+                        <Input/>
+                    </Form.Item>
+
+                    <Form.Item label='备注' name='registry' rules={[{required: true}]}>
+                        <Input/>
+                    </Form.Item>
+
+                    <Divider >高级设置</Divider>
+                    <Form.Item label='默认分支' name='branch' rules={[{required: true}]} initialValue='master'>
+                        <Input/>
+                    </Form.Item>
+
+                    <Form.Item label='dockerfile' name='dockerfile' rules={[{required: true}]}
+                               initialValue='Dockerfile'>
+                        <Input/>
+                    </Form.Item>
+
+
+                    <Form.Item label='注册中心' name='registry' rules={[{required: true}]}>
+                        <FieldRemoteSelect url='registry/options' />
+                    </Form.Item>
+                    <Form.Item label='维护latest' name='autoPushLatest' rules={[{required: true}]} initialValue={false}>
+                        <FieldRadioBoolean/>
+                    </Form.Item>
+
+                </Form>
+            </Modal>
         </>
-      },
-    },
-  ];
-
-  componentDidMount() {
-    // 检查是否定义注册中心
-    HttpUtil.get('project/check').then(rs=>{
-      this.setState({checkResult:rs})
-    })
-  }
 
 
-
-  handleSave = value => {
-    value.id = this.state.formValues.id
-    HttpUtil.post(api + 'save', value).then(rs => {
-      this.state.formOpen = false;
-      this.setState(this.state)
-      this.reload();
-    })
-  }
-
-  reload = () => {
-    this.actionRef.current.reload();
-  };
-  handleDelete = (row) => {
-    HttpUtil.get(api + 'delete', {id: row.id}).then(rs => {
-      message.info(rs.message)
-      this.actionRef.current.reload();
-    })
-  }
-
-
-  render() {
-    let {formOpen, checkResult} = this.state
-
-    if(!checkResult) {
-      return  <Skeleton  />
     }
-
-    if(!checkResult.success) {
-      return  <Result title={checkResult.message}></Result>
-    }
-
-    return (<>
-      <ProTable
-        actionRef={this.actionRef}
-        search={false}
-        toolBarRender={(action, {selectedRows}) => [
-          <Button disabled={notPermitted('project:save')}
-                  type="primary" onClick={() => {
-            this.setState({
-              formOpen: true, formValues: {
-                branch: 'master',
-                dockerfile: 'Dockerfile'
-              }
-            })
-          }}>
-            新增
-          </Button>,
-        ]}
-        request={(params, sort) => HttpUtil.pageData(api + "list", params, sort)}
-        columns={this.columns}
-        rowSelection={false}
-        rowKey="id"
-        bordered={true}
-        options={{search: true}}
-
-      />
-
-
-      <Modal
-        maskClosable={false}
-        destroyOnClose
-        title='项目信息'
-        open={formOpen}
-        onCancel={() => {
-          this.setState({formOpen: false})
-        }}
-        footer={null}
-      >
-        <ProTable
-          type='form'
-          form={{
-            initialValues: this.state.formValues,
-            layout: 'horizontal',
-            labelCol: {flex: '100px'},
-          }}
-          onSubmit={this.handleSave}
-          columns={this.columns}
-        />
-      </Modal>
-    </>)
-  }
-
-
 }
 
 
