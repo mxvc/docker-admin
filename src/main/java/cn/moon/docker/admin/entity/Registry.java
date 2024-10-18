@@ -37,6 +37,12 @@ public class Registry extends BaseEntity {
     Boolean defaultRegistry;
 
 
+    String ak;
+    String sk;
+
+    // 腾讯 ap-guangzhou
+    String region; //
+
     public String getFullUrl() {
         if (url != null) {
             return url + "/" + namespace;

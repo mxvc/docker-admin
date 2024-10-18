@@ -139,6 +139,17 @@ export default class extends React.Component {
                    <FieldRadioBoolean />
               </Form.Item>
 
+        <Form.Item label='区域' name='region' rules={[{required: true}]}>
+            <Input />
+        </Form.Item>
+        <Form.Item label='ak' name='ak' rules={[{required: true}]}>
+            <Input/>
+        </Form.Item>
+        <Form.Item label='sk' name='sk' rules={[{required: true}]}>
+            <Input/>
+        </Form.Item>
+
+
     </Form>
   </Modal>
     </>

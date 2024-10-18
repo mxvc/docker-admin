@@ -1,10 +1,27 @@
 package cn.moon.docker.sdk.registry;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+import java.util.Date;
+
+@Getter
+@Setter
 public class ImageVo {
-
     String name;
-    String fullName;
+    String type;
+    String summary;
+
+    String url;
+
+    Date time;
+    String latestVersion;
+
+    String description;
+    int starCount;
+
+    boolean isOfficial;
+
+
+    Long tagCount;
 }
