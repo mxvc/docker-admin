@@ -32,6 +32,12 @@
             <groupId>io.github.tmgg</groupId>
             <artifactId>tmgg-system-job</artifactId>
         </dependency>
+        <dependency>
+            <groupId>io.github.tmgg</groupId>
+            <artifactId>tmgg-system-code-gen</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
 
         <dependency>
             <groupId>org.springframework.boot</groupId>

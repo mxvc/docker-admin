@@ -2,6 +2,7 @@ import {DownOutlined, PlusOutlined} from '@ant-design/icons';
 import {Button, Divider, Dropdown, Modal, Popconfirm, Space, Switch, Tag} from 'antd';
 import React from 'react';
 import {ProTable} from "@tmgg/pro-table";
+import {HttpUtil} from "@tmgg/tmgg-base";
 
 
 const addTitle = "添加注册中心"
