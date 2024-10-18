@@ -1,5 +1,6 @@
 package cn.moon.docker.admin.controller;
 
+import cn.hutool.core.util.StrUtil;
 import cn.moon.docker.admin.entity.Registry;
 import cn.moon.docker.admin.service.RegistryService;
 import cn.moon.docker.sdk.registry.ImageVo;
@@ -7,6 +8,8 @@ import cn.moon.docker.sdk.registry.RegistrySdk;
 import com.tencentcloudapi.common.exception.TencentCloudSDKException;
 import io.tmgg.lang.obj.AjaxResult;
 import jakarta.annotation.Resource;
+import lombok.Data;
+import lombok.Getter;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -29,8 +32,11 @@ public class ImageController  {
 
 
     @PostMapping({"page"})
-    public AjaxResult page(@RequestBody ImageVo param, String keyword, @PageableDefault(direction = Sort.Direction.DESC,sort = {"updateTime"}) Pageable pageable) throws Exception {
-        Registry registry = registryService.checkAndFindDefault();
+    public AjaxResult page(@RequestBody PageParam param, String keyword, @PageableDefault(direction = Sort.Direction.DESC,sort = {"updateTime"}) Pageable pageable) throws Exception {
+        String registryId = param.getRegistryId();
+        Registry registry = StrUtil.isNotEmpty(registryId) ? registryService.findOne(registryId): registryService.checkAndFindDefault();
+
+
         RegistrySdk sdk = registryService.findSdkByUrl(registry.getUrl());
 
         Page<ImageVo> page = sdk.imageList(registry, pageable, keyword);
@@ -43,15 +49,13 @@ public class ImageController  {
         return AjaxResult.ok().data(null);
     }
 
-    @PostMapping({"namespaceOptions"})
-    public AjaxResult namespaceOptions(String registryId) throws TencentCloudSDKException {
-        Registry registry = registryService.findOne(registryId);
-        RegistrySdk sdk = registryService.findSdkByUrl(registry.getUrl());
-        List<NamespaceVo> list = sdk.nameList(registry);
 
-        return AjaxResult.ok().data(null);
+
+
+    @Data
+    public static class PageParam {
+        String registryId;
     }
-
 
 }
 

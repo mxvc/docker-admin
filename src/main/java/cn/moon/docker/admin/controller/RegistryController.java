@@ -6,7 +6,9 @@ import cn.moon.docker.admin.entity.Registry;
 import cn.moon.docker.admin.service.RegistryService;
 import io.tmgg.lang.dao.BaseCURDController;
 import io.tmgg.lang.dao.BaseEntity;
+import jakarta.ws.rs.GET;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -21,6 +23,12 @@ public class RegistryController extends BaseCURDController<Registry> {
     @Resource
     RegistryService service;
 
+    @GetMapping({"options"})
+    public AjaxResult options() {
+        List<Option> options = service.findOptionList(Registry::getFullUrl);
+
+        return AjaxResult.ok().data(options);
+    }
 
 
 }

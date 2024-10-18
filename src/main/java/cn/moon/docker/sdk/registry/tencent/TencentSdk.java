@@ -24,14 +24,6 @@ import java.util.List;
 @Component
 public class TencentSdk implements RegistrySdk {
 
-    @Override
-    public List<NamespaceVo> nameList(Registry registry) throws TencentCloudSDKException {
-        TcrClient client = getClient(registry);
-        DescribeNamespacesRequest req = new DescribeNamespacesRequest();
-        DescribeNamespacesResponse resp = client.DescribeNamespaces(req);
-
-        return null;
-    }
 
     @Override
     public Page<ImageVo> imageList(cn.moon.docker.admin.entity.Registry registry, Pageable pageable, String keyword) throws Exception {

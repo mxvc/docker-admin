@@ -60,19 +60,19 @@ export default class extends React.Component {
       <Card>
 
 
-      <Form layout='inline' onFinish={(values)=>{
+      <Form layout='inline' onValuesChange={(changedValues,values)=>{
         this.setState({searchParams:values})
         this.actionRef.current.reload();
       }}>
-        <Form.Item label='注册中心'>
-          <FieldRemoteSelect url='registry/options' />
+        <Form.Item label='注册中心' name='registryId'>
+          <FieldRemoteSelect url='registry/options' style={{width:400}} />
         </Form.Item>
-        <Form.Item label='命名空间'>
-          <FieldRemoteSelect url='image/namespaceOptions' />
-        </Form.Item>
+
       </Form>
       </Card>
 
+
+      <div style={{margin:12}}></div>
 
       <ProTable
         actionRef={this.actionRef}
