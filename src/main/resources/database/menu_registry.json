@@ -1,0 +1,12 @@
+{
+  "SysMenu": [
+    {
+      "pid":"biz",
+      "id": "registry",
+      "name": "注册中心",
+      "perm": "registry",
+      "path": "/registry",
+      "seq": 100
+    }
+  ]
+}

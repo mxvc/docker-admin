@@ -23,14 +23,7 @@
       "perm": "host",
       "path": "/host",
       "seq": 3
-    },
-    {
-      "pid": "biz",
-      "id": "settings",
-      "name": "设置",
-      "perm": "settings",
-      "path": "/settings",
-      "seq": 4
     }
+
   ]
 }
