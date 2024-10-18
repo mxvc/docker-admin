@@ -26,7 +26,7 @@ import ContainerLog from "../../components/container/ContainerLog";
 import ContainerFile from "../../components/container/ContainerFile";
 import {HttpUtil} from "@tmgg/tmgg-base";
 
-let api = '/api/app/';
+let api = 'app/';
 
 
 export default class extends React.Component {
@@ -55,7 +55,7 @@ export default class extends React.Component {
     let id = this.props.location.query.id;
     this.id = id;
 
-    HttpUtil.get('api/app/get', {id: id}).then(rs => {
+    HttpUtil.get('app/get', {id: id}).then(rs => {
       this.setState({app: rs, loading: false});
       this.loadTagOptions(rs)
     })
@@ -70,7 +70,7 @@ export default class extends React.Component {
   loadContainer = () => {
     console.log('loadContainer')
     this.setState({containerLoading: true})
-    HttpUtil.get("/api/app/container", {id: this.id}).then(rs => {
+    HttpUtil.get("app/container", {id: this.id}).then(rs => {
       const container = rs.data;
       this.setState({container})
 
@@ -86,7 +86,7 @@ export default class extends React.Component {
 
   loadTagOptions(app) {
     if(app.project){
-      HttpUtil.get('api/project/versions', {projectId:app.project.id}).then(rs => {
+      HttpUtil.get('project/versions', {projectId:app.project.id}).then(rs => {
         this.setState({tagOptions: rs})
       })
     }
@@ -97,34 +97,34 @@ export default class extends React.Component {
     const {container} = this.state
     container.state = 'deploying'
     this.setState({container})
-    HttpUtil.post('api/app/deploy/' + this.state.app.id).then(rs => {
+    HttpUtil.post('deploy/' + this.state.app.id).then(rs => {
       message.success('部署指令已发送，异步执行中...')
       this.loadContainer()
     })
   }
   start = () => {
-    HttpUtil.post('api/app/start/' + this.state.app.id).then(() => {
+    HttpUtil.post('app/start/' + this.state.app.id).then(() => {
       this.loadContainer()
     })
   }
   stop = () => {
-    HttpUtil.post('api/app/stop/' + this.state.app.id).then(() => {
+    HttpUtil.post('stop/' + this.state.app.id).then(() => {
       this.loadContainer()
     })
   }
 
   setAutoDeploy = (id, autoDeploy) => {
-    HttpUtil.get("/api/app/autoDeploy", {id, autoDeploy})
+    HttpUtil.get("app/autoDeploy", {id, autoDeploy})
   }
   setAutoRestart = (id, autoRestart) => {
-    HttpUtil.get("/api/app/autoRestart", {id, autoRestart})
+    HttpUtil.get("app/autoRestart", {id, autoRestart})
   }
 
 
   updateVersion = () => {
     const id = this.state.app.id;
     const tag = this.state.publishApp.targetVersion;
-    HttpUtil.get("/api/app/updateVersion", {id, version: tag}).then(rs => {
+    HttpUtil.get("app/updateVersion", {id, version: tag}).then(rs => {
       message.success(rs.message)
       window.location.reload(true)
     })

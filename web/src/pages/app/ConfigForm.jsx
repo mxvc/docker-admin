@@ -36,7 +36,7 @@ export default class extends React.Component {
         const {form} = this.state;
         const hide = message.loading("修改配置中...", 0)
         this.setState({form: null})
-        HttpUtil.post('/api/app/updateConfig?id=' + this.props.app.id, form).then(rs => {
+        HttpUtil.post('/app/updateConfig?id=' + this.props.app.id, form).then(rs => {
             const app = rs.data;
             this.setState({form: app.config})
             hide()

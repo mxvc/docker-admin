@@ -30,7 +30,7 @@ import java.util.*;
 
 @RestController
 @Slf4j
-@RequestMapping("api/host")
+@RequestMapping("host")
 public class HostController {
 
 

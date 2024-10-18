@@ -1,0 +1,36 @@
+{
+  "SysMenu": [
+    {
+      "pid": "biz",
+      "id": "project",
+      "name": "项目",
+      "perm": "project",
+      "path": "/project",
+      "seq": 1
+    },
+    {
+      "pid": "biz",
+      "id": "app",
+      "name": "应用",
+      "perm": "app",
+      "path": "/app",
+      "seq": 2
+    },
+    {
+      "pid": "biz",
+      "id": "host",
+      "name": "主机",
+      "perm": "host",
+      "path": "/host",
+      "seq": 3
+    },
+    {
+      "pid": "biz",
+      "id": "settings",
+      "name": "设置",
+      "perm": "settings",
+      "path": "/settings",
+      "seq": 4
+    }
+  ]
+}

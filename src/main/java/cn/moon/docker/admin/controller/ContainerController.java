@@ -37,7 +37,7 @@ import java.util.*;
 
 @RestController
 @Slf4j
-@RequestMapping(value = "api/container")
+@RequestMapping(value = "container")
 public class ContainerController {
 
     @Resource

@@ -25,7 +25,7 @@ import static cn.moon.docker.admin.controller.LogUrlTool.getLogViewUrl;
 
 @RestController
 @Slf4j
-@RequestMapping(value = "api/buildLog")
+@RequestMapping(value = "buildLog")
 public class BuildLogController {
 
     @Resource

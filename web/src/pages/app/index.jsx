@@ -6,7 +6,7 @@ import {notPermitted} from "../../utils/SysConfig";
 import {FieldRemoteSelect, HttpUtil} from "@tmgg/tmgg-base";
 import {ProTable} from "@tmgg/pro-table";
 
-let api = '/api/app/';
+let api = 'app/';
 
 
 export default class extends React.Component {
@@ -79,7 +79,7 @@ export default class extends React.Component {
   }
 
   loadVersions = projectId => {
-    HttpUtil. get('api/project/versions', {projectId}).then(rs => {
+    HttpUtil. get('project/versions', {projectId}).then(rs => {
       this.setState({versions: rs})
     })
   };
@@ -138,10 +138,10 @@ export default class extends React.Component {
               <>
                 <Form.Item name={['project', 'id']}
                            label='项目' required rules={[{required: true}]}>
-                  <RemoteSelect url='/api/project/options'
+                  <FieldRemoteSelect url='project/options'
                                 placeholder='请选择项目'
                                 optionFilterProp="label"
-                  ></RemoteSelect>
+                  ></FieldRemoteSelect>
                 </Form.Item>
                 <Form.Item name='imageTag' label='版本' required rules={[{required: true}]}>
                   <AutoComplete options={this.state.versions} placeholder='请选择版本'/>
@@ -161,7 +161,7 @@ export default class extends React.Component {
 
 
             <Form.Item name={['host', 'id']} label='部署主机' required rules={[{required: true}]}>
-              <FieldRemoteSelect showSearch url="/api/host/options"/>
+              <FieldRemoteSelect showSearch url="host/options"/>
             </Form.Item>
 
 

@@ -8,7 +8,7 @@ import {notPermitted} from "../../../utils/SysConfig";
 
 const addTitle = "添加项目"
 const editTitle = '编辑项目'
-let api = '/api/gitCredential/';
+let api = 'gitCredential/';
 
 
 export default class extends React.Component {

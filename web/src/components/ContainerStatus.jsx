@@ -14,7 +14,7 @@ export default class extends React.Component {
 
   componentDidMount() {
     const {hostId, appName} = this.props
-    HttpUtil.get("api/container/status", {hostId, appName}).then(rs => {
+    HttpUtil.get("container/status", {hostId, appName}).then(rs => {
       this.setState({status: rs.message})
     })
   }

@@ -1,9 +1,10 @@
 import {Button, Divider, Skeleton, Table} from 'antd';
 import React from 'react';
 import {history} from "umi";
+import {HttpUtil} from "@tmgg/tmgg-base";
 
 
-let api = '/api/host/';
+let api = 'host/';
 
 
 export default class extends React.Component {
@@ -28,15 +29,15 @@ export default class extends React.Component {
 
   remove = (id) => {
     let params = this.props;
-    HttpUtil.get("/api/container/remove", {hostId: params.id, containerId: id}).then(this.loadData)
+    HttpUtil.get("container/remove", {hostId: params.id, containerId: id}).then(this.loadData)
   }
   stop = (id) => {
     let params = this.props;
-    HttpUtil.get("/api/container/stop", {hostId: params.id, containerId: id}).then(this.loadData)
+    HttpUtil.get("container/stop", {hostId: params.id, containerId: id}).then(this.loadData)
   }
   start = (id) => {
     let params = this.props;
-    HttpUtil.get("/api/container/start", {hostId: params.id, containerId: id}).then(this.loadData)
+    HttpUtil.get("container/start", {hostId: params.id, containerId: id}).then(this.loadData)
   }
 
   columns = [

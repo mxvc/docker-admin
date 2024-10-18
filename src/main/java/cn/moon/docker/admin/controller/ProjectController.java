@@ -1,6 +1,5 @@
 package cn.moon.docker.admin.controller;
 
-import cn.hutool.core.util.StrUtil;
 import cn.moon.docker.admin.BuildParam;
 import cn.moon.docker.admin.entity.Project;
 import cn.moon.docker.admin.service.BuildLogService;
@@ -13,6 +12,7 @@ import io.tmgg.lang.obj.Option;
 import io.tmgg.web.annotion.HasPermission;
 import io.tmgg.web.perm.SecurityUtils;
 import io.tmgg.web.perm.Subject;
+import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -20,25 +20,20 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import jakarta.annotation.Resource;
-
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @RestController
 @Slf4j
-@RequestMapping(value = "api/project")
+@RequestMapping("project")
 public class ProjectController {
 
 

@@ -4,9 +4,10 @@ import React from 'react';
 import {ProTable} from "@tmgg/pro-table";
 import {history} from "umi";
 import {notPermitted} from "../../utils/SysConfig";
+import {HttpUtil} from "@tmgg/tmgg-base";
 
 
-let api = '/api/project/';
+let api = 'project/';
 
 
 export default class extends React.Component {
@@ -91,7 +92,7 @@ export default class extends React.Component {
 
   componentDidMount() {
     // 检查是否定义注册中心
-    HttpUtil.get('api/project/check').then(rs=>{
+    HttpUtil.get('project/check').then(rs=>{
       this.setState({checkResult:rs})
     })
   }

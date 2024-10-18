@@ -26,7 +26,7 @@ import static io.tmgg.sys.entity.SysRole.Fields.perms;
 
 @RestController
 @Slf4j
-@RequestMapping(value = "api/app")
+@RequestMapping(value = "app")
 public class AppController {
 
 

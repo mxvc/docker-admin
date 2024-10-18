@@ -11,7 +11,7 @@ import {
 } from "@ant-design/icons";
 import {ProTable} from "@tmgg/pro-table";
 
-let api = '/api/deployLog/';
+let api = '/deployLog/';
 
 
 function getIcon(key, index) {

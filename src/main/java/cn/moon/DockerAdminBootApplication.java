@@ -11,7 +11,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
 @SpringBootApplication
 @EnableAsync
 @Slf4j
-@ComponentScan(basePackageClasses = BasePackage.class)
+@ComponentScan(basePackageClasses = {BasePackage.class, DockerAdminBootApplication.class})
 public class DockerAdminBootApplication {
 
     public static void main(String[] args) {

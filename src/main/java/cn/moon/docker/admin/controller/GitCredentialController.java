@@ -16,7 +16,7 @@ import jakarta.annotation.Resource;
 
 @RestController
 @Slf4j
-@RequestMapping(value = "api/gitCredential")
+@RequestMapping(value = "gitCredential")
 public class GitCredentialController {
 
 

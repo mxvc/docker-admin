@@ -2,7 +2,7 @@ import React from 'react';
 import {LazyLog, ScrollFollow} from 'react-lazylog';
 
 
-let api = '/api/container/';
+let api = 'container/';
 
 
 export default class ContainerLog extends React.Component {
@@ -18,7 +18,7 @@ export default class ContainerLog extends React.Component {
     console.log('logx', this.props)
 
     let url = api + "log/" + hostId + "/" + containerId;
-    const downloadUrl = `api/container/downloadLog?hostId=${hostId}&containerId=${containerId}`
+    const downloadUrl = `container/downloadLog?hostId=${hostId}&containerId=${containerId}`
     return <div style={{height: 'calc(100vh - 350px)', minHeight: 400, width: '100%'}}>
 
 

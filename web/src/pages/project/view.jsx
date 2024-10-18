@@ -1,9 +1,10 @@
 import {Card, Descriptions, Spin, Switch} from 'antd';
 import React from 'react';
 import BuildLogList from "./BuildLogList";
+import {HttpUtil} from "@tmgg/tmgg-base";
 
 
-let api = '/api/project/';
+let api = 'project/';
 
 export default class extends React.Component {
 

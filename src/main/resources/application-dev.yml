@@ -10,3 +10,6 @@ spring:
     username: jttest
 server:
   port: 8080
+tmgg:
+  system:
+    auto-update-sys-data: false

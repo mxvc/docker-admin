@@ -21,7 +21,7 @@ import java.util.List;
 
 @RestController
 @Slf4j
-@RequestMapping("api/registry")
+@RequestMapping("registry")
 public class RegistryController {
 
     @Resource

@@ -7,7 +7,7 @@ import {ProTable} from "@tmgg/pro-table";
 const addTitle = "添加注册中心"
 const editTitle = '编辑注册中心'
 const deleteTitle = '删除注册中心'
-let api = '/api/registry/';
+let api = 'registry/';
 
 
 export default class extends React.Component {

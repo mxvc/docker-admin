@@ -2,7 +2,7 @@ import {Button, message, Table} from 'antd';
 import React from 'react';
 
 
-let api = '/api/host/';
+let api = 'host/';
 
 
 export default class extends React.Component {

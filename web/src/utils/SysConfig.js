@@ -1,9 +1,7 @@
-let loginData = {};
-export function setLogin(data){
-    loginData = data;
-}
+import {PermUtil} from "@tmgg/tmgg-base";
+
 export function isPermitted(p){
- return  loginData.perms.indexOf(p) != -1
+ return  PermUtil.hasPermission(p)
 }
 export function notPermitted(p){
   return  !isPermitted(p)

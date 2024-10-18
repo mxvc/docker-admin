@@ -1,5 +1,7 @@
 import React from "react";
 import {Card, Col, message, Row, Table, Tree} from "antd";
+import {HttpUtil} from "@tmgg/tmgg-base";
+import {TreeUtil} from "@tmgg/tmgg-commons-lang";
 
 
 export default class extends React.Component {
@@ -38,10 +40,10 @@ export default class extends React.Component {
 
       const hide = message.loading("加载文件信息中...", 0)
       this.setState({treeLoading: true})
-      HttpUtil.get("/api/container/file", {hostId, containerId, path}).then(rs => {
+      HttpUtil.get("container/file", {hostId, containerId, path}).then(rs => {
         hide()
         const {dirs, files} = rs.data
-        const node =  hutool.tree.findByKey(key, treeData, "key");
+        const node = TreeUtil.findByKey(key, treeData, "key");
         if (node) {
           node.children = dirs;
           node.fileList = files;
@@ -86,7 +88,7 @@ export default class extends React.Component {
                      {
                        title: '-', dataIndex: 'option',
                        render: (_, row) => {
-                         let url = 'api/container/downloadFile?hostId=' + hostId + "&containerId=" + containerId + "&file=" + row.path
+                         let url = 'container/downloadFile?hostId=' + hostId + "&containerId=" + containerId + "&file=" + row.path
                          return <a href={url} target='_blank'>下载</a>
                        }
                      }

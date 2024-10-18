@@ -6,7 +6,7 @@ import {ProTable} from "@tmgg/pro-table";
 import {history} from "umi";
 
 
-let api = '/api/host/';
+let api = 'host/';
 
 
 export default class extends React.Component {

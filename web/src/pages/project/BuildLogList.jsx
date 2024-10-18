@@ -9,9 +9,10 @@ import {
 } from "@ant-design/icons";
 import {ProTable} from "@tmgg/pro-table";
 import moment from "moment";
+import {HttpUtil} from "@tmgg/tmgg-base";
 
 
-let api = '/api/buildLog/';
+let api = 'buildLog/';
 
 function getIcon(key, index) {
   const iconDict = {
@@ -142,13 +143,13 @@ export default class extends React.Component {
   ]
 
   retry = row => {
-    HttpUtil.get("/api/project/build", row).then(rs => {
+    HttpUtil.get("project/build", row).then(rs => {
       this.reload()
     })
   }
 
   stop = row => {
-    HttpUtil.get("/api/project/stopBuild", row).then(rs => {
+    HttpUtil.get("project/stopBuild", row).then(rs => {
       this.reload()
     })
   }
@@ -166,7 +167,7 @@ export default class extends React.Component {
     }, 1000 * 30)
 
 
-    HttpUtil.get('/api/host/options?onlyRunner=true').then(rs => {
+    HttpUtil.get('host/options?onlyRunner=true').then(rs => {
       let hostOptions = rs;
       this.setState({hostOptions: hostOptions})
     })
@@ -185,13 +186,13 @@ export default class extends React.Component {
 
 
   submitTrigger = (values) => {
-    HttpUtil.get("/api/project/build", values).then(rs => {
+    HttpUtil.get("project/build", values).then(rs => {
       this.setState({showTrigger: false})
       this.actionRef.current.reload()
     })
   }
   cleanError = () => {
-    HttpUtil.get("/api/project/cleanErrorLog", {id: this.projectId}).then(rs => {
+    HttpUtil.get("project/cleanErrorLog", {id: this.projectId}).then(rs => {
       this.actionRef.current.reload()
     })
   }

@@ -5,7 +5,7 @@ import HostContainers from "./HostContainers";
 import {Spin} from "antd/lib";
 
 
-let api = '/api/host/';
+let api = 'host/';
 
 
 export default class extends React.Component {
@@ -116,7 +116,7 @@ export default class extends React.Component {
     let {id} = this.props.location.query;
     values.hostId = id;
     const hide = message.loading("同步中,请勿退出...", 0)
-    HttpUtil.postForm('api/host/syncImageToHost', values).then((rs) => {
+    HttpUtil.postForm('host/syncImageToHost', values).then((rs) => {
       hide();
       message.success(rs.message)
       this.loadData()
