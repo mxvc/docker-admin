@@ -17,6 +17,7 @@
     </properties>
 
     <dependencies>
+
         <dependency>
             <groupId>javax.xml.bind</groupId>
             <artifactId>jaxb-api</artifactId>
@@ -58,7 +59,11 @@
         </dependency>
 
 
-
+        <dependency>
+            <groupId>com.tencentcloudapi</groupId>
+            <artifactId>tencentcloud-sdk-java-tcr</artifactId>
+            <version>3.1.1098</version>
+        </dependency>
 
         <dependency>
             <groupId>org.projectlombok</groupId>
