@@ -107,7 +107,7 @@ export default class extends React.Component {
               新增
             </Button>,
           ]}
-          request={(params, sort) => HttpUtil.requestAntdSpringPageData(api + 'list', params, sort)}
+          request={(params, sort) => HttpUtil.pageData(api + 'list', params, sort)}
           columns={this.columns}
           rowSelection={false}
           rowKey="id"

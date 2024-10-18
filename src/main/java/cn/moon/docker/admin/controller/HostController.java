@@ -7,6 +7,7 @@ import cn.moon.docker.admin.vo.DockerInfo;
 import com.github.dockerjava.api.exception.ConflictException;
 import com.github.dockerjava.api.model.Image;
 import com.github.dockerjava.api.model.Info;
+import io.tmgg.lang.dao.BaseCURDController;
 import io.tmgg.lang.dao.BaseEntity;
 import io.tmgg.lang.dao.specification.JpaQuery;
 import io.tmgg.lang.obj.AjaxResult;
@@ -31,45 +32,18 @@ import java.util.*;
 @RestController
 @Slf4j
 @RequestMapping("host")
-public class HostController {
+public class HostController extends BaseCURDController<Host> {
 
 
     @Resource
     private HostService service;
 
-    @HasPermission("host:list")
-    @RequestMapping("list")
-    public Page<Host> list(String searchText, @PageableDefault(sort = BaseEntity.Fields.updateTime, direction = Sort.Direction.DESC) Pageable pageable) {
-        JpaQuery<Host> q = getHostQuery();
-
-        if (StrUtil.isNotBlank(searchText)) {
-            q.like("name", searchText.trim());
-        }
-
-
-        return service.findAll(q, pageable);
-    }
-
     private  JpaQuery<Host> getHostQuery() {
         JpaQuery<Host> q = new JpaQuery<>();
         Subject subject = SecurityUtils.getSubject();
-            q.in("sysOrg.id", subject.getOrgPermissions());
+        q.in("sysOrg.id", subject.getOrgPermissions());
         return q;
     }
-
-    @RequestMapping("save")
-    public AjaxResult update(@RequestBody Host host) {
-        service.save(host);
-        return AjaxResult.ok().msg("保存成功");
-    }
-
-
-    @RequestMapping("delete")
-    public AjaxResult delete(@RequestBody Host host) {
-        service.deleteById(host.getId());
-        return AjaxResult.ok().msg("删除成功");
-    }
-
 
     @RequestMapping("options")
     public List<Option> options(@RequestParam(defaultValue = "false") boolean onlyRunner) {

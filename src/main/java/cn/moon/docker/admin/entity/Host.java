@@ -1,5 +1,7 @@
 package cn.moon.docker.admin.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import io.tmgg.lang.ann.Remark;
 import io.tmgg.lang.dao.BaseEntity;
 import io.tmgg.sys.org.entity.SysOrg;
 import jakarta.persistence.ManyToOne;
@@ -15,6 +17,7 @@ import jakarta.persistence.Entity;
 /**
  * 主机信息
  */
+@Remark("主机")
 @Entity
 @Getter
 @Setter
@@ -22,19 +25,24 @@ import jakarta.persistence.Entity;
 @FieldNameConstants
 public class Host extends BaseEntity {
 
+    @Remark("名称")
     @NotNull
     @Column(unique = true)
     String name;
+
+    @Remark("构建节点")
     Boolean isRunner;
 
 
     @ManyToOne
     SysOrg sysOrg;
 
-
     String dockerHost;
+
+    @Remark("请求头Host重写")
     String dockerHostHeader;
 
+    @Remark("备注")
     String remark;
 
     @Override

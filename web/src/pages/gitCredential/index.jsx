@@ -21,15 +21,8 @@ export default class extends React.Component {
   columns = [
 
     {
-      title: '仓库地址',
+      title: '前缀',
       dataIndex: 'url',
-
-
-    },
-
-    {
-      title: '命名空间',
-      dataIndex: 'namespace',
 
 
     },
@@ -38,22 +31,16 @@ export default class extends React.Component {
       title: '账号',
       dataIndex: 'username',
 
-        hideInSearch:true
+
     },
 
     {
       title: '密码',
       dataIndex: 'password',
-      valueType: 'password',
+        valueType: 'password',
         hideInSearch:true,
-        hideInTable:true,
-    },
+        hideInTable:true
 
-    {
-      title: '是否默认',
-      dataIndex: 'defaultRegistry',
-       valueType: 'boolean',
-        hideInSearch:true
     },
 
     {
@@ -62,8 +49,8 @@ export default class extends React.Component {
       valueType: 'option',
       render: (_, record) => (
           <ButtonList>
-            <a perm='registry:save' onClick={() => this.handleEdit(record)}> 修改 </a>
-            <Popconfirm perm='registry:delete' title='是否确定删除Registry'  onConfirm={() => this.handleDelete(record)}>
+            <a perm='gitCredential:save' onClick={() => this.handleEdit(record)}> 修改 </a>
+            <Popconfirm perm='gitCredential:delete' title='是否确定删除GIT凭据'  onConfirm={() => this.handleDelete(record)}>
               <a>删除</a>
             </Popconfirm>
           </ButtonList>
@@ -81,7 +68,7 @@ export default class extends React.Component {
 
 
   onFinish = values => {
-    HttpUtil.post( 'registry/save', values).then(rs => {
+    HttpUtil.post( 'gitCredential/save', values).then(rs => {
       this.setState({formOpen: false})
       this.tableRef.current.reload()
     })
@@ -90,7 +77,7 @@ export default class extends React.Component {
 
 
   handleDelete = record => {
-    HttpUtil.post( 'registry/delete', {id:record.id}).then(rs => {
+    HttpUtil.post( 'gitCredential/delete', {id:record.id}).then(rs => {
       this.tableRef.current.reload()
     })
   }
@@ -101,17 +88,17 @@ export default class extends React.Component {
           actionRef={this.tableRef}
           toolBarRender={() => {
             return <ButtonList>
-              <Button perm='registry:save' type='primary' onClick={this.handleAdd}>
+              <Button perm='gitCredential:save' type='primary' onClick={this.handleAdd}>
                 <PlusOutlined/> 新增
               </Button>
             </ButtonList>
           }}
-          request={(jobParamDescs, sort) => HttpUtil.pageData('registry/page', jobParamDescs, sort)}
+          request={(jobParamDescs, sort) => HttpUtil.pageData('gitCredential/page', jobParamDescs, sort)}
           columns={this.columns}
           rowKey='id'
       />
 
-  <Modal title='Registry'
+  <Modal title='GIT凭据'
     open={this.state.formOpen}
     onOk={() => this.formRef.current.submit()}
     onCancel={() => this.setState({formOpen: false})}
@@ -123,10 +110,7 @@ export default class extends React.Component {
         onFinish={this.onFinish} >
         <Form.Item  name='id' noStyle></Form.Item>
 
-              <Form.Item label='仓库地址' name='url' rules={[{required: true}]}>
-                    <Input/>
-              </Form.Item>
-              <Form.Item label='命名空间' name='namespace' rules={[{required: true}]}>
+              <Form.Item label='前缀' name='url' rules={[{required: true}]}>
                     <Input/>
               </Form.Item>
               <Form.Item label='账号' name='username' rules={[{required: true}]}>
@@ -134,9 +118,6 @@ export default class extends React.Component {
               </Form.Item>
               <Form.Item label='密码' name='password' rules={[{required: true}]}>
                     <Input.Password/>
-              </Form.Item>
-              <Form.Item label='是否默认' name='defaultRegistry' rules={[{required: true}]}>
-                   <FieldRadioBoolean />
               </Form.Item>
 
     </Form>

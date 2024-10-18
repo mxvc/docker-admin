@@ -3,6 +3,7 @@ import React from 'react';
 import HostImages from "./HostImages";
 import HostContainers from "./HostContainers";
 import {Spin} from "antd/lib";
+import {HttpUtil} from "@tmgg/tmgg-base";
 
 
 let api = 'host/';
@@ -99,7 +100,7 @@ export default class extends React.Component {
               {value: 'ubuntu:latest'},
             ]}></AutoComplete>
           </Form.Item>
-          <Form.Item label='仓库源' name='src' initialValue='registry.cn-hangzhou.aliyuncs.com/commons-hub'>
+          <Form.Item label='仓库源' name='src' initialValue='registry.cn-hangzhou.aliyuncs.com/mxvc'>
             <Input></Input>
           </Form.Item>
 

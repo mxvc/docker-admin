@@ -213,7 +213,7 @@ export default class extends React.Component {
         }}
         search={false}
         actionRef={this.actionRef}
-        request={(params, sort) => HttpUtil.requestAntdSpringPageData(this.listURL, params, sort)}
+        request={(params, sort) => HttpUtil.pageData(this.listURL, params, sort)}
         columns={this.columns}
         rowSelection={false}
         scroll={{x: 'max-content'}}
