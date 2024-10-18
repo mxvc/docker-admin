@@ -3,7 +3,7 @@
     {
       "pid":"biz",
       "id": "image",
-      "name": "镜像",
+      "name": "镜像仓库",
       "perm": "image",
       "path": "/image",
       "seq": 1

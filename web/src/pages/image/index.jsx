@@ -1,9 +1,9 @@
-import {Button, Card} from 'antd';
+import {Button, Card, Form} from 'antd';
 import React from 'react';
 
 
 import {ProTable} from "@tmgg/pro-table";
-import {HttpUtil} from "@tmgg/tmgg-base";
+import {FieldRemoteSelect, HttpUtil} from "@tmgg/tmgg-base";
 
 
 
@@ -11,7 +11,9 @@ export default class extends React.Component {
 
   state = {
     configList: [],
-    index: null
+    index: null,
+
+    searchParams: {}
   }
 
 
@@ -55,11 +57,29 @@ export default class extends React.Component {
 
   render() {
     return <>
+      <Card>
+
+
+      <Form layout='inline' onFinish={(values)=>{
+        this.setState({searchParams:values})
+        this.actionRef.current.reload();
+      }}>
+        <Form.Item label='注册中心'>
+          <FieldRemoteSelect url='registry/options' />
+        </Form.Item>
+        <Form.Item label='命名空间'>
+          <FieldRemoteSelect url='image/namespaceOptions' />
+        </Form.Item>
+      </Form>
+      </Card>
+
+
       <ProTable
         actionRef={this.actionRef}
         request={(params, sort) => {
           params.pageSize = 100;
-          return HttpUtil.pageData('image/page', params, sort);
+
+          return HttpUtil.pageData('image/page', {...params, ... this.state.searchParams} , sort);
         }}
         columns={this.columns}
         rowSelection={false}

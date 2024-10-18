@@ -1,7 +1,9 @@
 package cn.moon.docker.sdk.registry;
 
 
+import cn.moon.docker.admin.entity.Registry;
 import com.aliyuncs.exceptions.ClientException;
+import com.tencentcloudapi.common.exception.TencentCloudSDKException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;

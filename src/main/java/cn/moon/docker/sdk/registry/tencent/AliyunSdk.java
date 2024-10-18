@@ -21,12 +21,12 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ *  阿里云个人版sdk已下线，但是目前还能用
+ */
 @Slf4j
 @Getter
 @Setter
@@ -100,6 +100,8 @@ public class AliyunSdk implements RegistrySdk {
 
         return new PageImpl<>(imageTagList, pageable, total);
     }
+
+
 
 
     private CommonRequest getCommonRequest(Registry registry) {
