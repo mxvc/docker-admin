@@ -2,7 +2,7 @@ package cn.moon.docker.sdk.registry.tencent;
 
 import cn.moon.docker.admin.entity.Registry;
 import cn.moon.docker.sdk.registry.ImageVo;
-import cn.moon.docker.sdk.registry.RegistryApi;
+import cn.moon.docker.sdk.registry.RegistrySdk;
 import cn.moon.docker.sdk.registry.TagVo;
 import com.aliyuncs.CommonRequest;
 import com.aliyuncs.CommonResponse;
@@ -20,7 +20,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
-import java.awt.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -31,7 +30,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @Getter
 @Setter
-public class AliyunApi extends RegistryApi {
+public class AliyunSdk extends RegistrySdk {
 
 
     public Page<ImageVo> findRepositoryList(cn.moon.docker.admin.entity.Registry registry,Pageable pageable, String keyword) throws Exception {

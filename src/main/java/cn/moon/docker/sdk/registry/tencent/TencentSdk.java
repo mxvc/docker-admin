@@ -3,7 +3,7 @@ package cn.moon.docker.sdk.registry.tencent;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.moon.docker.sdk.registry.ImageVo;
-import cn.moon.docker.sdk.registry.RegistryApi;
+import cn.moon.docker.sdk.registry.RegistrySdk;
 import cn.moon.docker.sdk.registry.TagVo;
 import com.tencentcloudapi.common.Credential;
 import com.tencentcloudapi.tcr.v20190924.TcrClient;
@@ -19,7 +19,7 @@ import java.util.List;
 
 @Slf4j
 @Component
-public class TencentApi extends RegistryApi {
+public class TencentSdk extends RegistrySdk {
 
     @Override
     public Page<ImageVo> findRepositoryList(cn.moon.docker.admin.entity.Registry registry, Pageable pageable, String keyword) throws Exception {
