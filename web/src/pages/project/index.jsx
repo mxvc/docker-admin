@@ -3,14 +3,17 @@ import {Button, Divider, Form, Input, Modal, Popconfirm} from 'antd'
 import React from 'react'
 
 import {ProTable} from '@tmgg/pro-table'
-import {ButtonList, FieldRadioBoolean, FieldRemoteSelect, HttpUtil} from "@tmgg/tmgg-base"
+import {ButtonList, FieldOrgTreeSelect, FieldRadioBoolean, FieldRemoteSelect, HttpUtil} from "@tmgg/tmgg-base"
+import {history} from "umi";
 
 
 export default class extends React.Component {
 
     state = {
         formValues: {},
-        formOpen: false
+        formOpen: false,
+        registryOptions:[],
+        defaultRegistryId:null
     }
 
     formRef = React.createRef()
@@ -21,29 +24,28 @@ export default class extends React.Component {
         {
             title: '组织',
             dataIndex: 'sysOrg',
-
+            render(v){
+                return  v.name
+            }
 
         },
 
         {
             title: '名称',
             dataIndex: 'name',
-
+            render: (name, row) => {
+                return <a onClick={() => history.push('project/view?id=' + row.id)}>{name}</a>
+            },
 
         },
 
         {
             title: 'gitUrl',
             dataIndex: 'gitUrl',
-
-
         },
-
         {
-            title: 'dockerfile',
-            dataIndex: 'dockerfile',
-
-
+            title: '备注',
+            dataIndex: 'remark',
         },
 
         {
@@ -52,12 +54,19 @@ export default class extends React.Component {
 
 
         },
+        {
+            title: 'dockerfile',
+            dataIndex: 'dockerfile',
+        },
+
+
 
         {
             title: '注册中心',
             dataIndex: 'registry',
-
-
+            render(v){
+                return  v.fullUrl
+            }
         },
 
         {
@@ -83,6 +92,15 @@ export default class extends React.Component {
             ),
         },
     ]
+
+    componentDidMount() {
+        HttpUtil.get('registry/options').then(rs=>{
+            this.setState({registryOptions: rs})
+            if(rs.length){
+                this.setState({defaultRegistryId: rs[0].value})
+            }
+        })
+    }
 
     handleAdd = () => {
         this.setState({formOpen: true, formValues: {}})
@@ -129,6 +147,8 @@ export default class extends React.Component {
                    onCancel={() => this.setState({formOpen: false})}
                    destroyOnClose
 
+                   width={600}
+
             >
 
                 <Form ref={this.formRef} labelCol={{flex: '100px'}}
@@ -136,21 +156,20 @@ export default class extends React.Component {
                       onFinish={this.onFinish}>
                     <Form.Item name='id' noStyle></Form.Item>
 
-                    <Form.Item label='组织' name='sysOrg' rules={[{required: true}]}>
+                    <Form.Item label='gitUrl' name='gitUrl' rules={[{required: true}]}>
                         <Input/>
                     </Form.Item>
                     <Form.Item label='名称' name='name' rules={[{required: true}]}>
                         <Input/>
                     </Form.Item>
-                    <Form.Item label='gitUrl' name='gitUrl' rules={[{required: true}]}>
-                        <Input/>
-                    </Form.Item>
-
-                    <Form.Item label='备注' name='registry' rules={[{required: true}]}>
+                    <Form.Item label='备注' name='remark' rules={[{required: true}]}>
                         <Input/>
                     </Form.Item>
 
                     <Divider >高级设置</Divider>
+                    <Form.Item label='组织' name={['sysOrg','id']} >
+                       <FieldOrgTreeSelect />
+                    </Form.Item>
                     <Form.Item label='默认分支' name='branch' rules={[{required: true}]} initialValue='master'>
                         <Input/>
                     </Form.Item>
@@ -161,7 +180,9 @@ export default class extends React.Component {
                     </Form.Item>
 
 
-                    <Form.Item label='注册中心' name='registry' rules={[{required: true}]}>
+
+
+                    <Form.Item label='注册中心' name={['registry','id']} rules={[{required: true}]} initialValue={this.state.defaultRegistryId}>
                         <FieldRemoteSelect url='registry/options' />
                     </Form.Item>
                     <Form.Item label='维护latest' name='autoPushLatest' rules={[{required: true}]} initialValue={false}>

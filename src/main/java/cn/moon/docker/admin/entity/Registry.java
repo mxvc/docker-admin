@@ -2,11 +2,10 @@ package cn.moon.docker.admin.entity;
 
 import io.tmgg.lang.ann.Remark;
 import io.tmgg.lang.dao.BaseEntity;
+import jakarta.persistence.Entity;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
-
-import jakarta.persistence.Entity;
 import lombok.experimental.FieldNameConstants;
 
 @Remark("注册中心")
@@ -22,7 +21,6 @@ public class Registry extends BaseEntity {
     String url;
 
 
-
     @Remark("命名空间")
     String namespace;
 
@@ -35,6 +33,7 @@ public class Registry extends BaseEntity {
     String password;
 
     @Remark("是否默认")
+    @NotNull
     Boolean defaultRegistry;
 
 
@@ -51,7 +50,6 @@ public class Registry extends BaseEntity {
 
         return namespace;
     }
-
 
 
     @Override
