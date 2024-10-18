@@ -1,7 +1,7 @@
 import {Card, Descriptions, Spin, Switch} from 'antd';
 import React from 'react';
 import BuildLogList from "./BuildLogList";
-import {HttpUtil} from "@tmgg/tmgg-base";
+import {HttpUtil, PageUtil} from "@tmgg/tmgg-base";
 
 
 let api = 'project/';
@@ -17,7 +17,8 @@ export default class extends React.Component {
   }
 
   componentDidMount() {
-    this.id = this.props.location.query.id
+    this.id =  PageUtil.currentLocationQuery().id
+
     HttpUtil.get(api + 'get', {id: this.id}).then(rs => this.setState({project: rs}))
   }
 

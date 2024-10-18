@@ -10,6 +10,7 @@ import {
 import {ProTable} from "@tmgg/pro-table";
 import moment from "moment";
 import {HttpUtil} from "@tmgg/tmgg-base";
+import {DateUtil, StrUtil} from "@tmgg/tmgg-commons-lang";
 
 
 let api = 'buildLog/';
@@ -61,7 +62,7 @@ export default class extends React.Component {
       title: '开始时间',
       dataIndex: 'createTime',
       render(_, row) {
-        return <Tooltip title={row.createTime}> {hutool.date.friendlyTime(row.createTime)}</Tooltip>
+        return <Tooltip title={row.createTime}> {DateUtil.friendlyTime(row.createTime)}</Tooltip>
       }
     },
     {
@@ -84,7 +85,7 @@ export default class extends React.Component {
       title: '代码日志',
       dataIndex: 'codeMessage',
       render(v) {
-        return hutool.str.ellipsis(v, 20)
+        return StrUtil.ellipsis(v, 20)
       }
     },
     {
@@ -111,7 +112,7 @@ export default class extends React.Component {
       title: '耗时',
       dataIndex: 'timeSpend',
       render(t, row) {
-        return hutool.date.friendlyTotalTime(t)
+        return DateUtil.friendlyTotalTime(t)
       }
     },
     {

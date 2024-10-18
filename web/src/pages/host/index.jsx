@@ -28,7 +28,7 @@ export default class extends React.Component {
       title: '名称',
       dataIndex: 'name',
         render(name, row) {
-            return <a onClick={() => history.push('host/view?id=' + row.id)}>{name}</a>
+            return <a onClick={() => history.push('/host/view?id=' + row.id)}>{name}</a>
         }
 
     },
