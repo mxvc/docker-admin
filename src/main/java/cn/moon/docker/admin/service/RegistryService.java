@@ -2,6 +2,9 @@ package cn.moon.docker.admin.service;
 
 import cn.moon.docker.admin.dao.RegistryDao;
 import cn.moon.docker.admin.entity.Registry;
+import cn.moon.docker.sdk.registry.RegistrySdk;
+import cn.moon.docker.sdk.registry.tencent.AliyunSdk;
+import cn.moon.docker.sdk.registry.tencent.TencentSdk;
 import io.tmgg.lang.dao.BaseService;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +17,16 @@ public class RegistryService extends BaseService<Registry> {
     @Resource
     private RegistryDao dao;
 
+
+    public RegistrySdk findSdkByUrl(String url){
+        if(url.contains("aliyun")){
+            return new AliyunSdk();
+        }
+        if(url.contains("tencent")){
+            return new TencentSdk();
+        }
+        return null;
+    }
 
 
 

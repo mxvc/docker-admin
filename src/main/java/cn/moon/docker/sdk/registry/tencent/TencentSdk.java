@@ -19,10 +19,12 @@ import java.util.List;
 
 @Slf4j
 @Component
-public class TencentSdk extends RegistrySdk {
+public class TencentSdk implements RegistrySdk {
+
+
 
     @Override
-    public Page<ImageVo> findRepositoryList(cn.moon.docker.admin.entity.Registry registry, Pageable pageable, String keyword) throws Exception {
+    public Page<ImageVo> imageList(cn.moon.docker.admin.entity.Registry registry, Pageable pageable, String keyword) throws Exception {
         Credential cred = new Credential(registry.getAk(), registry.getSk());
 
         TcrClient client = new TcrClient(cred, registry.getRegion());
@@ -52,7 +54,7 @@ public class TencentSdk extends RegistrySdk {
     }
 
     @Override
-    public PageImpl<TagVo> findTagList(cn.moon.docker.admin.entity.Registry registry, String imageUrl, Pageable pageable) throws Exception {
+    public PageImpl<TagVo> tagList(cn.moon.docker.admin.entity.Registry registry, String imageUrl, Pageable pageable) throws Exception {
         String repoName = imageUrl.replace(registry.getUrl(), "");
         repoName = StrUtil.removePrefix(repoName,"/");
 

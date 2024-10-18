@@ -30,10 +30,12 @@ import java.util.stream.Collectors;
 @Slf4j
 @Getter
 @Setter
-public class AliyunSdk extends RegistrySdk {
+public class AliyunSdk implements RegistrySdk {
 
 
-    public Page<ImageVo> findRepositoryList(cn.moon.docker.admin.entity.Registry registry,Pageable pageable, String keyword) throws Exception {
+
+
+    public Page<ImageVo> imageList(cn.moon.docker.admin.entity.Registry registry, Pageable pageable, String keyword) throws Exception {
         IAcsClient client = getClient(registry);
         CommonRequest request = getCommonRequest(registry);
 
@@ -56,7 +58,7 @@ public class AliyunSdk extends RegistrySdk {
 
 
     @Override
-    public PageImpl<TagVo> findTagList(cn.moon.docker.admin.entity.Registry registry, String imageUrl, Pageable pageable) throws ClientException {
+    public PageImpl<TagVo> tagList(cn.moon.docker.admin.entity.Registry registry, String imageUrl, Pageable pageable) throws ClientException {
         int page = pageable.getPageNumber() + 1;
         int pageSize = pageable.getPageSize();
         CommonRequest request = getCommonRequest(registry);

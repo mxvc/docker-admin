@@ -16,6 +16,7 @@ import lombok.experimental.FieldNameConstants;
 @FieldNameConstants
 public class Registry extends BaseEntity {
 
+
     @Remark("仓库地址")
     @NotNull
     String url;

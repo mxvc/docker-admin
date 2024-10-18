@@ -1,0 +1,12 @@
+{
+  "SysMenu": [
+    {
+      "pid":"biz",
+      "id": "image",
+      "name": "镜像",
+      "perm": "image",
+      "path": "/image",
+      "seq": 1
+    }
+  ]
+}
