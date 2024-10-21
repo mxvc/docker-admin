@@ -49,6 +49,7 @@ public class App extends BaseEntity {
 
     @Lob
     @Convert(converter = AppConfigConverter.class)
+    @Column(columnDefinition = "longtext")
     AppConfig config;
 
     @ManyToOne

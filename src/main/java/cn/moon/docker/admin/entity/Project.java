@@ -64,12 +64,6 @@ public class Project extends BaseEntity {
     String remark;
 
 
-    public Registry getRegistry() {
-        if(registry == null){
-          registry =  SpringUtil.getBean(RegistryService.class).checkAndFindDefault();
-        }
-        return registry;
-    }
 
     @Override
     public void prePersist() {

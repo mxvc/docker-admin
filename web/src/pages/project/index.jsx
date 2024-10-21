@@ -63,10 +63,8 @@ export default class extends React.Component {
 
         {
             title: '注册中心',
-            dataIndex: 'registry',
-            render(v){
-                return  v.fullUrl
-            }
+            dataIndex: ['registry','fullUrl'],
+            hideInSearch:true
         },
 
         {
@@ -74,7 +72,7 @@ export default class extends React.Component {
             dataIndex: 'autoPushLatest',
 
             valueType: 'boolean',
-
+            hideInSearch:true
         },
 
         {

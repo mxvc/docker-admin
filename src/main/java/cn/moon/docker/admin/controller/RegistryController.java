@@ -30,7 +30,7 @@ public class RegistryController extends BaseCURDController<Registry> {
         List<Registry> list = service.findAll(Sort.by(Sort.Direction.DESC,Registry.Fields.defaultRegistry));
         List<Option> options = list.stream().map(r -> {
             String label = r.getFullUrl();
-            if (r.getDefaultRegistry()) {
+            if (r.getDefaultRegistry() != null && r.getDefaultRegistry()) {
                 label += " (默认)";
             }
             String value = r.getId();
