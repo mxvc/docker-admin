@@ -127,7 +127,7 @@ export default class extends React.Component {
             let logUrl = row.logUrl;
 
             Modal.info({
-              title: '构建日志' + logUrl,
+              title: '构建日志' ,
               width: 1024,
               closable: true,
               icon: null,

@@ -7,3 +7,6 @@ spring:
 
 sys:
   base-package-class: cn.moon.DockerAdminBootApplication
+  site-info:
+    title: "容器管理面板"
+    copyright: "2024"
