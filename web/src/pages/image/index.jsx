@@ -3,7 +3,7 @@ import React from 'react';
 
 
 import {ProTable} from "@tmgg/pro-table";
-import {FieldRemoteSelect, HttpUtil} from "@tmgg/tmgg-base";
+import {FieldRemoteSelect, HttpUtil, PageUtil} from "@tmgg/tmgg-base";
 
 
 
@@ -27,18 +27,22 @@ export default class extends React.Component {
       dataIndex: 'name',
     },
     {
-      title: '镜像',
+      title: '镜像地址',
       dataIndex: 'url',
+    },
+    {
+      title: '版本数',
+      dataIndex: 'tagCount',
+      render(v){
+        return <a onClick={()=>PageUtil.open('/')}> {v}</a>
+      }
     },
     {
       title: '类型',
       dataIndex: 'type',
     },
 
-    {
-      title: '版本数量',
-      dataIndex: 'tagCount',
-    },
+
     {
       title: '下载量',
       dataIndex: 'pullCount',
