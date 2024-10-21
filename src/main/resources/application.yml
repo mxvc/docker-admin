@@ -5,6 +5,5 @@ spring:
 
 
 
-tmgg:
-  system:
-    base-package-class: cn.moon.DockerAdminBootApplication
+sys:
+  base-package-class: cn.moon.DockerAdminBootApplication

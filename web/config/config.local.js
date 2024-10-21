@@ -7,6 +7,10 @@ let proxy = {
         target: target,
         changeOrigin: true,
         pathRewrite: {'^/api': '/'},
+    },
+    '/log-view': {
+        target: target,
+        changeOrigin: true,
     }
 };
 

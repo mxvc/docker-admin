@@ -5,6 +5,7 @@ import cn.moon.validation.StartWithLetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.tmgg.lang.dao.BaseEntity;
+import io.tmgg.lang.dao.DBConstants;
 import io.tmgg.sys.org.entity.SysOrg;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
@@ -49,7 +50,7 @@ public class App extends BaseEntity {
 
     @Lob
     @Convert(converter = AppConfigConverter.class)
-    @Column(columnDefinition = "longtext")
+    @Column(length = DBConstants.LEN_MAX_VARCHAR)
     AppConfig config;
 
     @ManyToOne

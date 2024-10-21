@@ -1,6 +1,7 @@
 package cn.moon.docker.admin.entity;
 
 import io.tmgg.lang.dao.BaseEntity;
+import io.tmgg.lang.dao.DBConstants;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import lombok.Getter;
@@ -21,7 +22,7 @@ import java.util.Date;
 public class BuildLog extends BaseEntity {
 
     @Lob
-    @Column(columnDefinition="LONGTEXT")
+    @Column(length = DBConstants.LEN_MAX_VARCHAR)
     String codeMessage;
 
     String buildHostName;
