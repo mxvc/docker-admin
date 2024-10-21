@@ -43,7 +43,7 @@ public class TencentSdk implements RegistrySdk {
             vo.setType(info.getRepoType());
             vo.setTagCount(info.getTagCount());
             vo.setUrl(registry.getUrl() + "/" + vo.getName());
-
+            vo.setPullCount(info.getPullCount());
 
             voList.add(vo);
         }

@@ -39,10 +39,14 @@ export default class extends React.Component {
       title: '版本数量',
       dataIndex: 'tagCount',
     },
+    {
+      title: '下载量',
+      dataIndex: 'pullCount',
+    },
 
     {
       title: '最近更新',
-      dataIndex: 'modifyTime',
+      dataIndex: 'time',
     },
     {
       title: '操作',

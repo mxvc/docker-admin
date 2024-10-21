@@ -24,4 +24,6 @@ public class ImageVo {
 
 
     Long tagCount;
+
+    Long pullCount;
 }
