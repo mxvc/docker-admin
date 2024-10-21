@@ -104,11 +104,7 @@ public class ProjectController extends BaseCURDController<Project> {
         return AjaxResult.ok();
     }
 
-    @RequestMapping("updateAutoPushLatest")
-    public AjaxResult updateAutoPushLatest(@RequestParam String id, boolean value) {
-        service.updateAutoPushLatest(id, value);
-        return AjaxResult.ok();
-    }
+
 
 
     @RequestMapping("options")

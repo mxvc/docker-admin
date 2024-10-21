@@ -10,6 +10,7 @@ import io.tmgg.lang.obj.Option;
 import io.tmgg.web.annotion.HasPermission;
 import io.tmgg.web.perm.SecurityUtils;
 import io.tmgg.web.perm.Subject;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.*;
@@ -48,7 +49,7 @@ public class AppController {
     }
 
     @RequestMapping("get")
-    public App view(String id) throws UnsupportedEncodingException {
+    public App view(HttpServletRequest request, String id) throws UnsupportedEncodingException {
         App app = service.findOne(id);
 
         if (app.getImageUrl() == null) {
@@ -56,7 +57,7 @@ public class AppController {
             app.setImageUrl(fullUrl + "/" + app.getProject().getName());
         }
 
-        String url = LogUrlTool.getLogViewUrl(id);
+        String url = LogUrlTool.getLogViewUrl(request,id);
         app.setLogUrl(url);
         return app;
     }

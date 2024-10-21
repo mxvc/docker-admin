@@ -21,13 +21,7 @@ export default class extends React.Component {
 
     columns = [
 
-        {
-            title: '组织',
-            dataIndex: ['sysOrg','name'],
-            renderFormItem(){
-                return <FieldOrgTreeSelect />
-            }
-        },
+
 
         {
             title: '名称',
@@ -72,7 +66,13 @@ export default class extends React.Component {
             valueType: 'boolean',
             hideInSearch:true
         },
-
+        {
+            title: '组织',
+            dataIndex: ['sysOrg','name'],
+            renderFormItem(){
+                return <FieldOrgTreeSelect />
+            }
+        },
         {
             title: '操作',
             dataIndex: 'option',

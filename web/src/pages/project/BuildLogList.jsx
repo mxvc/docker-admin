@@ -11,6 +11,7 @@ import {ProTable} from "@tmgg/pro-table";
 import moment from "moment";
 import {HttpUtil} from "@tmgg/tmgg-base";
 import {DateUtil, StrUtil} from "@tmgg/tmgg-commons-lang";
+import LogView from "../../components/LogView";
 
 
 let api = 'buildLog/';
@@ -123,17 +124,14 @@ export default class extends React.Component {
       render: (_, row) => {
         return <Space>
           <a onClick={() => {
+            let logUrl = row.logUrl;
+
             Modal.info({
-              title: '构建日志',
+              title: '构建日志' + logUrl,
               width: 1024,
               closable: true,
               icon: null,
-              content: <iframe
-                src={row.logUrl} width='100%' height={500} marginWidth={0} marginHeight={0}
-                style={{
-                  border: 0,
-                }}
-              />
+              content: <LogView url={logUrl} />
             })
           }}>日志</a>
           <a onClick={() => this.stop(row)}>停止</a>

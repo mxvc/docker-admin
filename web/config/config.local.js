@@ -1,16 +1,16 @@
 import {defineConfig} from 'umi';
 
 
-let target = 'http://127.0.0.1:8080';
 let proxy = {
     '/api': {
-        target: target,
+        target: 'http://localhost:8080',
         changeOrigin: true,
         pathRewrite: {'^/api': '/'},
     },
-    '/log-view': {
-        target: target,
+    '/ws-log-view': {
+        target: "http://localhost:8080",
         changeOrigin: true,
+        ws: true,
     }
 };
 
