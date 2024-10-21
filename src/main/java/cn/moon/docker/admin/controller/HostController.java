@@ -38,23 +38,21 @@ public class HostController extends BaseCURDController<Host> {
     @Resource
     private HostService service;
 
-    private  JpaQuery<Host> getHostQuery() {
-        JpaQuery<Host> q = new JpaQuery<>();
-        Subject subject = SecurityUtils.getSubject();
-        q.in("sysOrg.id", subject.getOrgPermissions());
-        return q;
-    }
+
 
     @RequestMapping("options")
     public List<Option> options(@RequestParam(defaultValue = "false") boolean onlyRunner) {
-        JpaQuery<Host> q = getHostQuery();
+        JpaQuery<Host> q = new JpaQuery<>();
+        if(onlyRunner){
+            q.eq(Host.Fields.isRunner, true);
+        }
         List<Host> list = service.findAll(q, Sort.by(Host.Fields.name));
         List<Option> options = new ArrayList<>();
         for (Host h : list) {
             if(onlyRunner && !h.getIsRunner() ){
                 continue;
             }
-            options.add(new Option(h.getName(), h.getId()));
+            options.add(Option.builder().label(h.getName()).value(h.getId()).build());
         }
         return options;
     }

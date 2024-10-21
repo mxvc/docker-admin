@@ -34,9 +34,6 @@ public class Host extends BaseEntity {
     Boolean isRunner;
 
 
-    @ManyToOne
-    SysOrg sysOrg;
-
     String dockerHost;
 
     @Remark("请求头Host重写")

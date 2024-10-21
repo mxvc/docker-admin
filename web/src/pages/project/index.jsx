@@ -23,11 +23,10 @@ export default class extends React.Component {
 
         {
             title: '组织',
-            dataIndex: 'sysOrg',
-            render(v){
-                return  v.name
+            dataIndex: ['sysOrg','name'],
+            renderFormItem(){
+                return <FieldOrgTreeSelect />
             }
-
         },
 
         {
@@ -41,7 +40,7 @@ export default class extends React.Component {
 
         {
             title: 'gitUrl',
-            dataIndex: 'gitUrl',
+            dataIndex: 'gitUrl',            hideInSearch: true
         },
         {
             title: '备注',
@@ -51,12 +50,11 @@ export default class extends React.Component {
         {
             title: '默认分支',
             dataIndex: 'branch',
-
-
+            hideInSearch: true
         },
         {
             title: 'dockerfile',
-            dataIndex: 'dockerfile',
+            dataIndex: 'dockerfile',            hideInSearch: true
         },
 
 
@@ -160,12 +158,12 @@ export default class extends React.Component {
                     <Form.Item label='名称' name='name' rules={[{required: true}]}>
                         <Input/>
                     </Form.Item>
-                    <Form.Item label='备注' name='remark' rules={[{required: true}]}>
+                    <Form.Item label='备注' name='remark'>
                         <Input/>
                     </Form.Item>
 
                     <Divider >高级设置</Divider>
-                    <Form.Item label='组织' name={['sysOrg','id']} >
+                    <Form.Item label='组织' name={['sysOrg','id']} rules={[{required: true}]}>
                        <FieldOrgTreeSelect />
                     </Form.Item>
                     <Form.Item label='默认分支' name='branch' rules={[{required: true}]} initialValue='master'>

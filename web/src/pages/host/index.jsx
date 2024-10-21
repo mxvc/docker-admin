@@ -20,10 +20,7 @@ export default class extends React.Component {
   tableRef = React.createRef()
 
   columns = [
-      {
-          title: '机构',
-          dataIndex: ['sysOrg','name'],
-      },
+
     {
       title: '名称',
       dataIndex: 'name',
@@ -129,9 +126,7 @@ export default class extends React.Component {
         initialValues={this.state.formValues}
         onFinish={this.onFinish} >
         <Form.Item  name='id' noStyle></Form.Item>
-        <Form.Item label='所属机构' name={['sysOrg','id']} >
-          <FieldOrgTreeSelect />
-        </Form.Item>
+
               <Form.Item label='名称' name='name' rules={[{required: true}]}>
                     <Input/>
               </Form.Item>
