@@ -58,7 +58,7 @@ public class AliyunSdk implements RegistrySdk {
 
 
     @Override
-    public PageImpl<TagVo> tagList(Registry registry, String imageUrl, Pageable pageable) throws ClientException {
+    public Page<TagVo> tagList(Registry registry, String imageUrl, Pageable pageable) throws ClientException {
         int page = pageable.getPageNumber() + 1;
         int pageSize = pageable.getPageSize();
         CommonRequest request = getCommonRequest(registry);
@@ -93,7 +93,7 @@ public class AliyunSdk implements RegistrySdk {
         List<TagVo> imageTagList = tagList.stream().map(tag -> {
             TagVo t = new TagVo();
             t.setTime(new Date((Long) tag.get("imageUpdate")));
-            t.setName((String) tag.get("tag"));
+            t.setTagName((String) tag.get("tag"));
             return t;
         }).collect(Collectors.toList());
 

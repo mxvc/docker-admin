@@ -14,10 +14,10 @@ public interface  RegistrySdk {
 
 
 
-    Page<ImageVo> imageList(cn.moon.docker.admin.entity.Registry registry, Pageable pageable, String keyword) throws Exception;
+    Page<ImageVo> imageList(Registry registry, Pageable pageable, String keyword) throws Exception;
 
 
-    PageImpl<TagVo> tagList(cn.moon.docker.admin.entity.Registry registry, String imageUrl, Pageable pageable) throws Exception;
+    Page<TagVo> tagList(Registry registry, String imageUrl, Pageable pageable) throws Exception;
 
 
 }

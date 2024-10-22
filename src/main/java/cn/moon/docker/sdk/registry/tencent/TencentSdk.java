@@ -7,7 +7,6 @@ import cn.moon.docker.sdk.registry.ImageVo;
 import cn.moon.docker.sdk.registry.RegistrySdk;
 import cn.moon.docker.sdk.registry.TagVo;
 import com.tencentcloudapi.common.Credential;
-import com.tencentcloudapi.common.exception.TencentCloudSDKException;
 import com.tencentcloudapi.tcr.v20190924.TcrClient;
 import com.tencentcloudapi.tcr.v20190924.models.*;
 import lombok.extern.slf4j.Slf4j;
@@ -42,7 +41,7 @@ public class TencentSdk implements RegistrySdk {
             vo.setDescription(info.getDescription());
             vo.setType(info.getRepoType());
             vo.setTagCount(info.getTagCount());
-            vo.setUrl(registry.getUrl() + "/" + vo.getName());
+            vo.setUrl(registry.getUrl() + "/" + info.getRepoName());
             vo.setPullCount(info.getPullCount());
 
             voList.add(vo);
@@ -61,7 +60,7 @@ public class TencentSdk implements RegistrySdk {
     }
 
     @Override
-    public PageImpl<TagVo> tagList(cn.moon.docker.admin.entity.Registry registry, String imageUrl, Pageable pageable) throws Exception {
+    public Page<TagVo> tagList(cn.moon.docker.admin.entity.Registry registry, String imageUrl, Pageable pageable) throws Exception {
         String repoName = imageUrl.replace(registry.getUrl(), "");
         repoName = StrUtil.removePrefix(repoName,"/");
 
@@ -77,7 +76,7 @@ public class TencentSdk implements RegistrySdk {
         List<TagVo> voList = new ArrayList<>();
         for (TagInfo info : data.getTagInfo()) {
             TagVo vo = new TagVo();
-            vo.setName(info.getTagName());
+            vo.setTagName(info.getTagName());
             vo.setTime(DateUtil.parseDateTime(info.getUpdateTime()));
 
             voList.add(vo);

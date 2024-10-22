@@ -8,7 +8,7 @@ import java.util.Date;
 @Getter
 @Setter
 public class TagVo {
-    String name;
+    String tagName;
 
     Date time;
 

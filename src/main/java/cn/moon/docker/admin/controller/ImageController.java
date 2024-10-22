@@ -5,14 +5,13 @@ import cn.moon.docker.admin.entity.Registry;
 import cn.moon.docker.admin.service.RegistryService;
 import cn.moon.docker.sdk.registry.ImageVo;
 import cn.moon.docker.sdk.registry.RegistrySdk;
+import cn.moon.docker.sdk.registry.TagVo;
 import com.tencentcloudapi.common.exception.TencentCloudSDKException;
 import io.tmgg.lang.obj.AjaxResult;
 import jakarta.annotation.Resource;
 import lombok.Data;
 import lombok.Getter;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -44,17 +43,27 @@ public class ImageController  {
         return AjaxResult.ok().data(page);
     }
 
-    @PostMapping({"options"})
-    public AjaxResult options(String url) {
-        return AjaxResult.ok().data(null);
+
+
+    @PostMapping({"tagPage"})
+    public AjaxResult tagPage(@RequestBody TagPageParam param, Pageable pageable) throws Exception {
+        String url = param.getUrl();
+        RegistrySdk sdk = registryService.findSdkByUrl(url);
+        Registry registry = registryService.findByUrl(url);
+
+        Page<TagVo> page = sdk.tagList(registry, url, pageable);
+
+        return AjaxResult.ok().data(page);
     }
-
-
-
 
     @Data
     public static class PageParam {
         String registryId;
+    }
+
+    @Data
+    public static class TagPageParam {
+        String url;
     }
 
 }

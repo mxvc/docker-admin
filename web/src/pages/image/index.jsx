@@ -1,4 +1,4 @@
-import {Button, Card, Form} from 'antd';
+import {Button, Card, Form, Modal} from 'antd';
 import React from 'react';
 
 
@@ -13,7 +13,10 @@ export default class extends React.Component {
     configList: [],
     index: null,
 
-    searchParams: {}
+    searchParams: {},
+
+    tagTableModalOpen: false,
+    tabTableUrl: null
   }
 
   actionRef = React.createRef();
@@ -30,8 +33,8 @@ export default class extends React.Component {
     {
       title: '版本数',
       dataIndex: 'tagCount',
-      render(v){
-        return <a onClick={()=>PageUtil.open('/')}> {v}</a>
+      render:(v,record)=>{
+        return <a onClick={()=>this.showTagList(record.url)}> {v}</a>
       }
     },
     {
@@ -60,10 +63,14 @@ export default class extends React.Component {
   ];
 
 
+  showTagList(url){
+    this.setState({tagTableModalOpen:true,tabTableUrl:url})
+
+  }
+
   render() {
     return <>
       <Card>
-
 
       <Form layout='inline' onValuesChange={(changedValues,values)=>{
         this.setState({searchParams:values})
@@ -82,8 +89,6 @@ export default class extends React.Component {
       <ProTable
         actionRef={this.actionRef}
         request={(params, sort) => {
-          params.pageSize = 100;
-
           return HttpUtil.pageData('image/page', {...params, ... this.state.searchParams} , sort);
         }}
         columns={this.columns}
@@ -93,6 +98,38 @@ export default class extends React.Component {
         options={{search: true}}
       />
 
+
+      <Modal title='版本列表' open={this.state.tagTableModalOpen}
+             width={700}
+             destroyOnClose
+             onCancel={()=>this.setState({tagTableModalOpen:false})}
+             footer={null}
+      >
+        <ProTable
+            actionRef={this.actionRef}
+
+            request={(params, sort) => {
+              params.url = this.state.tabTableUrl;
+              return HttpUtil.pageData('/image/tagPage' , params , sort);
+            }}
+
+            bordered={false}
+
+            columns={[
+              {
+                title:'版本',
+                dataIndex:'tagName'
+              },
+              {
+                title:'时间',
+                dataIndex:'time'
+              }
+            ]}
+            rowSelection={false}
+            search={false}
+            options={{search: true}}
+        />
+      </Modal>
 
     </>
   }
