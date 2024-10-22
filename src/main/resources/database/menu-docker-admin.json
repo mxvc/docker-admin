@@ -3,7 +3,7 @@
     {
       "pid": "biz",
       "id": "project",
-      "name": "项目",
+      "name": "项目构建",
       "perm": "project",
       "path": "/project",
       "seq": 1
@@ -11,7 +11,7 @@
     {
       "pid": "biz",
       "id": "app",
-      "name": "应用",
+      "name": "应用部署",
       "perm": "app",
       "path": "/app",
       "seq": 2
@@ -19,7 +19,7 @@
     {
       "pid": "biz",
       "id": "host",
-      "name": "主机",
+      "name": "主机管理",
       "perm": "host",
       "path": "/host",
       "seq": 3
