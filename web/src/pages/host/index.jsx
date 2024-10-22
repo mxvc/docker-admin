@@ -49,17 +49,11 @@ export default class extends React.Component {
     {
       title: '请求头Host重写',
       dataIndex: 'dockerHostHeader',
-
-
     },
-
     {
       title: '备注',
       dataIndex: 'remark',
-
-
     },
-
     {
       title: '操作',
       dataIndex: 'option',
@@ -94,7 +88,7 @@ export default class extends React.Component {
 
 
   handleDelete = record => {
-    HttpUtil.post( 'host/delete', {id:record.id}).then(rs => {
+    HttpUtil.postForm( 'host/delete', {id:record.id}).then(rs => {
       this.tableRef.current.reload()
     })
   }
