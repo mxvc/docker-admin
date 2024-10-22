@@ -46,12 +46,12 @@ public class ImageController  {
 
 
     @PostMapping({"tagPage"})
-    public AjaxResult tagPage(@RequestBody TagPageParam param, Pageable pageable) throws Exception {
+    public AjaxResult tagPage(@RequestBody TagPageParam param, String keyword, Pageable pageable) throws Exception {
         String url = param.getUrl();
         RegistrySdk sdk = registryService.findSdkByUrl(url);
         Registry registry = registryService.findByUrl(url);
 
-        Page<TagVo> page = sdk.tagList(registry, url, pageable);
+        Page<TagVo> page = sdk.tagList(registry, url, keyword,pageable);
 
         return AjaxResult.ok().data(page);
     }

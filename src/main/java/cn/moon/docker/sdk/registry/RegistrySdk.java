@@ -17,7 +17,7 @@ public interface  RegistrySdk {
     Page<ImageVo> imageList(Registry registry, Pageable pageable, String keyword) throws Exception;
 
 
-    Page<TagVo> tagList(Registry registry, String imageUrl, Pageable pageable) throws Exception;
+    Page<TagVo> tagList(Registry registry, String imageUrl,String keyword, Pageable pageable) throws Exception;
 
 
 }

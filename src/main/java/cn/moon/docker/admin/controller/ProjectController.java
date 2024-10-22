@@ -1,10 +1,10 @@
 package cn.moon.docker.admin.controller;
 
+import cn.hutool.core.util.StrUtil;
 import cn.moon.docker.admin.BuildParam;
 import cn.moon.docker.admin.entity.Project;
 import cn.moon.docker.admin.service.BuildLogService;
 import cn.moon.docker.admin.service.ProjectService;
-import cn.moon.docker.admin.service.RegistryService;
 import io.tmgg.lang.dao.BaseCURDController;
 import io.tmgg.lang.dao.BaseEntity;
 import io.tmgg.lang.dao.specification.JpaQuery;
@@ -14,17 +14,12 @@ import io.tmgg.web.annotion.HasPermission;
 import io.tmgg.web.perm.SecurityUtils;
 import io.tmgg.web.perm.Subject;
 import jakarta.annotation.Resource;
-import jakarta.validation.Valid;
-import lombok.extern.slf4j.Slf4j;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -37,16 +32,28 @@ import java.util.stream.Collectors;
 public class ProjectController extends BaseCURDController<Project> {
 
 
-
-
     @Resource
     private ProjectService service;
 
     @Resource
     private BuildLogService logService;
 
+    @Override
+    @HasPermission
+    @PostMapping({"page"})
+    public AjaxResult page(@RequestBody Project param, @PageableDefault(direction = Sort.Direction.DESC, sort = {"updateTime"}) Pageable pageable) {
+        JpaQuery<Project> q = new JpaQuery<>();
+        if (StrUtil.isNotEmpty(param.getName())) {
+            q.like(Project.Fields.name, param.getName());
+        }
+        if (StrUtil.isNotEmpty(param.getRemark())) {
+            q.like(Project.Fields.remark, param.getRemark());
+        }
 
 
+        Page<Project> page = this.service.findAll(q, pageable);
+        return AjaxResult.ok().data(page);
+    }
 
     private JpaQuery<Project> getQuery() {
         JpaQuery<Project> q = new JpaQuery<>();
@@ -54,7 +61,6 @@ public class ProjectController extends BaseCURDController<Project> {
         q.in("sysOrg.id", subject.getOrgPermissions());
         return q;
     }
-
 
 
     @HasPermission("project:list")
@@ -103,8 +109,6 @@ public class ProjectController extends BaseCURDController<Project> {
         service.cleanErrorLog(id);
         return AjaxResult.ok();
     }
-
-
 
 
     @RequestMapping("options")

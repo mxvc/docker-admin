@@ -58,7 +58,7 @@ public class AliyunSdk implements RegistrySdk {
 
 
     @Override
-    public Page<TagVo> tagList(Registry registry, String imageUrl, Pageable pageable) throws ClientException {
+    public Page<TagVo> tagList(Registry registry, String imageUrl,String keyword, Pageable pageable) throws ClientException {
         int page = pageable.getPageNumber() + 1;
         int pageSize = pageable.getPageSize();
         CommonRequest request = getCommonRequest(registry);

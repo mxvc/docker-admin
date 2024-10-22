@@ -19,6 +19,8 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 
+// https://cloud.tencent.com/document/sdk 容器镜像服务 (TCR)
+
 @Slf4j
 @Component
 public class TencentSdk implements RegistrySdk {
@@ -29,6 +31,14 @@ public class TencentSdk implements RegistrySdk {
         TcrClient client = getClient(registry);
 
         DescribeRepositoryOwnerPersonalRequest req = new DescribeRepositoryOwnerPersonalRequest();
+        req.setOffset(pageable.getOffset());
+        req.setLimit((long) pageable.getPageSize());
+        if(StrUtil.isNotEmpty(keyword)){
+            req.setRepoName(keyword);
+        }
+
+
+
         DescribeRepositoryOwnerPersonalResponse resp = client.DescribeRepositoryOwnerPersonal(req);
 
         RepoInfoResp data = resp.getData();
@@ -52,15 +62,9 @@ public class TencentSdk implements RegistrySdk {
         return page;
     }
 
-    @NotNull
-    private static TcrClient getClient(Registry registry) {
-        Credential cred = new Credential(registry.getAk(), registry.getSk());
-        TcrClient client = new TcrClient(cred, registry.getRegion());
-        return client;
-    }
 
     @Override
-    public Page<TagVo> tagList(cn.moon.docker.admin.entity.Registry registry, String imageUrl, Pageable pageable) throws Exception {
+    public Page<TagVo> tagList(cn.moon.docker.admin.entity.Registry registry, String imageUrl, String keyword, Pageable pageable) throws Exception {
         String repoName = imageUrl.replace(registry.getUrl(), "");
         repoName = StrUtil.removePrefix(repoName,"/");
 
@@ -68,6 +72,14 @@ public class TencentSdk implements RegistrySdk {
 
         DescribeImagePersonalRequest req = new DescribeImagePersonalRequest();
         req.setRepoName(repoName);
+        req.setOffset(pageable.getOffset());
+        req.setLimit((long) pageable.getPageSize());
+        if(StrUtil.isNotEmpty(keyword)){
+            req.setTag(keyword);
+        }
+
+
+
 
         DescribeImagePersonalResponse resp = client.DescribeImagePersonal(req);
 
@@ -85,6 +97,12 @@ public class TencentSdk implements RegistrySdk {
         PageImpl<TagVo> page = new PageImpl<>(voList, pageable, data.getTagCount());
 
         return page;
+    }
+    @NotNull
+    private static TcrClient getClient(Registry registry) {
+        Credential cred = new Credential(registry.getAk(), registry.getSk());
+        TcrClient client = new TcrClient(cred, registry.getRegion());
+        return client;
     }
 
 
