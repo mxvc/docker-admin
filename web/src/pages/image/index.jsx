@@ -16,9 +16,6 @@ export default class extends React.Component {
     searchParams: {}
   }
 
-
-
-
   actionRef = React.createRef();
 
   columns = [
