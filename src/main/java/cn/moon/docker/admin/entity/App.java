@@ -42,7 +42,7 @@ public class App extends BaseEntity {
 
     Boolean autoDeploy;
 
-    Boolean autoRestart;
+
 
     @Transient
     String logUrl;

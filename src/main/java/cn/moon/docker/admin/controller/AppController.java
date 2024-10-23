@@ -156,20 +156,7 @@ public class AppController {
     }
 
 
-    @HasPermission("app:start")
-    @RequestMapping("autoRestart")
-    public AjaxResult autoRestart(String id, boolean autoRestart) throws InterruptedException {
 
-        App db = service.findOne(id);
-        db.setAutoRestart(autoRestart);
-        db.getConfig().setRestart(autoRestart);
-
-        service.save(db);
-        service.deploy(db);
-
-
-        return   AjaxResult.ok().msg("自动重启:" + (autoRestart ? "启用" : "停用"));
-    }
 
 
     @HasPermission("app:start")

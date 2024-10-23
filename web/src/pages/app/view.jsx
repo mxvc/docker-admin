@@ -117,9 +117,7 @@ export default class extends React.Component {
     setAutoDeploy = (id, autoDeploy) => {
         HttpUtil.get("app/autoDeploy", {id, autoDeploy})
     }
-    setAutoRestart = (id, autoRestart) => {
-        HttpUtil.get("app/autoRestart", {id, autoRestart})
-    }
+
 
 
     updateVersion = () => {
@@ -216,6 +214,7 @@ export default class extends React.Component {
         const {container, containerLoading} = this.state;
 
 
+
         const {app} = this.state
 
         const notFound = container.state === 'notFound'
@@ -231,7 +230,7 @@ export default class extends React.Component {
             items.push({
                 key: 'log',
                 label: '日志',
-                children: <ContainerLog hostId={hostId} containerId={containerId}/>
+                children: containerLoading ? '容器加载中': <ContainerLog hostId={hostId} containerId={containerId}/>
             })
 
 
@@ -247,7 +246,7 @@ export default class extends React.Component {
         if (isPermitted('app:config')) {
             items.push({
                 key: 'config',
-                label: '配置',
+                label: '参数',
                 children: <ConfigForm app={app}
                                       onChange={app => {
                                           window.location.reload(true)
@@ -324,20 +323,7 @@ export default class extends React.Component {
                     </Row>
 
 
-                    <Divider></Divider>
-                    <Row wrap={false}>
-                        <Col flex="100px">自动重启</Col>
-                        <Col flex="auto">
-                            <Switch checked={app.autoRestart}
-                                    onChange={checked => {
-                                        app.autoRestart = checked
-                                        this.setState({app: this.state.app})
-                                        this.setAutoRestart(app.id, checked)
-                                    }}
-                            ></Switch>
-                        </Col>
 
-                    </Row>
 
 
                     <Divider></Divider>

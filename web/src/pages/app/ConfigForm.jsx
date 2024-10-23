@@ -1,4 +1,4 @@
-import {Button, Col, Divider, Input, message, Row, Select, Spin} from "antd";
+import {Button, Col, Divider, Input, message, Radio, Row, Spin} from "antd";
 import React from "react";
 import EditTable from "../../components/EditTable";
 import CodeMirrorEditor from "../../components/CodeMirrorEditor";
@@ -57,21 +57,20 @@ export default class extends React.Component {
                     <h4>网络模式</h4>
                 </Col>
                 <Col flex="auto">
-                    <Select
+                    <Radio.Group
                         options={[
-                            {label: '主机模式（同主机IP）', value: 'host',},
                             {label: '桥接模式（虚拟IP，需自定义端口）', value: 'bridge',},
+                            {label: '主机模式（同主机IP）', value: 'host',},
                             {label: '无需网络', value: 'none',},
                         ]}
-                        style={{width: 300}}
                         value={form.networkMode}
                         onChange={e => {
                             form.networkMode = e
                             this.setState({form})
-                        }}
-                    >
+                        }}>
 
-                    </Select>
+                    </Radio.Group>
+
                 </Col>
             </Row>
             <Divider/>
