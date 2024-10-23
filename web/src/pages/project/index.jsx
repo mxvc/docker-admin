@@ -162,7 +162,7 @@ export default class extends React.Component {
                         <Input/>
                     </Form.Item>
 
-                    <Divider >高级设置</Divider>
+                    <Divider >其他</Divider>
                     <Form.Item label='组织' name={['sysOrg','id']} rules={[{required: true}]}>
                        <FieldOrgTreeSelect />
                     </Form.Item>

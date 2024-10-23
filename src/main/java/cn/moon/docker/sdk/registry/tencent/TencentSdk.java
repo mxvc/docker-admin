@@ -79,8 +79,6 @@ public class TencentSdk implements RegistrySdk {
         }
 
 
-
-
         DescribeImagePersonalResponse resp = client.DescribeImagePersonal(req);
 
         TagInfoResp data = resp.getData();

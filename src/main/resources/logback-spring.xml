@@ -51,5 +51,8 @@
     <root level="INFO">
         <appender-ref ref="STDOUT"/>
     </root>
+    <logger name="cn.moon" level="DEBUG"   >
+        <appender-ref ref="STDOUT"/>
+    </logger>
 
 </configuration>

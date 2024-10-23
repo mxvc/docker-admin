@@ -173,15 +173,15 @@ public class ContainerController {
             List<Container> list = client.listContainersCmd().withLabelFilter(appLabelFilter).withShowAll(true).exec();
             client.close();
             if (list.isEmpty()) {
-                return AjaxResult.ok().msg("未知");
+                return AjaxResult.ok().data("未知");
             }
 
             Container container = list.get(0);
 
-            return AjaxResult.ok().msg(container.getStatus());
+            return AjaxResult.ok().data(container.getStatus());
         } catch (Exception e) {
 
-            return AjaxResult.ok().msg("未知");
+            return AjaxResult.ok().data("未知");
         }
 
     }

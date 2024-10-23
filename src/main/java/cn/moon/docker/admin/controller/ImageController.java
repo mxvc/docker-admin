@@ -8,6 +8,7 @@ import cn.moon.docker.sdk.registry.RegistrySdk;
 import cn.moon.docker.sdk.registry.TagVo;
 import com.tencentcloudapi.common.exception.TencentCloudSDKException;
 import io.tmgg.lang.obj.AjaxResult;
+import io.tmgg.lang.obj.Option;
 import jakarta.annotation.Resource;
 import lombok.Data;
 import lombok.Getter;
@@ -15,6 +16,7 @@ import org.springframework.data.domain.*;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -27,7 +29,7 @@ public class ImageController  {
 
 
 
-    @GetMapping({"page"})
+    @GetMapping("page")
     public AjaxResult page(         String registryId, String keyword, @PageableDefault(direction = Sort.Direction.DESC,sort = {"updateTime"}) Pageable pageable) throws Exception {
         Registry registry = StrUtil.isNotEmpty(registryId) ? registryService.findOne(registryId): registryService.checkAndFindDefault();
 
@@ -41,7 +43,7 @@ public class ImageController  {
 
 
 
-    @GetMapping({"tagPage"})
+    @GetMapping("tagPage")
     public AjaxResult tagPage(  String url, String keyword, Pageable pageable) throws Exception {
         RegistrySdk sdk = registryService.findSdkByUrl(url);
         Registry registry = registryService.findByUrl(url);
@@ -51,7 +53,27 @@ public class ImageController  {
         return AjaxResult.ok().data(page);
     }
 
+    @GetMapping("options")
+    public AjaxResult options(String registryId, String keyword, @PageableDefault(direction = Sort.Direction.DESC,sort = {"updateTime"}) Pageable pageable) throws Exception {
+        Registry registry = StrUtil.isNotEmpty(registryId) ? registryService.findOne(registryId): registryService.checkAndFindDefault();
 
+        RegistrySdk sdk = registryService.findSdkByUrl(registry.getUrl());
+
+        Page<ImageVo> page = sdk.imageList(registry, pageable, keyword);
+
+        List<Option> options = Option.convertList(page, ImageVo::getUrl, ImageVo::getUrl);
+        return AjaxResult.ok().data(options);
+    }
+
+    @GetMapping("tagOptions")
+    public AjaxResult tagOptions(String url, String keyword, Pageable pageable) throws Exception {
+        RegistrySdk sdk = registryService.findSdkByUrl(url);
+        Registry registry = registryService.findByUrl(url);
+
+        Page<TagVo> page = sdk.tagList(registry, url, keyword,pageable);
+        List<Option> options = Option.convertList(page, TagVo::getTagName, TagVo::getTagName);
+        return AjaxResult.ok().data(options);
+    }
 
 
 

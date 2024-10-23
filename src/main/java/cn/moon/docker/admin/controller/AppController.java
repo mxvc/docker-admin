@@ -1,5 +1,6 @@
 package cn.moon.docker.admin.controller;
 
+import cn.hutool.core.util.StrUtil;
 import cn.moon.docker.admin.vo.ContainerVo;
 import cn.moon.docker.admin.entity.App;
 import cn.moon.docker.admin.service.AppService;
@@ -39,11 +40,14 @@ public class AppController {
     @RequestMapping("list")
     public Page<App> list(String keyword, @PageableDefault(sort = "updateTime", direction = Sort.Direction.DESC) Pageable pageable, HttpSession session) {
         JpaQuery<App> q = new JpaQuery<>();
-        q.like("name", keyword);
+        if(StrUtil.isNotEmpty(keyword)){
+            q.like("name", keyword);
+        }
+
 
         Subject subject = SecurityUtils.getSubject();
         Collection<String> orgIds = subject.getOrgPermissions();
-        q.in("id", orgIds);
+    //    q.in("sysOrg.id", orgIds);
 
        return service.findAll(q, pageable);
     }
