@@ -25,6 +25,7 @@ import {isPermitted, notPermitted} from "../../utils/SysConfig";
 import ContainerLog from "../../components/container/ContainerLog";
 import ContainerFile from "../../components/container/ContainerFile";
 import {HttpUtil, PageUtil} from "@tmgg/tmgg-base";
+import LogView from "../../components/LogView";
 
 let api = 'app/';
 
@@ -48,6 +49,9 @@ export default class extends React.Component {
     showEditName: false,
     newName: '',
 
+
+    deployLogOpen:false
+
   }
 
 
@@ -60,10 +64,7 @@ export default class extends React.Component {
       this.loadTagOptions(rs)
     })
 
-
     this.loadContainer();
-
-
   }
 
 
@@ -96,8 +97,9 @@ export default class extends React.Component {
     const {container} = this.state
     container.state = 'deploying'
     this.setState({container})
-    HttpUtil.post('deploy/' + this.state.app.id).then(rs => {
+    HttpUtil.post('app/deploy/' + this.state.app.id).then(rs => {
       message.success('部署指令已发送，异步执行中...')
+      this.setState({deployLogOpen:true})
       this.loadContainer()
     })
   }
@@ -179,7 +181,7 @@ export default class extends React.Component {
       <Card title={app.name} extra={<Space>
         {state === 'exited' && <Button onClick={this.start} type="primary">启动</Button>}
         {state === 'running' && <Button onClick={this.stop} type="primary" danger>停止</Button>}
-        <Button onClick={this.deploy} loading={this.state.container.state === 'deploying'} type="primary">部署</Button>
+        <Button onClick={this.deploy} loading={state === 'deploying'} type="primary">部署</Button>
       </Space>}>
 
 
@@ -188,7 +190,7 @@ export default class extends React.Component {
           <Descriptions.Item label='主机'>  {app.host?.name} </Descriptions.Item>
           <Descriptions.Item label='状态'>
             {containerLoading ?
-              "检测中..." : <Tag color={container.state == 'running' ? 'green' : 'red'}>
+              "检测中..." : <Tag color={state === 'running' ? 'green' : 'red'}>
                 {container.status}</Tag>}
 
           </Descriptions.Item>
@@ -204,7 +206,9 @@ export default class extends React.Component {
         {this.renderTabs()}
       </Card>
 
-
+      <Modal title='部署日志' open={this.state.deployLogOpen} destroyOnClose width={800} footer={null} onCancel={()=>this.setState({deployLogOpen:false})}>
+        <LogView url={app.logUrl} />
+      </Modal>
     </>)
   }
 
@@ -221,25 +225,8 @@ export default class extends React.Component {
     let hostId = app.host.id
 
     const items = []
-    let iframe = <iframe src={app.logUrl}
-                         width={window.screen.width - 300}
-                         height={window.screen.height - 450}
-                         style={{
-                           overflow: 'hidden'
-                         }}
-    />;
-    if (container.state === 'deploying') {
 
-      return iframe
-    }
-
-    items.push({
-      key: 'deployLog',
-      label: '部署日志',
-      children: iframe
-    })
-
-    // 容器信息
+// 容器信息
     if (!notFound) {
       items.push({
         key: 'log',

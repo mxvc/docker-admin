@@ -1,6 +1,7 @@
 import {LazyLog, ScrollFollow} from "react-lazylog";
 import React from "react";
 import {SysUtil} from "@tmgg/tmgg-base";
+import {Alert} from "antd";
 
 /**
  * https://mozilla-frontend-infra.github.io/react-lazylog/
@@ -10,6 +11,9 @@ export default class extends React.Component {
     render() {
         const headers = SysUtil.getHeaders();
         let url = this.props.url;
+        if(!url){
+            return <Alert message='未定义组件属性url' type="error"></Alert>
+        }
         if (!url.startsWith("ws://")) {
             url = "ws://" + location.host +  url
             console.log('调整后的ws url')
