@@ -11,7 +11,13 @@ let proxy = {
         target: "http://localhost:8080",
         changeOrigin: true,
         ws: true,
-    }
+    },
+    '/container/log': {
+        target: "http://localhost:8080",
+        changeOrigin: true,
+        ws: true,
+    },
+
 };
 
 export const configLocal = {
