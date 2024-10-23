@@ -10,6 +10,8 @@ import org.springframework.stereotype.Component;
 
 import jakarta.annotation.Resource;
 
+import java.util.List;
+
 /**
  * 启动后执行
  */
@@ -34,5 +36,6 @@ public class DataInit implements ApplicationRunner {
             hostService.save(host);
             log.info("创建默认主机配置 {}", host);
         }
+
     }
 }

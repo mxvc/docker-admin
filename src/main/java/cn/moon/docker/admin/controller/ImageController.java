@@ -13,10 +13,7 @@ import lombok.Data;
 import lombok.Getter;
 import org.springframework.data.domain.*;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -30,9 +27,8 @@ public class ImageController  {
 
 
 
-    @PostMapping({"page"})
-    public AjaxResult page(@RequestBody PageParam param, String keyword, @PageableDefault(direction = Sort.Direction.DESC,sort = {"updateTime"}) Pageable pageable) throws Exception {
-        String registryId = param.getRegistryId();
+    @GetMapping({"page"})
+    public AjaxResult page(         String registryId, String keyword, @PageableDefault(direction = Sort.Direction.DESC,sort = {"updateTime"}) Pageable pageable) throws Exception {
         Registry registry = StrUtil.isNotEmpty(registryId) ? registryService.findOne(registryId): registryService.checkAndFindDefault();
 
 
@@ -45,9 +41,8 @@ public class ImageController  {
 
 
 
-    @PostMapping({"tagPage"})
-    public AjaxResult tagPage(@RequestBody TagPageParam param, String keyword, Pageable pageable) throws Exception {
-        String url = param.getUrl();
+    @GetMapping({"tagPage"})
+    public AjaxResult tagPage(  String url, String keyword, Pageable pageable) throws Exception {
         RegistrySdk sdk = registryService.findSdkByUrl(url);
         Registry registry = registryService.findByUrl(url);
 
@@ -56,15 +51,9 @@ public class ImageController  {
         return AjaxResult.ok().data(page);
     }
 
-    @Data
-    public static class PageParam {
-        String registryId;
-    }
 
-    @Data
-    public static class TagPageParam {
-        String url;
-    }
+
+
 
 }
 

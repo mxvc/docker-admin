@@ -40,8 +40,8 @@ public class ProjectController extends BaseCURDController<Project> {
 
     @Override
     @HasPermission
-    @PostMapping({"page"})
-    public AjaxResult page(@RequestBody Project param, @PageableDefault(direction = Sort.Direction.DESC, sort = {"updateTime"}) Pageable pageable) {
+    @GetMapping({"page"})
+    public AjaxResult page( Project param, @PageableDefault(direction = Sort.Direction.DESC, sort = {"updateTime"}) Pageable pageable) {
         JpaQuery<Project> q = new JpaQuery<>();
         if (StrUtil.isNotEmpty(param.getName())) {
             q.like(Project.Fields.name, param.getName());
