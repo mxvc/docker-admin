@@ -24,7 +24,7 @@ import {isPermitted, notPermitted} from "../../utils/SysConfig";
 
 import ContainerLog from "../../components/container/ContainerLog";
 import ContainerFile from "../../components/container/ContainerFile";
-import {HttpUtil} from "@tmgg/tmgg-base";
+import {HttpUtil, PageUtil} from "@tmgg/tmgg-base";
 
 let api = 'app/';
 
@@ -52,7 +52,7 @@ export default class extends React.Component {
 
 
   componentDidMount() {
-    let id = this.props.location.query.id;
+    let id =PageUtil.currentLocationQuery().id
     this.id = id;
 
     HttpUtil.get('app/get', {id: id}).then(rs => {
@@ -70,8 +70,7 @@ export default class extends React.Component {
   loadContainer = () => {
     console.log('loadContainer')
     this.setState({containerLoading: true})
-    HttpUtil.get("app/container", {id: this.id}).then(rs => {
-      const container = rs.data;
+    HttpUtil.get("app/container", {id: this.id}).then(container => {
       this.setState({container})
 
       if (container.state === 'deploying') {
@@ -125,7 +124,6 @@ export default class extends React.Component {
     const id = this.state.app.id;
     const tag = this.state.publishApp.targetVersion;
     HttpUtil.get("app/updateVersion", {id, version: tag}).then(rs => {
-      message.success(rs.message)
       window.location.reload(true)
     })
   }
@@ -135,7 +133,6 @@ export default class extends React.Component {
     const id = this.state.app.id
     const hide = message.loading('删除中...')
     HttpUtil.get(api + 'delete', {id}).then(rs => {
-      message.info(rs.message)
       hide();
 
       history.push('/app')
@@ -149,7 +146,6 @@ export default class extends React.Component {
         cancelText: '取消',
         onOk: () => {
           HttpUtil.get(api + 'delete', {id, force: true}).then(rs => {
-            message.info(rs.message)
             history.push('/app')
           })
         }
@@ -165,7 +161,7 @@ export default class extends React.Component {
     HttpUtil.post(api + 'rename', {appId, newName}).then(rs => {
 
       message.success(rs.message)
-      this.setState({app: rs.data, showEditName: false})
+      this.setState({app: rs, showEditName: false})
     }).finally(hide)
   }
 
@@ -226,7 +222,6 @@ export default class extends React.Component {
 
     const items = []
     let iframe = <iframe src={app.logUrl}
-                         {...hutool.html.getIframeCommonProps()}
                          width={window.screen.width - 300}
                          height={window.screen.height - 450}
                          style={{

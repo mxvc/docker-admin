@@ -19,7 +19,7 @@ export default class extends React.Component {
             dataIndex: 'name',
             sorter: true,
             render: (name, row) => {
-                return <a onClick={() => history.push('app/view?id=' + row.id)}>{name}</a>
+                return <a onClick={() => history.push('/app/view?id=' + row.id)}>{name}</a>
             }
         },
         {
