@@ -22,7 +22,7 @@ export default class extends React.Component {
         this.setState({loading: true})
         HttpUtil.get(api + "images", {id: this.props.id}).then(list => {
             this.setState({list})
-        }).catch(() => {
+        }).finally(() => {
             this.setState({loading: false})
         })
     }
