@@ -7,21 +7,6 @@ import {HttpUtil} from "@tmgg/tmgg-base";
 
 export default class extends React.Component {
 
-    state = {
-        form: {
-            ports: [],
-            binds: [],
-            environmentYAML: ''
-        },
-
-
-    }
-
-    constructor(props) {
-        super(props);
-        const app = this.props.app
-        this.state.form = app.config
-    }
 
 
     portsColumns = [
@@ -34,26 +19,20 @@ export default class extends React.Component {
         {title: '主机路径', dataIndex: 'publicVolume', dataType: 'Input'},
         {title: '容器路径', dataIndex: 'privateVolume', dataType: 'Input'},
     ]
-    update = () => {
-        const {form} = this.state;
+    update = (form) => {
         const hide = message.loading("修改配置中...", 0)
-        this.setState({form: null})
-        HttpUtil.post('/app/updateConfig?id=' + this.props.app.id, form).then(rs => {
-            const app = rs.data;
-            this.setState({form: app.config})
-            hide()
+        HttpUtil.post('/app/updateConfig?id=' + this.props.app.id, form).then(app => {
             this.props.onChange(app)
-        })
+        }).finally(hide)
     }
 
     render() {
-        const {form} = this.state;
-        if (!form) {
+        if (!this.props.app.config) {
             return <Spin/>
         }
         return <>
 
-            <Form colon={false}>
+            <Form colon={false} labelCol={{flex:'120px'}} onFinish={this.update} initialValues={this.props.app.config}>
                 <Form.Item label='网络模式' name='networkMode' initialValue='bridge'>
                     <Radio.Group
                         options={[
@@ -70,7 +49,7 @@ export default class extends React.Component {
                        const networkMode =  fm.getFieldValue('networkMode')
                         if(networkMode === 'bridge') {
                             return       <Form.Item label='端口映射' name='portsColumns' >
-                                <EditTable columns={this.portsColumns} dataSource={form.ports}></EditTable>
+                                <EditTable columns={this.portsColumns} ></EditTable>
                             </Form.Item>
                         }
 
@@ -78,8 +57,8 @@ export default class extends React.Component {
 
                 </Form.Item>
 
-                <Form.Item label='文件映射' name='portsColumns' >
-                    <EditTable columns={this.bindsColumns} dataSource={form.binds}></EditTable>
+                <Form.Item label='文件映射' name='binds' >
+                    <EditTable columns={this.bindsColumns} ></EditTable>
                 </Form.Item>
 
                 <Form.Item label='环境变量' tooltip='yml格式' name='environmentYAML'>
@@ -93,16 +72,14 @@ export default class extends React.Component {
                 <Form.Item label='extraHosts' name='ExtraHosts' tooltip='域名IP映射,类似dns,hosts文件'>
                     <Input placeholder='域名:IP 域名2:IP2'/>
                 </Form.Item>
+
+
+                <Form.Item label=' '>
+                    <Button type="primary" danger htmlType='submit'  size={"large"}>保存并重启</Button>
+                </Form.Item>
             </Form>
 
 
-            <Row>
-                <Col flex="100px">
-                </Col>
-                <Col flex="auto">
-                    <Button type="primary" onClick={this.update} size={"large"}>保存并重启</Button>
-                </Col>
-            </Row>
 
 
         </>
