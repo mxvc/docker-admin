@@ -15,7 +15,9 @@ import com.github.dockerjava.api.command.CreateContainerCmd;
 import com.github.dockerjava.api.command.CreateContainerResponse;
 import com.github.dockerjava.api.model.*;
 import io.tmgg.lang.dao.BaseService;
+import io.tmgg.web.BizException;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.IOUtils;
 import org.slf4j.MDC;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
@@ -24,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import jakarta.annotation.Resource;
+
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.*;
@@ -302,9 +305,17 @@ public class AppService extends BaseService<App> {
         String name = app.getName();
 
         Map<String, String> labels = dockerManager.getAppLabelFilter(name);
-        List<Container> list = client.listContainersCmd().withLabelFilter(labels).withShowAll(true).exec();
-        if (!list.isEmpty()) {
-            return list.get(0);
+        try {
+
+
+            List<Container> list = client.listContainersCmd().withLabelFilter(labels).withShowAll(true).exec();
+            if (!list.isEmpty()) {
+                return list.get(0);
+            }
+        } catch (Exception e) {
+            throw new BizException("查询容器状态失败", e);
+        } finally {
+            IOUtils.closeQuietly(client);
         }
         return null;
     }

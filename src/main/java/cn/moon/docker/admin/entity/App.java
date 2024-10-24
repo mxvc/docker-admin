@@ -6,13 +6,14 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.tmgg.lang.dao.BaseEntity;
 import io.tmgg.lang.dao.DBConstants;
-import io.tmgg.sys.org.entity.SysOrg;
+
+import io.tmgg.sys.entity.SysOrg;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
-import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 

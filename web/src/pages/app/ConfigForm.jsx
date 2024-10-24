@@ -1,4 +1,4 @@
-import {Button, Col, Divider, Input, message, Radio, Row, Spin} from "antd";
+import {Button, Col, Divider, Form, Input, message, Radio, Row, Spin} from "antd";
 import React from "react";
 import EditTable from "../../components/EditTable";
 import CodeMirrorEditor from "../../components/CodeMirrorEditor";
@@ -13,6 +13,8 @@ export default class extends React.Component {
             binds: [],
             environmentYAML: ''
         },
+
+
     }
 
     constructor(props) {
@@ -51,98 +53,49 @@ export default class extends React.Component {
         }
         return <>
 
-
-            <Row>
-                <Col flex="100px">
-                    <h4>网络模式</h4>
-                </Col>
-                <Col flex="auto">
+            <Form colon={false}>
+                <Form.Item label='网络模式' name='networkMode' initialValue='bridge'>
                     <Radio.Group
                         options={[
-                            {label: '桥接模式（虚拟IP，需自定义端口）', value: 'bridge',},
-                            {label: '主机模式（同主机IP）', value: 'host',},
+                            {label: '桥接模式', value: 'bridge',},
+                            {label: '主机模式', value: 'host',},
                             {label: '无需网络', value: 'none',},
                         ]}
-                        value={form.networkMode}
-                        onChange={e => {
-                            form.networkMode = e
-                            this.setState({form})
-                        }}>
-
+                       >
                     </Radio.Group>
+                </Form.Item>
 
-                </Col>
-            </Row>
-            <Divider/>
+                <Form.Item noStyle dependencies={['networkMode']}>
+                    {(fm)=>{
+                       const networkMode =  fm.getFieldValue('networkMode')
+                        if(networkMode === 'bridge') {
+                            return       <Form.Item label='端口映射' name='portsColumns' >
+                                <EditTable columns={this.portsColumns} dataSource={form.ports}></EditTable>
+                            </Form.Item>
+                        }
 
-            {form.networkMode === 'bridge' && <> <Row>
-                <Col flex="100px">
-                    <h4>端口映射</h4>
-                </Col>
-                <Col flex="auto">
-                    <EditTable columns={this.portsColumns} dataSource={form.ports}></EditTable>
-                </Col>
-            </Row>
-                <Divider/>
-            </>
-            }
+                    }}
 
+                </Form.Item>
 
-            <Row>
-                <Col flex="100px">
-                    <h4>文件映射</h4>
-                </Col>
-                <Col flex="auto">
+                <Form.Item label='文件映射' name='portsColumns' >
                     <EditTable columns={this.bindsColumns} dataSource={form.binds}></EditTable>
-                </Col>
-            </Row>
-            <Divider/>
+                </Form.Item>
 
-            <Row>
-                <Col flex="100px">
-                    <h4>环境变量</h4>
-                    <i style={{fontSize: "small"}}>YML格式</i>
-                </Col>
-                <Col flex="auto">
-                    <CodeMirrorEditor value={form.environmentYAML}
-                                      onChange={e => {
-                                          form.environmentYAML = e
-                                          this.setState({form})
-                                      }}/>
+                <Form.Item label='环境变量' tooltip='yml格式' name='environmentYAML'>
+                    <CodeMirrorEditor />
+                </Form.Item>
 
-                </Col>
-            </Row>
-            <Divider/>
-            <Row>
-                <Col flex="100px">
-                    <h4>启动命令</h4>
-                </Col>
-                <Col flex="auto">
-                    <Input value={form.cmd} onChange={e => {
-                        form.cmd = e.target.value
-                        this.setState({form})
-                    }}/>
-                </Col>
-            </Row>
+                <Form.Item label='启动命令' name='cmd'>
+                    <Input />
+                </Form.Item>
 
-            <Divider/>
-
-            <Row>
-                <Col flex="100px">
-                    <h4>ExtraHosts</h4>
-                    <small><i>域名IP映射</i></small>
-                    <small><i></i></small>
-                </Col>
-                <Col flex="auto">
-                    <Input placeholder='域名:IP 域名2:IP2' value={form.extraHosts} onChange={e => {
-                        form.extraHosts = e.target.value
-                        this.setState({form})
-                    }}/>
-                </Col>
-            </Row>
+                <Form.Item label='extraHosts' name='ExtraHosts' tooltip='域名IP映射,类似dns,hosts文件'>
+                    <Input placeholder='域名:IP 域名2:IP2'/>
+                </Form.Item>
+            </Form>
 
 
-            <Divider/>
             <Row>
                 <Col flex="100px">
                 </Col>

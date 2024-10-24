@@ -42,7 +42,7 @@ export default class extends React.Component {
       this.setState({treeLoading: true})
       HttpUtil.get("container/file", {hostId, containerId, path}).then(rs => {
         hide()
-        const {dirs, files} = rs.data
+        const {dirs, files} = rs
         const node = TreeUtil.findByKey(key, treeData, "key");
         if (node) {
           node.children = dirs;
@@ -59,7 +59,7 @@ export default class extends React.Component {
 
   onSelect = (keys) => {
     const key = keys[0];
-    const node = hutool.tree.findByKey(key, this.state.treeData, "key")
+    const node = TreeUtil.findByKey(key, this.state.treeData, "key")
     this.setState({curNode: node})
   }
 

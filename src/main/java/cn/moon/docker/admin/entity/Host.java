@@ -1,18 +1,14 @@
 package cn.moon.docker.admin.entity;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import io.tmgg.lang.ann.Remark;
 import io.tmgg.lang.dao.BaseEntity;
-import io.tmgg.sys.org.entity.SysOrg;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.FieldNameConstants;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
 
 /**
  * 主机信息

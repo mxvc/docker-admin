@@ -246,7 +246,7 @@ export default class extends React.Component {
         if (isPermitted('app:config')) {
             items.push({
                 key: 'config',
-                label: '参数',
+                label: '参数配置',
                 children: <ConfigForm app={app}
                                       onChange={app => {
                                           window.location.reload(true)
