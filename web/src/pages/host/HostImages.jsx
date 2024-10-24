@@ -111,6 +111,7 @@ export default class extends React.Component {
       size={"small"}
       columns={this.columns}
       scroll={{x: 'max-content'}}
+      pagination={false}
 
     />
 

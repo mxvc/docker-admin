@@ -21,7 +21,7 @@ export default class extends React.Component {
   loadData = () => {
     this.setState({loading: true})
     HttpUtil.get(api + "containers", {id: this.props.id}).then(rs => {
-      this.setState({list:rs.data})
+      this.setState({list:rs})
     }).finally(() => {
       this.setState({loading: false})
     })
@@ -56,7 +56,7 @@ export default class extends React.Component {
         const name = row.Names[0].substr(1)
         const id = row.Id.substr(0, 12)
         return <div>
-          <a onClick={() => history.push('containerView?containerId=' + id + '&hostId=' + hostId)}>{name}</a>
+          <a onClick={() => history.push('/host/containerView?containerId=' + id + '&hostId=' + hostId)}>{name}</a>
           <br/> {id}
         </div>
       }

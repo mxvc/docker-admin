@@ -79,7 +79,6 @@ public class App extends BaseEntity {
         String image;
         boolean privileged;
 
-        boolean restart; // always, no
 
         String cmd; //启动命令
 

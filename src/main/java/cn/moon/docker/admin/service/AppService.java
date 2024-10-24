@@ -131,10 +131,16 @@ public class AppService extends BaseService<App> {
                             if (protocol == null) {
                                 protocol = "TCP";
                             }
-                            ExposedPort e = new ExposedPort(p.getPrivatePort(), InternetProtocol.valueOf(protocol));
-                            exposedPorts.add(e);
+                            Integer privatePort = p.getPrivatePort();
+                            Integer publicPort = p.getPublicPort();
+                            if(privatePort == null || publicPort == null){
+                                continue;
+                            }
 
-                            ports.bind(e, Ports.Binding.bindPort(p.getPublicPort()));
+                            ExposedPort e = new ExposedPort(privatePort, InternetProtocol.valueOf(protocol));
+                            ports.bind(e, Ports.Binding.bindPort(publicPort));
+
+                            exposedPorts.add(e);
                         }
                     }
 
@@ -144,7 +150,7 @@ public class AppService extends BaseService<App> {
             }
 
 
-            // 路径绑定
+            // 文件路径绑定
             List<Bind> binds = new ArrayList<>();
 
             for (App.BindConfig v : cfg.getBinds()) {
@@ -163,10 +169,7 @@ public class AppService extends BaseService<App> {
 
 
             // 是否自动启动
-            log.info("是否自动重启 {}", cfg.isRestart());
-            if (cfg.isRestart()) {
-                hostConfig.withRestartPolicy(RestartPolicy.alwaysRestart());
-            }
+            hostConfig.withRestartPolicy(RestartPolicy.unlessStoppedRestart());
 
             hostConfig.withPrivileged(true);
 

@@ -30,11 +30,13 @@ class CodeMirrorEditor extends React.Component {
   init = () => {
     const textarea = this.textareaRef.current;
     this.editor = CodeMirror.fromTextArea(textarea, {
+
       mode:   this.props.mode || 'yaml',
       lineNumbers: true,
       tabSize: 2,
-      theme: "darcula"
+      theme: "darcula",
     });
+    this.editor.setSize(null, 150);
 
     this.editor.on('change', (cm) => {
       this.props.onChange(cm.getValue());
@@ -50,7 +52,6 @@ class CodeMirrorEditor extends React.Component {
   render() {
     return (
       <textarea
-        style={{width:100,height:100}}
         ref={this.textareaRef}
         defaultValue={this.props.value}
       />

@@ -2,12 +2,13 @@ import React from 'react';
 import {Card, Tabs} from "antd";
 import ContainerLog from "../../components/container/ContainerLog";
 import ContainerFile from "../../components/container/ContainerFile";
+import {PageUtil} from "@tmgg/tmgg-base";
 
 
 export default class extends React.Component {
 
   render() {
-    const {containerId, hostId} = this.props.location.query;
+    const {containerId, hostId} = PageUtil.currentLocationQuery();
 
     return <Card style={{minHeight:'calc(100vh - 100px)'}}>
       <Tabs  destroyInactiveTabPane >

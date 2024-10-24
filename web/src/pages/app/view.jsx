@@ -58,15 +58,16 @@ export default class extends React.Component {
     componentDidMount() {
         let id = PageUtil.currentLocationQuery().id
         this.id = id;
-
-        HttpUtil.get('app/get', {id: id}).then(rs => {
-            this.setState({app: rs, loading: false});
-            this.loadTagOptions(rs)
-        })
-
+        this.loadApp();
         this.loadContainer();
     }
 
+
+    loadApp() {
+        HttpUtil.get('app/get', {id: this.id}).then(rs => {
+            this.setState({app: rs, loading: false});
+        })
+    }
 
     loadContainer = () => {
         console.log('loadContainer')
@@ -84,14 +85,7 @@ export default class extends React.Component {
         })
     }
 
-    loadTagOptions(app) {
-        if (app.project) {
-            HttpUtil.get('project/versions', {projectId: app.project.id}).then(rs => {
-                this.setState({tagOptions: rs})
-            })
-        }
 
-    }
 
     deploy = () => {
         const {container} = this.state
@@ -249,7 +243,8 @@ export default class extends React.Component {
                 label: '参数配置',
                 children: <ConfigForm app={app}
                                       onChange={app => {
-                                          window.location.reload(true)
+                                         this.loadApp()
+                                         this.loadContainer()
                                       }}/>
             })
         }
