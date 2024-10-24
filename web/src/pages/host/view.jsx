@@ -76,10 +76,10 @@ export default class extends React.Component {
 
             <Card className='mt-2'>
                 <Tabs defaultActiveKey="1">
-                    <Tabs.TabPane tab={<Badge count={info.containers}> 容器</Badge>} key="1">
+                    <Tabs.TabPane tab={<Badge count={info.containers}> 容器列表</Badge>} key="1">
                         <HostContainers id={host.id}/>
                     </Tabs.TabPane>
-                    <Tabs.TabPane tab={<Badge count={info.images}> 镜像</Badge>} key="2">
+                    <Tabs.TabPane tab={<Badge count={info.images}> 镜像列表</Badge>} key="2">
                         <HostImages id={host.id}/>
                     </Tabs.TabPane>
                 </Tabs>

@@ -85,14 +85,14 @@ public class HostController extends BaseCURDController<Host> {
         return service.getImages(id);
     }
 
-    @RequestMapping("deleteImage")
+    @PostMapping("deleteImage")
     public AjaxResult deleteImage(String id, String imageId) {
         try {
             service.deleteImage(id, imageId);
         } catch (ConflictException e) {
             return AjaxResult.err().msg("删除镜像失败" + e.getMessage());
         }
-        return AjaxResult.ok();
+        return AjaxResult.ok().msg("删除镜像"+imageId +"成功");
     }
 
     @RequestMapping("cleanImage")

@@ -1,6 +1,7 @@
-import {Button, message, Table} from 'antd';
+import {Button, message, Skeleton, Table, Tag} from 'antd';
 import React from 'react';
 import {HttpUtil} from "@tmgg/tmgg-base";
+import {StrUtil} from "@tmgg/tmgg-commons-lang";
 
 
 let api = 'host/';
@@ -8,115 +9,93 @@ let api = 'host/';
 
 export default class extends React.Component {
 
-  state = {
-    list: [],
-    loadingMap: {}
-  }
+    state = {
+        loading: true,
+        list: [],
+    }
 
-  componentDidMount() {
+    componentDidMount() {
+        this.loadData();
+    }
 
-    this.loadData();
-  }
+    loadData() {
+        this.setState({loading: true})
+        HttpUtil.get(api + "images", {id: this.props.id}).then(list => {
+            this.setState({list})
+        }).catch(() => {
+            this.setState({loading: false})
+        })
+    }
 
-  loadData() {
-    let params = this.props;
-    const hide = message.loading("加载主机镜像中...", 0)
-    HttpUtil.get(api + "images", params).then(list => {
-      this.setState({list})
-      hide()
-    }).catch(hide)
-  }
+    delete = imageId => {
+        const hide = message.loading("删除镜像" + imageId + "中...", 0)
+        HttpUtil.postForm(api + "/deleteImage", {id: this.props.id, imageId}).then(rs => {
+            this.loadData()
+        }).finally(hide)
+    }
 
-  delete = imageId => {
-    let map = this.state.loadingMap;
-    map[imageId] = true;
-    this.setState({loadingMap: map})
-    let params = this.props;
-    const hide = message.loading("删除镜像中...", 0)
-    HttpUtil.get(api + "/deleteImage", {id: params.id, imageId}).then(rs => {
-      let map = this.state.loadingMap;
-      map[imageId] = false;
-      this.setState({loadingMap: map})
+    columns = [
+        {
+            title: '序号',
+            dataIndex: 'index',
+            render(tags, row, index) {
+                return index + 1;
+            }
+        },
+        {
+            title: 'Id',
+            dataIndex: 'Id',
+            render(v) {
+                return v.substr(7, 12);
+            }
+        },
+        {
+            title: '版本',
+            dataIndex: 'RepoTags',
+            render(tags, row) {
+                return tags && tags.map(tag => <Tag>{tag}</Tag>)
+            }
+        },
 
-      message.success(rs.message)
-      this.loadData()
-      this.setState({})
-      hide()
-    }).catch(() => {
-      let map = this.state.loadingMap;
-      map[imageId] = false;
-      this.setState({loadingMap: map})
-      hide();
-    })
-  }
+        {
+            title: '创建于',
+            dataIndex: 'Created',
+            render: function (v, row) {
+                let date = new Date(v * 1000);
+                return date.toLocaleDateString();
+            }
+        },
+        {
+            title: '大小',
+            dataIndex: 'Size',
+            render(v) {
+                return (v / 1024 / 1024).toFixed(1) + " MB";
+            }
+        },
 
-  columns = [
-    {
-      title: '序号',
-      dataIndex: 'index',
-      render(tags, row, index) {
-        return index + 1;
-      }
-    },
-    {
-      title: 'Id',
-      dataIndex: 'Id',
-      render(v) {
-        return v.substr(7, 12);
-      }
-    },
-    {
-      title: '镜像Tag',
-      dataIndex: 'RepoTags',
-      render(tags, row) {
-        return tags && tags.map(tag => <div>{tag}</div>)
-      }
-    },
+        {
+            dataIndex: 'action',
+            fixed: 'right',
+            width: 200,
+            render: (_, row) => {
+                return <Button size="small" onClick={() => this.delete(row.Id)}>删除 </Button>;
+            }
+        },
+    ];
 
-    {
-      title: '创建于',
-      dataIndex: 'Created',
-      render: function (v, row) {
-        let date = new Date(v * 1000);
-        return date.toLocaleDateString();
-      }
-    },
-    {
-      title: '大小',
-      dataIndex: 'Size',
-      render(v) {
-        return (v / 1024 / 1024).toFixed(1) + " MB";
-      }
-    },
-
-    {
-      dataIndex: 'action',
-      fixed: 'right',
-      width: 200,
-      render: (_, row) => {
-        const map = this.state.loadingMap;
-        const result = map[row.Id]
-
-
-        return <Button size={"small"} loading={result}
-                       onClick={() => this.delete(row.Id)}>删除 {result != null && '已点击'}</Button>;
-      }
-    },
-  ];
-
-  render() {
-    return <Table
-      dataSource={this.state.list}
-      rowKey="Id"
-      size={"small"}
-      columns={this.columns}
-      scroll={{x: 'max-content'}}
-      pagination={false}
-
-    />
-
-
-  }
+    render() {
+        if (this.state.loading) {
+            return <Skeleton active/>
+        }
+        return <Table
+            dataSource={this.state.list}
+            rowKey="Id"
+            size={"small"}
+            columns={this.columns}
+            scroll={{x: 'max-content'}}
+            pagination={false}
+        />
+    }
 
 
 }

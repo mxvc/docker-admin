@@ -62,11 +62,10 @@ public class HostService extends BaseService<Host> {
     }
 
     public void deleteImage(String hostId, String imageId) {
-        Host db = this.findOne(hostId);
-        DockerClient client = sdkManager.getClient(db);
+        Host host = this.findOne(hostId);
+        DockerClient client = sdkManager.getClient(host);
 
-        client.removeImageCmd(imageId).exec();
-
+        client.removeImageCmd(imageId).withForce(true).exec();
     }
 
 
