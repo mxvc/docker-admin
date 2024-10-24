@@ -1,6 +1,5 @@
 import {
     Alert,
-    AutoComplete,
     Button,
     Card,
     Col,
@@ -12,10 +11,8 @@ import {
     Row,
     Space,
     Spin,
-    Switch,
     Tabs,
-    Tag,
-    Typography
+    Tag
 } from 'antd';
 import React from 'react';
 import ConfigForm from "./ConfigForm";
@@ -51,8 +48,6 @@ export default class extends React.Component {
         showEditName: false,
         newName: '',
 
-
-        deployLogOpen: false
 
     }
 
@@ -93,14 +88,13 @@ export default class extends React.Component {
     };
 
 
-
     deploy = () => {
         const {container} = this.state
         container.state = 'deploying'
         this.setState({container})
         HttpUtil.post('app/deploy/' + this.state.app.id).then(rs => {
             message.success('部署指令已发送，异步执行中...')
-            this.setState({deployLogOpen: true})
+
             this.loadContainer()
         })
     }
@@ -114,7 +108,6 @@ export default class extends React.Component {
             this.loadContainer()
         })
     }
-
 
 
     handleDelete = () => {
@@ -160,6 +153,8 @@ export default class extends React.Component {
             return <Spin/>
         }
         const {state} = container;
+        const deploying = state === 'deploying'
+
 
         return (<>
 
@@ -180,7 +175,7 @@ export default class extends React.Component {
 
                     </Item>
                     <Item label='镜像' span={2}>  {app.imageUrl}:{app.imageTag} </Item>
-                    <Item label='自动发布' >  {String(app.autoDeploy)} </Item>
+                    <Item label='自动发布'>  {String(app.autoDeploy)} </Item>
 
 
                 </Descriptions>
@@ -192,8 +187,7 @@ export default class extends React.Component {
                 {this.renderTabs()}
             </Card>
 
-            <Modal title='部署日志' open={this.state.deployLogOpen} destroyOnClose width={800} footer={null}
-                   onCancel={() => this.setState({deployLogOpen: false})}>
+            <Modal title='部署日志' open={deploying} destroyOnClose width={800} footer={null}>
                 <LogView url={app.logUrl}/>
             </Modal>
         </>)
@@ -201,7 +195,6 @@ export default class extends React.Component {
 
     renderTabs = () => {
         const {container, containerLoading} = this.state;
-
 
 
         const {app} = this.state
@@ -219,7 +212,7 @@ export default class extends React.Component {
             items.push({
                 key: 'log',
                 label: '日志',
-                children: containerLoading ? '容器加载中': <ContainerLog hostId={hostId} containerId={containerId}/>
+                children: containerLoading ? '容器加载中' : <ContainerLog hostId={hostId} containerId={containerId}/>
             })
 
 
@@ -232,60 +225,59 @@ export default class extends React.Component {
         }
 
 
-            items.push({
-                key: 'config',
-                label: '配置',
-                children: <HasPerm code='app:config'> <ConfigForm app={app}   onChange={this.reload}/></HasPerm>
-            })
+        items.push({
+            key: 'config',
+            label: '配置',
+            children: <HasPerm code='app:config'> <ConfigForm app={app} onChange={this.reload}/></HasPerm>
+        })
 
         items.push({
             key: 'publish',
             label: '发布',
-            children: <HasPerm code='app:deploy'> <PublishForm appId={app.id} onChange={this.reload} /></HasPerm>
+            children: <HasPerm code='app:deploy'> <PublishForm appId={app.id} onChange={this.reload}/></HasPerm>
         })
 
 
-            items.push({
-                key: 'setting',
-                label: "其他",
-                children: <HasPerm code='app:config'>
-                    <Row wrap={false}>
-                        <Col flex="100px">名称</Col>
-                        <Col flex="auto">
+        items.push({
+            key: 'setting',
+            label: "其他",
+            children: <HasPerm code='app:config'>
+                <Row wrap={false}>
+                    <Col flex="100px">名称</Col>
+                    <Col flex="auto">
 
-                            {!this.state.showEditName ? <div>
-                                {this.state.app.name} <a onClick={() => this.setState({
-                                newName: this.state.app.name,
-                                showEditName: true
-                            })}>修改名称</a>
-                            </div> : <div>
+                        {!this.state.showEditName ? <div>
+                            {this.state.app.name} <a onClick={() => this.setState({
+                            newName: this.state.app.name,
+                            showEditName: true
+                        })}>修改名称</a>
+                        </div> : <div>
 
-                                <Input value={this.state.newName} style={{width: 200}}
-                                       onChange={e => this.setState({newName: e.target.value})}></Input>
-                                <Button type={"primary"} onClick={this.rename}>确定</Button>
-                            </div>}
+                            <Input value={this.state.newName} style={{width: 200}}
+                                   onChange={e => this.setState({newName: e.target.value})}></Input>
+                            <Button type={"primary"} onClick={this.rename}>确定</Button>
+                        </div>}
 
-                        </Col>
+                    </Col>
 
-                    </Row>
+                </Row>
 
 
-                    <Divider></Divider>
-                    <Row wrap={false}>
-                        <Col flex="100px">删除应用</Col>
-                        <Col flex="auto">
-                            <Space direction={"vertical"}>
-                                <Alert
-                                    message="请注意，删除应用将清除该应用的所有数据，且该操作不能被恢复，您确定要删除吗?"
-                                    type="warning"
-                                ></Alert>
-                                <Button danger type="primary" onClick={this.handleDelete}>删除应用</Button>
-                            </Space>
-                        </Col>
-                    </Row>
-                </HasPerm>
-            })
-
+                <Divider></Divider>
+                <Row wrap={false}>
+                    <Col flex="100px">删除应用</Col>
+                    <Col flex="auto">
+                        <Space direction={"vertical"}>
+                            <Alert
+                                message="请注意，删除应用将清除该应用的所有数据，且该操作不能被恢复，您确定要删除吗?"
+                                type="warning"
+                            ></Alert>
+                            <Button danger type="primary" onClick={this.handleDelete}>删除应用</Button>
+                        </Space>
+                    </Col>
+                </Row>
+            </HasPerm>
+        })
 
 
         return <>
