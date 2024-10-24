@@ -20,12 +20,14 @@ import {
 import React from 'react';
 import ConfigForm from "./ConfigForm";
 import {history} from "umi";
-import {isPermitted} from "../../utils/SysConfig";
 
 import ContainerLog from "../../components/container/ContainerLog";
 import ContainerFile from "../../components/container/ContainerFile";
-import {HttpUtil, PageUtil} from "@tmgg/tmgg-base";
+import {HasPerm, HttpUtil, PageUtil} from "@tmgg/tmgg-base";
 import LogView from "../../components/LogView";
+import PublishForm from "./PublishForm";
+
+const Item = Descriptions.Item
 
 let api = 'app/';
 
@@ -85,6 +87,11 @@ export default class extends React.Component {
         })
     }
 
+    reload = () => {
+        this.loadApp();
+        this.loadContainer()
+    };
+
 
 
     deploy = () => {
@@ -108,19 +115,6 @@ export default class extends React.Component {
         })
     }
 
-    setAutoDeploy = (id, autoDeploy) => {
-        HttpUtil.get("app/autoDeploy", {id, autoDeploy})
-    }
-
-
-
-    updateVersion = () => {
-        const id = this.state.app.id;
-        const tag = this.state.publishApp.targetVersion;
-        HttpUtil.get("app/updateVersion", {id, version: tag}).then(rs => {
-            window.location.reload(true)
-        })
-    }
 
 
     handleDelete = () => {
@@ -177,15 +171,16 @@ export default class extends React.Component {
 
 
                 <Descriptions size="small">
-                    <Descriptions.Item label='应用'>  {app.name} </Descriptions.Item>
-                    <Descriptions.Item label='主机'>  {app.host?.name} </Descriptions.Item>
-                    <Descriptions.Item label='状态'>
+                    <Item label='应用'>  {app.name} </Item>
+                    <Item label='主机'>  {app.host?.name} </Item>
+                    <Item label='状态'>
                         {containerLoading ?
                             "检测中..." : <Tag color={state === 'running' ? 'green' : 'red'}>
                                 {container.status}</Tag>}
 
-                    </Descriptions.Item>
-                    <Descriptions.Item label='镜像' span={2}>  {app.imageUrl}:{app.imageTag} </Descriptions.Item>
+                    </Item>
+                    <Item label='镜像' span={2}>  {app.imageUrl}:{app.imageTag} </Item>
+                    <Item label='自动发布' >  {String(app.autoDeploy)} </Item>
 
 
                 </Descriptions>
@@ -237,65 +232,23 @@ export default class extends React.Component {
         }
 
 
-        if (isPermitted('app:config')) {
             items.push({
                 key: 'config',
-                label: '参数配置',
-                children: <ConfigForm app={app}
-                                      onChange={app => {
-                                         this.loadApp()
-                                         this.loadContainer()
-                                      }}/>
+                label: '配置',
+                children: <HasPerm code='app:config'> <ConfigForm app={app}   onChange={this.reload}/></HasPerm>
             })
-        }
 
         items.push({
             key: 'publish',
-            label: '发布', children: <>
-                <Row wrap={false}>
-                    <Col flex="100px">自动发布</Col>
-                    <Col flex="auto">
-                        <Switch checked={app.autoDeploy}
-                                onChange={checked => {
-                                    app.autoDeploy = checked
-                                    this.setState({app: this.state.app})
-                                    this.setAutoDeploy(app.id, checked)
-                                }}
-                        ></Switch>
-                        <div>
-                            <Typography.Text
-                                type="secondary">当有镜像构建成功后，自动更新应用到最新构建的版本</Typography.Text>
-                        </div>
-                    </Col>
-                </Row>
-                <Divider></Divider>
-
-                <Row wrap={false}>
-                    <Col flex="100px">手动发布</Col>
-                    <Col flex="auto">
-                        <AutoComplete options={this.state.tagOptions}
-                                      style={{width: 150}}
-                                      value={this.state.publishApp.targetVersion}
-                                      onChange={targetVersion => {
-                                          this.setState({publishApp: {targetVersion}})
-                                      }}/>
-
-                        &nbsp;&nbsp;
-                        <Button type={"primary"} onClick={this.updateVersion}>更新应用</Button>
-
-                        <div>
-                            <Typography.Text type="secondary">用指定的镜像版本</Typography.Text>
-                        </div>
-                    </Col>
-                </Row>
-            </>
+            label: '发布',
+            children: <HasPerm code='app:deploy'> <PublishForm appId={app.id} onChange={this.reload} /></HasPerm>
         })
 
-        if (isPermitted('app:config')) {
+
             items.push({
                 key: 'setting',
-                label: "设置",
-                children: <>
+                label: "其他",
+                children: <HasPerm code='app:config'>
                     <Row wrap={false}>
                         <Col flex="100px">名称</Col>
                         <Col flex="auto">
@@ -309,16 +262,12 @@ export default class extends React.Component {
 
                                 <Input value={this.state.newName} style={{width: 200}}
                                        onChange={e => this.setState({newName: e.target.value})}></Input>
-
                                 <Button type={"primary"} onClick={this.rename}>确定</Button>
                             </div>}
 
                         </Col>
 
                     </Row>
-
-
-
 
 
                     <Divider></Divider>
@@ -334,9 +283,9 @@ export default class extends React.Component {
                             </Space>
                         </Col>
                     </Row>
-                </>
+                </HasPerm>
             })
-        }
+
 
 
         return <>

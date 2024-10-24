@@ -40,16 +40,16 @@ public class AppController {
     @RequestMapping("list")
     public Page<App> list(String keyword, @PageableDefault(sort = "updateTime", direction = Sort.Direction.DESC) Pageable pageable, HttpSession session) {
         JpaQuery<App> q = new JpaQuery<>();
-        if(StrUtil.isNotEmpty(keyword)){
+        if (StrUtil.isNotEmpty(keyword)) {
             q.like("name", keyword);
         }
 
 
         Subject subject = SecurityUtils.getSubject();
         Collection<String> orgIds = subject.getOrgPermissions();
-    //    q.in("sysOrg.id", orgIds);
+        //    q.in("sysOrg.id", orgIds);
 
-       return service.findAll(q, pageable);
+        return service.findAll(q, pageable);
     }
 
     @RequestMapping("get")
@@ -61,7 +61,7 @@ public class AppController {
             app.setImageUrl(fullUrl + "/" + app.getProject().getName());
         }
 
-        String url = LogUrlTool.getLogViewUrl(request,id);
+        String url = LogUrlTool.getLogViewUrl(request, id);
         app.setLogUrl(url);
         return app;
     }
@@ -152,11 +152,8 @@ public class AppController {
         service.save(db);
 
 
-      return AjaxResult.ok().msg("自动部署:" + (autoDeploy ? "启用" : "停用"));
+        return AjaxResult.ok().msg("调整自动发布:" + (autoDeploy ? "启用" : "停用"));
     }
-
-
-
 
 
     @HasPermission("app:start")

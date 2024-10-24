@@ -33,7 +33,7 @@ export default class extends React.Component {
         }
         return <>
 
-            <Form ref={this.formRef} colon={false} labelCol={{flex: '120px'}} onFinish={this.update} onValuesChange={console.log} initialValues={this.props.app.config}>
+            <Form ref={this.formRef} colon={false} labelCol={{flex: '100px'}} onFinish={this.update} onValuesChange={console.log} initialValues={this.props.app.config}>
                 <Form.Item label='网络模式' name='networkMode'>
                     <Radio.Group
                         options={[
