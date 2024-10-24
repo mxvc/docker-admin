@@ -7,6 +7,9 @@ import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.model.PruneResponse;
 import com.github.dockerjava.api.model.PruneType;
 import lombok.extern.slf4j.Slf4j;
+import org.quartz.Job;
+import org.quartz.JobExecutionContext;
+import org.quartz.JobExecutionException;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -16,7 +19,7 @@ import java.util.concurrent.TimeUnit;
 
 @Component
 @Slf4j
-public class CleanImageJob {
+public class CleanImageJob implements Job {
 
 
     @Resource
@@ -26,9 +29,8 @@ public class CleanImageJob {
     DockerSdkManager sdkManager;
 
 
-
-    @Scheduled(fixedRate = 1, initialDelay = 1, timeUnit = TimeUnit.DAYS)
-    public void run() {
+    @Override
+    public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
         log.info("开始清理资源");
 
         List<Host> list = hostService.findAll();
@@ -56,4 +58,8 @@ public class CleanImageJob {
 
         }
     }
+
+
+
+
 }

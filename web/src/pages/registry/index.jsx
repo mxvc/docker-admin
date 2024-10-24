@@ -109,6 +109,7 @@ export default class extends React.Component {
           request={(jobParamDescs, sort) => HttpUtil.pageData('registry/page', jobParamDescs, sort)}
           columns={this.columns}
           rowKey='id'
+          search={false}
       />
 
   <Modal title='Registry'
