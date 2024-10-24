@@ -104,6 +104,7 @@ export default class extends React.Component {
               </Button>
             </ButtonList>
           }}
+          search={false}
           request={(jobParamDescs, sort) => HttpUtil.pageData('host/page', jobParamDescs, sort)}
           columns={this.columns}
           rowKey='id'
