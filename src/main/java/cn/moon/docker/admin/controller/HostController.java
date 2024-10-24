@@ -15,16 +15,14 @@ import io.tmgg.lang.obj.Option;
 import io.tmgg.web.annotion.HasPermission;
 import io.tmgg.web.perm.SecurityUtils;
 import io.tmgg.web.perm.Subject;
+import jakarta.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import jakarta.annotation.Resource;
 import java.util.*;
@@ -107,14 +105,14 @@ public class HostController extends BaseCURDController<Host> {
         return AjaxResult.ok();
     }
 
-    @RequestMapping("syncImageToHost")
-    public AjaxResult syncImageToHost(String hostId,String src, String image) {
+    @PostMapping("syncImageToHost")
+    public AjaxResult syncImageToHost(@NotNull String hostId, @NotNull String url, @NotNull String tag, String newName) {
         try {
-            service.syncImageToHost(hostId,src, image);
+            service.syncImageToHost(hostId, url, tag ,newName);
         } catch (Exception e) {
-            return AjaxResult.err().msg("同步镜像失败" + e.getMessage());
+            return AjaxResult.err().msg("拉取镜像失败" + e.getMessage());
         }
-        return AjaxResult.ok();
+        return AjaxResult.ok().msg("拉取镜像成功");
     }
 
 

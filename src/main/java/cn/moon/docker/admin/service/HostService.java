@@ -75,11 +75,11 @@ public class HostService extends BaseService<Host> {
         return hostDao.count();
     }
 
-    public void syncImageToHost(String hostId, String src, String image) throws InterruptedException {
-        Host db = this.findOne(hostId);
-        DockerClient client = sdkManager.getClient(db);
+    public void syncImageToHost(String hostId, String url, String tag, String newName) throws InterruptedException {
+        Host host = this.findOne(hostId);
+        DockerClient client = sdkManager.getClient(host);
 
-        ImageSyncToHostTool.syncImageToHost(client, src, image);
+        ImageSyncToHostTool.syncImageToHost(client, url,tag, newName);
     }
 
     @Async
