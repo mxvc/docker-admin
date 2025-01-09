@@ -3,8 +3,7 @@ import React from 'react';
 import ContainerStatus from "../../components/ContainerStatus";
 import {history} from "umi";
 import {notPermitted} from "../../utils/SysConfig";
-import {FieldOrgTreeSelect, FieldRemoteSelect, HttpUtil} from "@tmgg/tmgg-base";
-import {ProTable} from "@tmgg/pro-table";
+import {FieldOrgTreeSelect, FieldRemoteSelect, HttpUtil, ProTable} from "@tmgg/tmgg-base";
 
 let api = 'app/';
 

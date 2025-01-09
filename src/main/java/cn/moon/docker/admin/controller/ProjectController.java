@@ -6,6 +6,7 @@ import cn.moon.docker.admin.entity.Project;
 import cn.moon.docker.admin.service.BuildLogService;
 import cn.moon.docker.admin.service.ProjectService;
 import io.tmgg.lang.dao.BaseCURDController;
+import io.tmgg.lang.dao.BaseController;
 import io.tmgg.lang.dao.BaseEntity;
 import io.tmgg.lang.dao.specification.JpaQuery;
 import io.tmgg.lang.obj.AjaxResult;
@@ -29,7 +30,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("project")
-public class ProjectController extends BaseCURDController<Project> {
+public class ProjectController extends BaseController<Project> {
 
 
     @Resource
@@ -38,7 +39,6 @@ public class ProjectController extends BaseCURDController<Project> {
     @Resource
     private BuildLogService logService;
 
-    @Override
     @HasPermission
     @GetMapping({"page"})
     public AjaxResult page( Project param, @PageableDefault(direction = Sort.Direction.DESC, sort = {"updateTime"}) Pageable pageable) {
@@ -115,7 +115,7 @@ public class ProjectController extends BaseCURDController<Project> {
     public List<Option> options() throws InterruptedException, IOException, GitAPIException {
         JpaQuery<Project> q = getQuery();
 
-        List<Project> list = service.findAll(q, Sort.by(Sort.Direction.DESC, BaseEntity.Fields.updateTime));
+        List<Project> list = service.findAll(q, Sort.by(Sort.Direction.DESC, BaseEntity.FIELD_UPDATE_TIME));
 
         List<Option> options = new ArrayList<>();
         for (Project h : list) {

@@ -1,7 +1,6 @@
 import {Button, message, Skeleton, Table, Tag} from 'antd';
 import React from 'react';
 import {HttpUtil} from "@tmgg/tmgg-base";
-import {StrUtil} from "@tmgg/tmgg-commons-lang";
 
 
 let api = 'host/';

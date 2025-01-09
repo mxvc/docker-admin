@@ -1,15 +1,8 @@
-
-
 db_port: 3306
-db_ip: mysql.sqlpub.com
-db_database: jttest
-
-
-spring:
-  datasource:
-    username: jttest
-server:
-  port: 8080
+db_ip: 127.0.0.1
+db_database: docker-admin
+db_password: 123456
+db_username: root
 
 sys:
   auto-update-sys-data: true

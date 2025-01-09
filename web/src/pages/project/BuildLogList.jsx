@@ -7,11 +7,10 @@ import {
   Loading3QuartersOutlined,
   MinusCircleTwoTone
 } from "@ant-design/icons";
-import {ProTable} from "@tmgg/pro-table";
-import moment from "moment";
-import {HttpUtil} from "@tmgg/tmgg-base";
+import {HttpUtil, ProTable} from "@tmgg/tmgg-base";
 import {DateUtil, StrUtil} from "@tmgg/tmgg-commons-lang";
 import LogView from "../../components/LogView";
+import dayjs from "dayjs";
 
 
 let api = 'buildLog/';
@@ -200,7 +199,7 @@ export default class extends React.Component {
     const {project} = this.props;
     const {showTrigger} = this.state
 
-    let todayVersion = 'v' + moment().format('YYYYMMDD');
+    let todayVersion = 'v' + dayjs().format('YYYYMMDD');
     return (<>
 
       <ProTable

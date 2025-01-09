@@ -2,8 +2,8 @@ import {Button, Card, Form, Input, Modal, Radio} from 'antd';
 import React from 'react';
 
 
-import {ProTable} from "@tmgg/pro-table";
-import {FieldRemoteSelect, HttpUtil, PageUtil} from "@tmgg/tmgg-base";
+
+import {FieldRemoteSelect, HttpUtil, PageUtil, ProTable} from "@tmgg/tmgg-base";
 
 
 

@@ -2,8 +2,7 @@ import {PlusOutlined} from '@ant-design/icons'
 import {Button, Card,InputNumber, Popconfirm,Modal,Form,Input,message} from 'antd'
 import React from 'react'
 
-import {ProTable} from '@tmgg/pro-table'
-import {HttpUtil} from "@tmgg/tmgg-base"
+import {HttpUtil, ProTable} from "@tmgg/tmgg-base"
 import {ButtonList,FieldDictSelect,FieldRadioBoolean} from "@tmgg/tmgg-base";
 
 

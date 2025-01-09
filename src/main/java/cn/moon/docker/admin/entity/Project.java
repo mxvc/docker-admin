@@ -3,7 +3,7 @@ package cn.moon.docker.admin.entity;
 import cn.moon.validation.StartWithLetter;
 import io.tmgg.lang.ann.Remark;
 import io.tmgg.lang.dao.BaseEntity;
-import io.tmgg.sys.entity.SysOrg;
+import io.tmgg.modules.sys.entity.SysOrg;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;

@@ -32,6 +32,6 @@ public class BuildLogDao extends BaseDao<BuildLog> {
     public BuildLog findTop1ByProjectIdOrderByCreateTimeDesc(String projectId) {
         JpaQuery<BuildLog> q= new JpaQuery<>();
         q.eq(BuildLog.Fields.projectId,projectId);
-        return findTop1(q, Sort.by(BaseEntity.Fields.createTime));
+        return findTop1(q, Sort.by(BaseEntity.FIELD_CREATE_TIME));
     }
 }

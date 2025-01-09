@@ -3,7 +3,7 @@ package cn.moon.docker.admin.entity.converter;
 import cn.hutool.core.util.StrUtil;
 import cn.moon.docker.admin.entity.App;
 
-import io.tmgg.lang.JsonTool;
+import io.tmgg.jackson.JsonTool;
 import jakarta.persistence.AttributeConverter;
 
 public class AppConfigConverter implements AttributeConverter<App.AppConfig, String> {

@@ -33,7 +33,7 @@ public class BuildLogController {
     private BuildLogService service;
 
     @RequestMapping("list")
-    public Page<BuildLog> list(HttpServletRequest request, String projectId, @PageableDefault(sort = BaseEntity.Fields.createTime, direction = Sort.Direction.DESC) Pageable pageable) throws UnsupportedEncodingException {
+    public Page<BuildLog> list(HttpServletRequest request, String projectId, @PageableDefault(sort = BaseEntity.FIELD_CREATE_TIME, direction = Sort.Direction.DESC) Pageable pageable) throws UnsupportedEncodingException {
         JpaQuery<BuildLog> q = new JpaQuery<>();
         q.eq("projectId", projectId);
         Page<BuildLog> page = service.findAll(q, pageable);

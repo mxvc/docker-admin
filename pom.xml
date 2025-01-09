@@ -5,11 +5,11 @@
     <parent>
         <groupId>io.github.tmgg</groupId>
         <artifactId>tmgg-system-parent</artifactId>
-        <version>0.1.46</version>
+        <version>0.2.13</version>
     </parent>
     <groupId>io.github.mxvc</groupId>
     <artifactId>docker-admin</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
     <name>docker-admin</name>
 
     <properties>
@@ -30,15 +30,6 @@
 
         <dependency>
             <groupId>io.github.tmgg</groupId>
-            <artifactId>tmgg-system-job</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.github.tmgg</groupId>
-            <artifactId>tmgg-system-code-gen</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>io.github.tmgg</groupId>
             <artifactId>tmgg-commons-log-view</artifactId>
         </dependency>
 
@@ -54,11 +45,7 @@
 
 
 
-        <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-            <version>8.0.33</version>
-        </dependency>
+
 
         <dependency>
             <groupId>com.aliyun</groupId>
@@ -102,13 +89,6 @@
             <version>5.10.0.202012080955-r</version>
         </dependency>
 
-
-        <!-- https://mvnrepository.com/artifact/commons-io/commons-io -->
-        <dependency>
-            <groupId>commons-io</groupId>
-            <artifactId>commons-io</artifactId>
-            <version>2.11.0</version>
-        </dependency>
 
 
         <dependency>

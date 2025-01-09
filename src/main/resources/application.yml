@@ -4,7 +4,6 @@ spring:
     active: default,dev
 
 
-
 sys:
   base-package-class: cn.moon.DockerAdminBootApplication
   site-info:

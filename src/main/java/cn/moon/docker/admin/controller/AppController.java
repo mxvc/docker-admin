@@ -24,7 +24,6 @@ import jakarta.annotation.Resource;
 import java.io.UnsupportedEncodingException;
 import java.util.*;
 
-import static io.tmgg.sys.entity.SysRole.Fields.perms;
 
 @RestController
 @Slf4j
@@ -187,7 +186,7 @@ public class AppController {
     @RequestMapping("options")
     public AjaxResult options() {
         List<Option> list = new ArrayList<>();
-        Sort sort = Sort.by(Sort.Direction.DESC, BaseEntity.Fields.updateTime);
+        Sort sort = Sort.by(Sort.Direction.DESC, BaseEntity.FIELD_UPDATE_TIME);
 
         List<App> all = service.findAll(sort);
 

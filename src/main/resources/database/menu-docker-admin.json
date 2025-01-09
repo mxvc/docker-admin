@@ -1,12 +1,22 @@
 {
   "SysMenu": [
     {
+      "pid":"biz",
+      "id": "image",
+      "name": "镜像仓库",
+      "perm": "image",
+      "path": "/image",
+      "icon": "DockerOutlined",
+      "seq": 1
+    },
+    {
       "pid": "biz",
       "id": "project",
       "name": "项目构建",
       "perm": "project",
       "path": "/project",
-      "seq": 1
+      "icon": "OrderedListOutlined",
+      "seq": 2
     },
     {
       "pid": "biz",
@@ -14,14 +24,40 @@
       "name": "应用部署",
       "perm": "app",
       "path": "/app",
-      "seq": 2
+      "icon": "AppstoreOutlined",
+      "seq": 3
     },
+
     {
       "pid": "biz",
+      "id": "settings",
+      "name": "设置",
+      "icon": "SettingOutlined",
+      "seq": 10
+    },
+    {
+      "pid": "settings",
       "id": "host",
       "name": "主机管理",
       "perm": "host",
       "path": "/host",
+      "seq": 1
+    },
+    {
+      "pid":"settings",
+      "id": "gitCredential",
+      "name": "GIT凭据",
+      "perm": "gitCredential",
+      "path": "/gitCredential",
+      "seq": 2
+    },
+
+    {
+      "pid":"settings",
+      "id": "registry",
+      "name": "注册中心",
+      "perm": "registry",
+      "path": "/registry",
       "seq": 3
     }
 

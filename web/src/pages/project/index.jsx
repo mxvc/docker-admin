@@ -2,8 +2,7 @@ import {PlusOutlined} from '@ant-design/icons'
 import {Button, Divider, Form, Input, Modal, Popconfirm} from 'antd'
 import React from 'react'
 
-import {ProTable} from '@tmgg/pro-table'
-import {ButtonList, FieldOrgTreeSelect, FieldRadioBoolean, FieldRemoteSelect, HttpUtil} from "@tmgg/tmgg-base"
+import {ButtonList, FieldOrgTreeSelect, FieldRadioBoolean, FieldRemoteSelect, HttpUtil, ProTable} from "@tmgg/tmgg-base"
 import {history} from "umi";
 
 

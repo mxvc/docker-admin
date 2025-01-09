@@ -9,7 +9,7 @@ import {
   Loading3QuartersOutlined,
   MinusCircleTwoTone
 } from "@ant-design/icons";
-import {ProTable} from "@tmgg/pro-table";
+import {ProTable} from "@tmgg/tmgg-base";
 
 let api = '/deployLog/';
 

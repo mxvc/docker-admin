@@ -50,7 +50,6 @@ public class DockerSdkManager {
         DockerHttpClient httpClient = new MyDockerHttpClient(config.getDockerHost(), config.getSSLConfig(), virtualHost);
 
 
-
         DockerClient dockerClient = DockerClientImpl.getInstance(config, httpClient);
 
 
