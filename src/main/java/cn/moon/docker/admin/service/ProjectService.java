@@ -122,12 +122,12 @@ public class ProjectService extends BaseService<Project> {
         MDC.put("logFileId", logId);
         try {
 
-            log.info("开始构建镜像任务 {} {} {} {}", project.getName(), project.getGitUrl(), branchOrTag, version);
+            log.info("开始构建镜像任务, 项目：{}， 仓库：{}， 分支：{}， 版本：{}", project.getName(), project.getGitUrl(), branchOrTag, version);
 
             Host host = hostService.findOne(p.getBuildHostId());
 
             Assert.notNull(host, "无构建主机");
-            log.info("构建主机： {} {} {}", host.getName(), host.getDockerHost(), StrUtil.emptyIfNull(host.getRemark()));
+            log.info("构建主机信息... 名称：{}, host:{}, 备注:{}", host.getName(), host.getDockerHost(), StrUtil.emptyIfNull(host.getRemark()));
 
             String username = null;
             String password = null;
@@ -143,7 +143,7 @@ public class ProjectService extends BaseService<Project> {
             log.info("代码下载完毕 " + workDir);
             log.info("代码提交信息: {}" , cloneResult.getCodeMessage());
             log.info("代码提交时间: {}" , cloneResult.getCommitTime());
-            log.info("代码文件大小 {}", DataSizeUtil.format(FileUtil.size(workDir)));
+            log.info("代码文件大小: {}", DataSizeUtil.format(FileUtil.size(workDir)));
 
             log.info("dockerfile {}", dockerfile);
             {

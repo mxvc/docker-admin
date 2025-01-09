@@ -82,7 +82,7 @@ public class GitTool {
         log.info("耗时：{} 秒", (System.currentTimeMillis() - start) / 1000);
 
 
-        return new CloneResult(workDir, submitMessage, DateUtil.formatDateTime(new Date(next.getCommitTime() * 1000L)));
+        return new CloneResult(workDir, submitMessage.trim(), DateUtil.formatDateTime(new Date(next.getCommitTime() * 1000L)));
     }
 
 }
