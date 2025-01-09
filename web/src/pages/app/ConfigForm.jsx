@@ -1,4 +1,4 @@
-import {Button, Col, Divider, Form, Input, message, Radio, Row, Spin} from "antd";
+import {Button, Col, Divider, Form, Input, message, Radio, Row, Select, Spin} from "antd";
 import React from "react";
 import EditTable from "../../components/EditTable";
 import CodeMirrorEditor from "../../components/CodeMirrorEditor";
@@ -35,14 +35,14 @@ export default class extends React.Component {
 
             <Form ref={this.formRef} colon={false} labelCol={{flex: '100px'}} onFinish={this.update} onValuesChange={console.log} initialValues={this.props.app.config}>
                 <Form.Item label='网络模式' name='networkMode'>
-                    <Radio.Group
+                    <Select style={{width:200}}
                         options={[
                             {label: '桥接模式', value: 'bridge',},
                             {label: '主机模式', value: 'host',},
                             {label: '无需网络', value: 'none',},
                         ]}
                     >
-                    </Radio.Group>
+                    </Select>
                 </Form.Item>
 
                 <Form.Item noStyle dependencies={['networkMode']}>
