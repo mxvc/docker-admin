@@ -14,6 +14,7 @@ import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 
 import java.io.File;
+import java.util.Date;
 
 @Slf4j
 public class GitTool {
@@ -23,6 +24,8 @@ public class GitTool {
     public static class CloneResult {
         File dir;
         String codeMessage;
+
+        String commitTime;
     }
 
     public static CloneResult clone(String url, String user, String password, String value) throws GitAPIException {
@@ -79,7 +82,7 @@ public class GitTool {
         log.info("耗时：{} 秒", (System.currentTimeMillis() - start) / 1000);
 
 
-        return new CloneResult(workDir, submitMessage);
+        return new CloneResult(workDir, submitMessage, DateUtil.formatDateTime(new Date(next.getCommitTime())));
     }
 
 }

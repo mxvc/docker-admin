@@ -141,7 +141,8 @@ public class ProjectService extends BaseService<Project> {
             GitTool.CloneResult cloneResult = GitTool.clone(project.getGitUrl(), username, password, branchOrTag);
             File workDir = cloneResult.getDir();
             log.info("代码下载完毕 " + workDir);
-            log.info("提交信息:" + cloneResult.getCodeMessage());
+            log.info("代码提交信息: {}" , cloneResult.getCodeMessage());
+            log.info("代码提交时间: {}" , cloneResult.getCommitTime());
             log.info("代码文件大小 {}", DataSizeUtil.format(FileUtil.size(workDir)));
 
             log.info("dockerfile {}", dockerfile);

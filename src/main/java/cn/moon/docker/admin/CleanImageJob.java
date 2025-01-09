@@ -6,10 +6,12 @@ import cn.moon.docker.sdk.engine.DockerSdkManager;
 import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.model.PruneResponse;
 import com.github.dockerjava.api.model.PruneType;
+import io.tmgg.modules.job.JobTool;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
+import org.slf4j.Logger;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -18,9 +20,9 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @Component
-@Slf4j
 public class CleanImageJob implements Job {
 
+    private static final Logger log = JobTool.getLogger();
 
     @Resource
     HostService hostService;
