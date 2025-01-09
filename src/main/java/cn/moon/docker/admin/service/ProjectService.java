@@ -184,6 +184,10 @@ public class ProjectService extends BaseService<Project> {
 
             log.info("是否拉取基础镜像 withPull {}", p.isPull());
             log.info("是否使用缓存 {}", p.isUseCache());
+            File dockerfileFile = new File(buildDir, dockerfile);
+            log.info("Dockerfile内容如下：\n{}",FileUtil.readUtf8String(dockerfileFile));
+
+            log.info("构建命令执行中...");
             client.buildImageCmd(buildDir)
                     // 删除构建产生的容器
                     .withForcerm(true)
@@ -191,8 +195,9 @@ public class ProjectService extends BaseService<Project> {
                     .withNetworkMode("host")
                     .withTags(imageTags)
                     .withNoCache(!p.isUseCache())
-                    .withDockerfile(new File(buildDir, dockerfile))
+                    .withDockerfile(dockerfileFile)
                     .exec(buildCallback).awaitCompletion();
+
 
 
             // 判断是构建被中途取消，如手动取消，重复构建取消

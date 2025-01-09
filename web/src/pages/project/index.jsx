@@ -1,5 +1,5 @@
 import {PlusOutlined} from '@ant-design/icons'
-import {Button, Divider, Form, Input, Modal, Popconfirm} from 'antd'
+import {Button, Form, Input, Modal, Popconfirm} from 'antd'
 import React from 'react'
 
 import {ButtonList, FieldOrgTreeSelect, FieldRadioBoolean, FieldRemoteSelect, HttpUtil, ProTable} from "@tmgg/tmgg-base"
@@ -61,17 +61,17 @@ export default class extends React.Component {
         {
             title: '推送latest',
             dataIndex: 'autoPushLatest',
+            render(v) {
+                return v ? '是' : '否'
+            }
 
-            valueType: 'boolean',
-            hideInSearch: true
         },
         {
             title: '组织',
             dataIndex: ['sysOrg', 'name'],
-            renderFormItem() {
-                return <FieldOrgTreeSelect/>
-            }
+
         },
+
         {
             title: '操作',
             dataIndex: 'option',
@@ -153,30 +153,29 @@ export default class extends React.Component {
                     <Form.Item label='名称' name='name' rules={[{required: true}]} help='不能包含中文，小写字母开头'>
                         <Input/>
                     </Form.Item>
+                    <Form.Item label='备注' name='remark'>
+                        <Input/>
+                    </Form.Item>
                     <Form.Item label='gi仓库' name='gitUrl' rules={[{required: true}]}>
                         <Input/>
                     </Form.Item>
 
-                    <Form.Item label='备注' name='remark'>
+
+                    <Form.Item label='dockerfile' name='dockerfile' rules={[{required: true}]}
+                               initialValue='Dockerfile'>
+                        <Input/>
+                    </Form.Item>
+                    <Form.Item label='默认分支' name='branch' rules={[{required: true}]} initialValue='master'>
                         <Input/>
                     </Form.Item>
 
-                    <a onClick={()=>this.setState({showMore:!this.state.showMore})}>高级设置</a>
+                    <a onClick={() => this.setState({showMore: !this.state.showMore})}>高级设置</a>
                     <div style={{display: this.state.showMore ? 'block' : 'none'}}>
-                        <Form.Item label='dockerfile' name='dockerfile' rules={[{required: true}]}
-                                   initialValue='Dockerfile'>
-                            <Input/>
-                        </Form.Item>
 
                         <Form.Item label='注册中心' name={['registry', 'id']} rules={[{required: true}]}
                                    initialValue={this.state.defaultRegistryId}>
                             <FieldRemoteSelect url='registry/options'/>
                         </Form.Item>
-                        <Form.Item label='默认分支' name='branch' rules={[{required: true}]} initialValue='master'>
-                            <Input/>
-                        </Form.Item>
-
-
 
 
                         <Form.Item label='推送latest' name='autoPushLatest' rules={[{required: true}]}

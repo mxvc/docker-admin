@@ -169,13 +169,13 @@ export default class extends React.Component {
                     <Item label='应用'>  {app.name} </Item>
                     <Item label='主机'>  {app.host?.name} </Item>
                     <Item label='状态'>
-                        {containerLoading ?
-                            "检测中..." : <Tag color={state === 'running' ? 'green' : 'red'}>
+                        {containerLoading ? "检测中..." :
+                            <Tag color={state === 'running' ? 'green' : 'red'}>
                                 {container.status}</Tag>}
 
                     </Item>
                     <Item label='镜像' span={2}>  {app.imageUrl}:{app.imageTag} </Item>
-                    <Item label='自动发布'>  {String(app.autoDeploy)} </Item>
+                    <Item label='自动发布'>  {app.autoDeploy ? '是' : '否'} </Item>
 
 
                 </Descriptions>
@@ -205,84 +205,74 @@ export default class extends React.Component {
         let containerId = container.id
         let hostId = app.host.id
 
-        const items = []
-
-// 容器信息
-        if (!notFound) {
-            items.push({
+        const items = [
+            {
                 key: 'log',
-                label: '日志',
+                label: 'Console',
+                disabled:notFound,
                 children: containerLoading ? '容器加载中' : <ContainerLog hostId={hostId} containerId={containerId}/>
-            })
-
-
-            items.push({
+            },
+            {
                 key: 'file',
                 label: '文件',
+                disabled:notFound,
                 children: <ContainerFile hostId={hostId} containerId={containerId}/>
 
-            })
-        }
+            },
+            {
+                key: 'config',
+                label: '配置',
+                children: <HasPerm code='app:config'> <ConfigForm app={app} onChange={this.reload}/></HasPerm>
+            },
+            {
+                key: 'publish',
+                label: '发布',
+                children: <HasPerm code='app:deploy'> <PublishForm appId={app.id} onChange={this.reload}/></HasPerm>
+            },
+            {
+                key: 'setting',
+                label: "其他",
+                children: <HasPerm code='app:config'>
+                    <Row wrap={false}>
+                        <Col flex="100px">名称</Col>
+                        <Col flex="auto">
+
+                            {!this.state.showEditName ? <div>
+                                {this.state.app.name} <a onClick={() => this.setState({
+                                newName: this.state.app.name,
+                                showEditName: true
+                            })}>修改名称</a>
+                            </div> : <div>
+
+                                <Input value={this.state.newName} style={{width: 200}}
+                                       onChange={e => this.setState({newName: e.target.value})}></Input>
+                                <Button type={"primary"} onClick={this.rename}>确定</Button>
+                            </div>}
+
+                        </Col>
+
+                    </Row>
 
 
-        items.push({
-            key: 'config',
-            label: '配置',
-            children: <HasPerm code='app:config'> <ConfigForm app={app} onChange={this.reload}/></HasPerm>
-        })
-
-        items.push({
-            key: 'publish',
-            label: '发布',
-            children: <HasPerm code='app:deploy'> <PublishForm appId={app.id} onChange={this.reload}/></HasPerm>
-        })
-
-
-        items.push({
-            key: 'setting',
-            label: "其他",
-            children: <HasPerm code='app:config'>
-                <Row wrap={false}>
-                    <Col flex="100px">名称</Col>
-                    <Col flex="auto">
-
-                        {!this.state.showEditName ? <div>
-                            {this.state.app.name} <a onClick={() => this.setState({
-                            newName: this.state.app.name,
-                            showEditName: true
-                        })}>修改名称</a>
-                        </div> : <div>
-
-                            <Input value={this.state.newName} style={{width: 200}}
-                                   onChange={e => this.setState({newName: e.target.value})}></Input>
-                            <Button type={"primary"} onClick={this.rename}>确定</Button>
-                        </div>}
-
-                    </Col>
-
-                </Row>
+                    <Divider></Divider>
+                    <Row wrap={false}>
+                        <Col flex="100px">删除应用</Col>
+                        <Col flex="auto">
+                            <Space direction={"vertical"}>
+                                <Alert
+                                    message="请注意，删除应用将清除该应用的所有数据，且该操作不能被恢复，您确定要删除吗?"
+                                    type="warning"
+                                ></Alert>
+                                <Button danger type="primary" onClick={this.handleDelete}>删除应用</Button>
+                            </Space>
+                        </Col>
+                    </Row>
+                </HasPerm>
+            }
+        ]
 
 
-                <Divider></Divider>
-                <Row wrap={false}>
-                    <Col flex="100px">删除应用</Col>
-                    <Col flex="auto">
-                        <Space direction={"vertical"}>
-                            <Alert
-                                message="请注意，删除应用将清除该应用的所有数据，且该操作不能被恢复，您确定要删除吗?"
-                                type="warning"
-                            ></Alert>
-                            <Button danger type="primary" onClick={this.handleDelete}>删除应用</Button>
-                        </Space>
-                    </Col>
-                </Row>
-            </HasPerm>
-        })
-
-
-        return <>
-            <Tabs items={items} destroyInactiveTabPane></Tabs>
-        </>
+        return <Tabs items={items} destroyInactiveTabPane></Tabs>
     }
 
 }
