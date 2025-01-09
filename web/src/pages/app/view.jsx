@@ -8,7 +8,7 @@ import {
     Input,
     message,
     Modal,
-    Row,
+    Row, Skeleton,
     Space,
     Spin,
     Tabs,
@@ -23,6 +23,7 @@ import ContainerFile from "../../components/container/ContainerFile";
 import {HasPerm, HttpUtil, PageUtil} from "@tmgg/tmgg-base";
 import LogView from "../../components/LogView";
 import PublishForm from "./PublishForm";
+import {SyncOutlined} from "@ant-design/icons";
 
 const Item = Descriptions.Item
 
@@ -187,9 +188,7 @@ export default class extends React.Component {
                 {this.renderTabs()}
             </Card>
 
-            <Modal title='部署日志' open={deploying} destroyOnClose width={800} footer={null}>
-                <LogView url={app.logUrl}/>
-            </Modal>
+
         </>)
     }
 
@@ -200,17 +199,23 @@ export default class extends React.Component {
         const {app} = this.state
 
         const notFound = container.state === 'notFound'
-
+        const deploying = container.state === 'deploying'
 
         let containerId = container.id
         let hostId = app.host.id
 
         const items = [
             {
+                key: 'deployLog',
+                label: '部署日志',
+                icon: deploying ? <SyncOutlined spin /> : null,
+                children: <LogView url={app.logUrl}/>
+            },
+            {
                 key: 'log',
                 label: 'Console',
                 disabled:notFound,
-                children: containerLoading ? '容器加载中' : <ContainerLog hostId={hostId} containerId={containerId}/>
+                children: containerLoading ? <Skeleton /> : <ContainerLog hostId={hostId} containerId={containerId}/>
             },
             {
                 key: 'file',

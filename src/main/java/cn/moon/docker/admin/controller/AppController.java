@@ -71,8 +71,7 @@ public class AppController {
         Assert.state(app != null, "应用不存在");
         ContainerVo container = service.getContainerVo(app);
 
-
-        return AjaxResult.ok().msg("获取容器信息成功").data(container);
+        return AjaxResult.ok().data(container);
     }
 
 

@@ -2,6 +2,7 @@ import {LazyLog, ScrollFollow} from "react-lazylog";
 import React from "react";
 import {SysUtil} from "@tmgg/tmgg-base";
 import {Alert} from "antd";
+import {getWebsocketBaseUrl} from "@tmgg/tmgg-commons-lang";
 
 /**
  * https://mozilla-frontend-infra.github.io/react-lazylog/
@@ -14,9 +15,10 @@ export default class extends React.Component {
         if(!url){
             return <Alert message='未定义组件属性url' type="error"></Alert>
         }
-        if (!url.startsWith("ws://")) {
-            url = "ws://" + location.host +  url
-            console.log('调整后的ws url')
+        if (!url.startsWith("ws://") && !url.startsWith("wss://")) {
+            const baseUrl = getWebsocketBaseUrl();
+            url = baseUrl +  url
+            console.log('调整后的 ws url', url)
         }
 
 

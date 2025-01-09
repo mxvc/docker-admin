@@ -1,5 +1,5 @@
 import React from "react";
-import {Card, Col, message, Row, Table, Tree} from "antd";
+import {Card, Col, message, Row, Splitter, Table, Tree} from "antd";
 import {HttpUtil} from "@tmgg/tmgg-base";
 import {TreeUtil} from "@tmgg/tmgg-commons-lang";
 
@@ -67,17 +67,16 @@ export default class extends React.Component {
     let {hostId, containerId} = this.props;
 
     return <div >
-      <Row gutter={10} wrap={false}>
-        <Col flex='400px'>
+      <Splitter>
+        <Splitter.Panel defaultSize={300}>
           <Card style={{height: '80vh', overflowY: "auto"}}>
             <Tree.DirectoryTree
-              loadData={this.onLoadData}
-              treeData={this.state.treeData}
-              onSelect={this.onSelect}/>
+                loadData={this.onLoadData}
+                treeData={this.state.treeData}
+                onSelect={this.onSelect}/>
           </Card>
-        </Col>
-
-        <Col flex='auto'>
+        </Splitter.Panel>
+        <Splitter.Panel>
           <Card title={'文件列表：' + this.state.curNode?.path}>
             <Table pagination={false}
                    dataSource={this.state.curNode?.fileList}
@@ -95,8 +94,9 @@ export default class extends React.Component {
                    ]}>
             </Table>
           </Card>
-        </Col>
-      </Row>
+        </Splitter.Panel>
+      </Splitter>
+
     </div>
   }
 }

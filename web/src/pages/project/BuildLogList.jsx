@@ -130,6 +130,7 @@ export default class extends React.Component {
               width: 1024,
               closable: true,
               icon: null,
+              footer:null,
               content: <LogView url={logUrl} />
             })
           }}>日志</a>
