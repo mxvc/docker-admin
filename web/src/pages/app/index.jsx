@@ -1,4 +1,4 @@
-import {AutoComplete, Button, Form, Input, message, Modal, Radio} from 'antd';
+import {AutoComplete, Button, Form, Input, Modal} from 'antd';
 import React from 'react';
 import ContainerStatus from "../../components/ContainerStatus";
 import {history} from "umi";
@@ -21,20 +21,8 @@ export default class extends React.Component {
                 return <a onClick={() => history.push('/app/view?id=' + row.id)}>{name}</a>
             }
         },
-        {
-            title: '主机',
-            dataIndex: 'host',
-            sorter: true,
-            hideInForm: true,
-            render(v) {
-                return v.name
-            },
-        },
-        {
-            title: '主机',
-            dataIndex: 'hostId',
-            hideInTable: true,
-        },
+
+
         {
             title: '镜像',
             dataIndex: 'imageUrl',
@@ -51,6 +39,10 @@ export default class extends React.Component {
             dataIndex: 'imageTag',
         },
         {
+            title: '运行主机',
+            dataIndex: ['host','name'],
+        },
+        {
             title: '状态',
             dataIndex: 'containerStatus',
             hideInForm: true,
@@ -64,7 +56,6 @@ export default class extends React.Component {
         },
 
 
-
     ];
     state = {
 
@@ -72,15 +63,14 @@ export default class extends React.Component {
         deployImageVisible: false,
 
 
-        imageList:[],
-        imageTagList:[]
+        imageList: [],
+        imageTagList: []
     }
 
 
     reload = () => {
         this.actionRef.current.reload()
     }
-
 
 
     handleSave = value => {
@@ -92,27 +82,28 @@ export default class extends React.Component {
 
     formRef = React.createRef()
 
-    handleAdd =()=>{
+    handleAdd = () => {
         this.setState({deployVisible: true})
         this.loadImageList();
     }
 
     loadImageList = (text) => {
-        HttpUtil.get('image/options',{keyword:text}).then(rs => {
+        HttpUtil.get('image/options', {keyword: text}).then(rs => {
             this.setState({imageList: rs})
         })
     };
     loadImageTagList = (text) => {
         const url = this.formRef.current.getFieldValue('imageUrl')
-        if(url){
-            HttpUtil.get('image/tagOptions',{url,keyword:text}).then(rs => {
+        if (url) {
+            HttpUtil.get('image/tagOptions', {url, keyword: text}).then(rs => {
                 this.setState({imageTagList: rs})
             })
-        }else {
-            this.setState({imageTagList:[]})
+        } else {
+            this.setState({imageTagList: []})
         }
 
     };
+
     render() {
         return (
             <>
@@ -132,8 +123,11 @@ export default class extends React.Component {
                     search={false}
                     options={{search: true}}
                 />
-                <Modal title='新增应用' open={this.state.deployVisible} destroyOnClose={true} footer={null}
-                       onCancel={() => this.setState({deployVisible: false})}>
+                <Modal title='新增应用' open={this.state.deployVisible} destroyOnClose={true}
+                       onOk={()=>this.formRef.current.submit()}
+                       onCancel={() => this.setState({deployVisible: false})}
+                    width={800}
+                >
                     <Form
                         layout='horizontal'
                         labelCol={{flex: '100px'}}
@@ -145,7 +139,9 @@ export default class extends React.Component {
                         }}
                         onFinish={this.handleSave}
                     >
-
+                        <Form.Item name='name' label='应用名称' required rules={[{required: true}]}>
+                            <Input/>
+                        </Form.Item>
 
                         <Form.Item name='imageUrl' label='镜像' required rules={[{required: true}]}>
                             <AutoComplete options={this.state.imageList} onSearch={this.loadImageList}></AutoComplete>
@@ -153,7 +149,8 @@ export default class extends React.Component {
 
 
                         <Form.Item name='imageTag' label='版本' required rules={[{required: true}]}>
-                            <AutoComplete options={this.state.imageTagList} onSearch={this.loadImageTagList}></AutoComplete>
+                            <AutoComplete options={this.state.imageTagList}
+                                          onSearch={this.loadImageTagList}></AutoComplete>
                         </Form.Item>
 
 
@@ -162,15 +159,11 @@ export default class extends React.Component {
                         </Form.Item>
 
 
-                        <Form.Item name='name' label='应用名称' required rules={[{required: true}]}>
-                            <Input/>
+
+                        <Form.Item label='所属组织' name={['sysOrg', 'id']} >
+                            <FieldOrgTreeSelect/>
                         </Form.Item>
-                        <Form.Item label='组织' name={['sysOrg','id']} rules={[{required: true}]}>
-                            <FieldOrgTreeSelect />
-                        </Form.Item>
-                        <Form.Item>
-                            <Button htmlType='submit' type='primary'>确定</Button>
-                        </Form.Item>
+
                     </Form>
                 </Modal>
 

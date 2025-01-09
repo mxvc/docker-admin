@@ -55,7 +55,7 @@ public class Project extends BaseEntity {
     Registry registry;
 
     // 自动更新latest版本
-    @Remark("维护latest")
+    @Remark("推送latest")
     Boolean autoPushLatest;
 
 

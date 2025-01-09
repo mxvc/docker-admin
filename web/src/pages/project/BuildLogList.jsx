@@ -209,14 +209,10 @@ export default class extends React.Component {
             <Button onClick={this.cleanError} title='清理失败的记录'>清理</Button>
           </Space>;
         }}
-        search={false}
         actionRef={this.actionRef}
         request={(params, sort) => HttpUtil.pageData(this.listURL, params, sort)}
         columns={this.columns}
-        rowSelection={false}
-        scroll={{x: 'max-content'}}
-
-        rowKey="id"
+        showSearch={false}
       />
 
 
@@ -236,7 +232,7 @@ export default class extends React.Component {
           preserve={false}>
           <Form.Item name="projectId" hidden>
           </Form.Item>
-          <Form.Item name="version" label="版本">
+          <Form.Item name="version" label="构建版本" rules={[{required: true}]}>
             <AutoComplete options={[
               {label: 'latest', value: 'latest'},
               {label: todayVersion, value: todayVersion}

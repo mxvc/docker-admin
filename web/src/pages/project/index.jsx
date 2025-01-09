@@ -11,15 +11,16 @@ export default class extends React.Component {
     state = {
         formValues: {},
         formOpen: false,
-        registryOptions:[],
-        defaultRegistryId:null
+        registryOptions: [],
+        defaultRegistryId: null,
+
+        showMore: false
     }
 
     formRef = React.createRef()
     tableRef = React.createRef()
 
     columns = [
-
 
 
         {
@@ -32,8 +33,8 @@ export default class extends React.Component {
         },
 
         {
-            title: 'gitUrl',
-            dataIndex: 'gitUrl',            hideInSearch: true
+            title: 'git仓库',
+            dataIndex: 'gitUrl', hideInSearch: true
         },
         {
             title: '备注',
@@ -47,29 +48,28 @@ export default class extends React.Component {
         },
         {
             title: 'dockerfile',
-            dataIndex: 'dockerfile',            hideInSearch: true
+            dataIndex: 'dockerfile', hideInSearch: true
         },
-
 
 
         {
             title: '注册中心',
-            dataIndex: ['registry','fullUrl'],
-            hideInSearch:true
+            dataIndex: ['registry', 'fullUrl'],
+            hideInSearch: true
         },
 
         {
-            title: '维护latest',
+            title: '推送latest',
             dataIndex: 'autoPushLatest',
 
             valueType: 'boolean',
-            hideInSearch:true
+            hideInSearch: true
         },
         {
             title: '组织',
-            dataIndex: ['sysOrg','name'],
-            renderFormItem(){
-                return <FieldOrgTreeSelect />
+            dataIndex: ['sysOrg', 'name'],
+            renderFormItem() {
+                return <FieldOrgTreeSelect/>
             }
         },
         {
@@ -89,9 +89,9 @@ export default class extends React.Component {
     ]
 
     componentDidMount() {
-        HttpUtil.get('registry/options').then(rs=>{
+        HttpUtil.get('registry/options').then(rs => {
             this.setState({registryOptions: rs})
-            if(rs.length){
+            if (rs.length) {
                 this.setState({defaultRegistryId: rs[0].value})
             }
         })
@@ -150,40 +150,43 @@ export default class extends React.Component {
                       initialValues={this.state.formValues}
                       onFinish={this.onFinish}>
                     <Form.Item name='id' noStyle></Form.Item>
+                    <Form.Item label='名称' name='name' rules={[{required: true}]} help='不能包含中文，小写字母开头'>
+                        <Input/>
+                    </Form.Item>
+                    <Form.Item label='gi仓库' name='gitUrl' rules={[{required: true}]}>
+                        <Input/>
+                    </Form.Item>
 
-                    <Form.Item label='gitUrl' name='gitUrl' rules={[{required: true}]}>
-                        <Input/>
-                    </Form.Item>
-                    <Form.Item label='名称' name='name' rules={[{required: true}]}>
-                        <Input/>
-                    </Form.Item>
                     <Form.Item label='备注' name='remark'>
                         <Input/>
                     </Form.Item>
 
-                    <Divider >其他</Divider>
-                    <Form.Item label='组织' name={['sysOrg','id']} rules={[{required: true}]}>
-                       <FieldOrgTreeSelect />
-                    </Form.Item>
-                    <Form.Item label='默认分支' name='branch' rules={[{required: true}]} initialValue='master'>
-                        <Input/>
-                    </Form.Item>
+                    <a onClick={()=>this.setState({showMore:!this.state.showMore})}>高级设置</a>
+                    <div style={{display: this.state.showMore ? 'block' : 'none'}}>
+                        <Form.Item label='dockerfile' name='dockerfile' rules={[{required: true}]}
+                                   initialValue='Dockerfile'>
+                            <Input/>
+                        </Form.Item>
 
-                    <Form.Item label='dockerfile' name='dockerfile' rules={[{required: true}]}
-                               initialValue='Dockerfile'>
-                        <Input/>
-                    </Form.Item>
+                        <Form.Item label='注册中心' name={['registry', 'id']} rules={[{required: true}]}
+                                   initialValue={this.state.defaultRegistryId}>
+                            <FieldRemoteSelect url='registry/options'/>
+                        </Form.Item>
+                        <Form.Item label='默认分支' name='branch' rules={[{required: true}]} initialValue='master'>
+                            <Input/>
+                        </Form.Item>
 
 
 
 
-                    <Form.Item label='注册中心' name={['registry','id']} rules={[{required: true}]} initialValue={this.state.defaultRegistryId}>
-                        <FieldRemoteSelect url='registry/options' />
-                    </Form.Item>
-                    <Form.Item label='维护latest' name='autoPushLatest' rules={[{required: true}]} initialValue={false}>
-                        <FieldRadioBoolean/>
-                    </Form.Item>
-
+                        <Form.Item label='推送latest' name='autoPushLatest' rules={[{required: true}]}
+                                   initialValue={false}>
+                            <FieldRadioBoolean/>
+                        </Form.Item>
+                        <Form.Item label='所属组织' name={['sysOrg', 'id']}>
+                            <FieldOrgTreeSelect/>
+                        </Form.Item>
+                    </div>
                 </Form>
             </Modal>
         </>

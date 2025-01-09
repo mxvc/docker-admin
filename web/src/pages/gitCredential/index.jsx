@@ -2,7 +2,7 @@ import {PlusOutlined} from '@ant-design/icons'
 import {Button, Popconfirm,Modal,Form,Input} from 'antd'
 import React from 'react'
 
-import {HttpUtil, ProTable} from "@tmgg/tmgg-base"
+import {FieldPassword, HttpUtil, ProTable} from "@tmgg/tmgg-base"
 import {ButtonList} from "@tmgg/tmgg-base";
 
 
@@ -33,14 +33,7 @@ export default class extends React.Component {
 
     },
 
-    {
-      title: '密码',
-      dataIndex: 'password',
-        valueType: 'password',
-        hideInSearch:true,
-        hideInTable:true
 
-    },
 
     {
       title: '操作',

@@ -32,7 +32,7 @@ public class Host extends BaseEntity {
 
     String dockerHost;
 
-    @Remark("请求头Host重写")
+    @Remark("指定host头")
     String dockerHostHeader;
 
     @Remark("备注")

@@ -5,7 +5,6 @@ import cn.moon.docker.admin.BuildParam;
 import cn.moon.docker.admin.entity.Project;
 import cn.moon.docker.admin.service.BuildLogService;
 import cn.moon.docker.admin.service.ProjectService;
-import io.tmgg.lang.dao.BaseCURDController;
 import io.tmgg.lang.dao.BaseController;
 import io.tmgg.lang.dao.BaseEntity;
 import io.tmgg.lang.dao.specification.JpaQuery;
@@ -30,7 +29,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("project")
-public class ProjectController extends BaseController<Project> {
+public class ProjectController  {
 
 
     @Resource
@@ -40,8 +39,8 @@ public class ProjectController extends BaseController<Project> {
     private BuildLogService logService;
 
     @HasPermission
-    @GetMapping({"page"})
-    public AjaxResult page( Project param, @PageableDefault(direction = Sort.Direction.DESC, sort = {"updateTime"}) Pageable pageable) {
+    @PostMapping("page")
+    public AjaxResult page(@RequestBody Project param, @PageableDefault(direction = Sort.Direction.DESC, sort = {"updateTime"}) Pageable pageable) {
         JpaQuery<Project> q = new JpaQuery<>();
         if (StrUtil.isNotEmpty(param.getName())) {
             q.like(Project.Fields.name, param.getName());
@@ -55,13 +54,28 @@ public class ProjectController extends BaseController<Project> {
         return AjaxResult.ok().data(page);
     }
 
-    private JpaQuery<Project> getQuery() {
+    private JpaQuery<Project> buildQuery() {
         JpaQuery<Project> q = new JpaQuery<>();
         Subject subject = SecurityUtils.getSubject();
         q.in("sysOrg.id", subject.getOrgPermissions());
         return q;
     }
+    @HasPermission
+    @PostMapping({"save"})
+    public AjaxResult save(@RequestBody Project param) throws Exception {
+        if(param.getSysOrg().getId() == null){
+            param.setSysOrg(null);
+        }
+        Project result = this.service.saveOrUpdate(param);
+        return AjaxResult.ok().data(result.getId()).msg("保存成功");
+    }
 
+    @HasPermission
+    @PostMapping({"delete"})
+    public AjaxResult delete(String id) {
+        this.service.deleteById(id);
+        return AjaxResult.ok().msg("删除成功");
+    }
 
     @HasPermission("project:list")
     @RequestMapping("get")
@@ -113,7 +127,7 @@ public class ProjectController extends BaseController<Project> {
 
     @RequestMapping("options")
     public List<Option> options() throws InterruptedException, IOException, GitAPIException {
-        JpaQuery<Project> q = getQuery();
+        JpaQuery<Project> q = buildQuery();
 
         List<Project> list = service.findAll(q, Sort.by(Sort.Direction.DESC, BaseEntity.FIELD_UPDATE_TIME));
 

@@ -1,10 +1,8 @@
 package com.github.dockerjava.httpclient5;
 
 import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.core.net.Ipv4Util;
 import com.github.dockerjava.transport.SSLConfig;
 import org.apache.hc.core5.http.HttpHost;
-import org.apache.http.conn.util.InetAddressUtils;
 
 import java.net.InetAddress;
 import java.net.URI;
@@ -18,13 +16,20 @@ public class MyDockerHttpClient extends ApacheDockerHttpClientImpl {
         if (dockerHost.getScheme().equals("tcp")) {
             try {
                 InetAddress addr = InetAddress.getByName(dockerHost.getHost());
-                HttpHost httpHost = new HttpHost("http", addr, vhost, dockerHost.getPort());
+                HttpHost httpHost = getHttpHost(dockerHost, vhost, addr);
                 this.setHostField(httpHost);
             } catch (UnknownHostException e) {
                 throw new RuntimeException(e);
             }
         }
 
+    }
+
+    private HttpHost getHttpHost(URI dockerHost, String vhost, InetAddress addr) {
+        if (vhost != null) {
+            return new HttpHost("http", addr, vhost, dockerHost.getPort());
+        }
+        return new HttpHost("http", addr, dockerHost.getPort());
     }
 
 
