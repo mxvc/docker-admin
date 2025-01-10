@@ -47,7 +47,7 @@ export default class extends React.Component {
       <table>
         <thead>
         <tr>
-          {columns.map(c => <th key={c.dataIndex}>{c.title}</th>)}
+          {columns.map(c => <th key={c.dataIndex} >{c.title}</th>)}
           <th></th>
         </tr>
         </thead>
@@ -58,7 +58,7 @@ export default class extends React.Component {
 
 
         {dataSource.map((p, i) => <tr key={i}>
-          {columns.map(c => <td key={c.dataIndex}>
+          {columns.map(c => <td key={c.dataIndex}  align='center'>
             {c.dataType === 'Input' && <Input
                 value={p[c.dataIndex]}
                 onChange={e => {

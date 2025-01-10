@@ -17,18 +17,16 @@ import 'codemirror/addon/lint/yaml-lint.js'
 
 
 class CodeMirrorEditor extends React.Component {
-  constructor(props) {
-    super(props);
-    this.textareaRef = React.createRef();
-    this.editor = null;
+
+  editor = null;
+
+  onRef = (dom)=>{
+    if(dom){
+      this.init(dom)
+    }
   }
 
-  componentDidMount() {
-    setTimeout(this.init, 500)
-  }
-
-  init = () => {
-    const textarea = this.textareaRef.current;
+  init = (textarea) => {
     this.editor = CodeMirror.fromTextArea(textarea, {
 
       mode:   this.props.mode || 'yaml',
@@ -43,6 +41,8 @@ class CodeMirrorEditor extends React.Component {
     });
   };
 
+
+
   componentWillUnmount() {
     if(this.editor){
       this.editor.toTextArea();
@@ -52,7 +52,7 @@ class CodeMirrorEditor extends React.Component {
   render() {
     return (
       <textarea
-        ref={this.textareaRef}
+        ref={this.onRef}
         defaultValue={this.props.value}
       />
     );
