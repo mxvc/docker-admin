@@ -1,6 +1,6 @@
 import React from 'react';
 import {LazyLog, ScrollFollow} from 'react-lazylog';
-import {Button, Card, Space, Switch} from "antd";
+import {Button, Space, Switch} from "antd";
 import {SysUtil} from "@tmgg/tmgg-base";
 
 
