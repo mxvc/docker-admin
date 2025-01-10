@@ -51,6 +51,12 @@ export default class extends React.Component {
             }
         },
         {
+            title: '组织机构',
+            dataIndex: ['sysOrg', 'name'],
+
+        },
+
+        {
             title: '最近更新',
             dataIndex: 'modifyTime',
         },

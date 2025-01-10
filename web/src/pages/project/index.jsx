@@ -67,7 +67,7 @@ export default class extends React.Component {
 
         },
         {
-            title: '组织',
+            title: '组织机构',
             dataIndex: ['sysOrg', 'name'],
 
         },
@@ -136,7 +136,7 @@ export default class extends React.Component {
                 rowKey='id'
             />
 
-            <Modal title='项目'
+            <Modal title='项目信息'
                    open={this.state.formOpen}
                    onOk={() => this.formRef.current.submit()}
                    onCancel={() => this.setState({formOpen: false})}

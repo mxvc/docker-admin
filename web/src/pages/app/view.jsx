@@ -1,10 +1,10 @@
 import {
-    Alert,
+    Alert, AutoComplete,
     Button,
     Card,
     Col,
     Descriptions,
-    Divider,
+    Divider, Form,
     Input,
     message,
     Modal,
@@ -20,7 +20,7 @@ import {history} from "umi";
 
 import ContainerLog from "../../components/container/ContainerLog";
 import ContainerFile from "../../components/container/ContainerFile";
-import {HasPerm, HttpUtil, PageUtil} from "@tmgg/tmgg-base";
+import {FieldOrgTreeSelect, FieldRadioBoolean, FieldRemoteSelect, HasPerm, HttpUtil, PageUtil} from "@tmgg/tmgg-base";
 import LogView from "../../components/LogView";
 import PublishForm from "./PublishForm";
 import {SyncOutlined} from "@ant-design/icons";
@@ -50,9 +50,12 @@ export default class extends React.Component {
         newName: '',
 
 
+
+        formValues: {},
+        formOpen: false,
+
     }
-
-
+    formRef = React.createRef()
     componentDidMount() {
         let id = PageUtil.currentLocationQuery().id
         this.id = id;
@@ -109,6 +112,17 @@ export default class extends React.Component {
             this.loadContainer()
         })
     }
+    handleEdit = record => {
+        this.setState({formOpen: true, formValues: record})
+    }
+
+
+    onFinish = values => {
+        HttpUtil.post('app/updateBaseInfo', values).then(rs => {
+            this.setState({formOpen: false})
+            this.reload()
+        })
+    }
 
 
     handleDelete = () => {
@@ -162,12 +176,14 @@ export default class extends React.Component {
             <Card title={app.name} extra={<Space>
                 <Button disabled={state !== 'exited'} onClick={this.start} type="primary">启动</Button>
                 <Button disabled={state !== 'running'} onClick={this.stop} type="primary" danger>停止</Button>
-                <Button onClick={this.deploy} loading={state === 'deploying'} type="primary">部署</Button>
+                <Button onClick={this.deploy} loading={state === 'deploying'} type="primary">重新部署</Button>
+                <Button onClick={()=>this.handleEdit(this.state.app)}>修改基本信息</Button>
             </Space>}>
 
 
-                <Descriptions size="small">
+                <Descriptions size="small" >
                     <Item label='应用'>  {app.name} </Item>
+                    <Item label='镜像' span={2}>  {app.imageUrl}:{app.imageTag} </Item>
                     <Item label='主机'>  {app.host?.name} </Item>
                     <Item label='状态'>
                         {containerLoading ? "检测中..." :
@@ -175,9 +191,9 @@ export default class extends React.Component {
                                 {container.status}</Tag>}
 
                     </Item>
-                    <Item label='镜像' span={2}>  {app.imageUrl}:{app.imageTag} </Item>
-                    <Item label='自动发布'>  {app.autoDeploy ? '是' : '否'} </Item>
 
+                    <Item label='自动发布'>  {app.autoDeploy ? '是' : '否'} </Item>
+                    <Item label='组织机构'>  {app.sysOrg?.name} </Item>
 
                 </Descriptions>
 
@@ -188,6 +204,39 @@ export default class extends React.Component {
                 {this.renderTabs()}
             </Card>
 
+
+            <Modal title='应用基本信息'
+                   open={this.state.formOpen}
+                   onOk={() => this.formRef.current.submit()}
+                   onCancel={() => this.setState({formOpen: false})}
+                   destroyOnClose
+
+                   width={600}
+
+            >
+
+                <Form ref={this.formRef} labelCol={{flex: '100px'}}
+                      initialValues={this.state.formValues}
+                      onFinish={this.onFinish}>
+                    <Form.Item name='id' noStyle></Form.Item>
+
+                    <Form.Item name='imageUrl' label='镜像' required rules={[{required: true}]}>
+                        <AutoComplete options={this.state.imageList} onSearch={this.loadImageList}></AutoComplete>
+                    </Form.Item>
+
+
+                    <Form.Item name='imageTag' label='版本' required rules={[{required: true}]}>
+                        <AutoComplete options={this.state.imageTagList}
+                                      onSearch={this.loadImageTagList}></AutoComplete>
+                    </Form.Item>
+
+
+
+                    <Form.Item label='所属组织' name={['sysOrg', 'id']} >
+                        <FieldOrgTreeSelect/>
+                    </Form.Item>
+                </Form>
+            </Modal>
 
         </>)
     }
@@ -226,7 +275,7 @@ export default class extends React.Component {
             },
             {
                 key: 'config',
-                label: '配置',
+                label: '容器设置',
                 children: <HasPerm code='app:config'> <ConfigForm app={app} onChange={this.reload}/></HasPerm>
             },
             {
@@ -236,7 +285,7 @@ export default class extends React.Component {
             },
             {
                 key: 'setting',
-                label: "其他",
+                label: "设置",
                 children: <HasPerm code='app:config'>
                     <Row wrap={false}>
                         <Col flex="100px">名称</Col>

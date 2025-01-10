@@ -1,6 +1,7 @@
 package cn.moon.docker.admin.controller;
 
 import cn.hutool.core.util.StrUtil;
+import cn.moon.docker.admin.entity.Project;
 import cn.moon.docker.admin.vo.ContainerVo;
 import cn.moon.docker.admin.entity.App;
 import cn.moon.docker.admin.service.AppService;
@@ -34,19 +35,23 @@ public class AppController {
     @Resource
     private AppService service;
 
+    private JpaQuery<App> buildQuery() {
+        JpaQuery<App> q = new JpaQuery<>();
+        Subject subject = SecurityUtils.getSubject();
+        q.in("sysOrg.id", subject.getOrgPermissions());
+        return q;
+    }
+
 
     @HasPermission("app:list")
     @RequestMapping("list")
     public Page<App> list(String keyword, @PageableDefault(sort = "updateTime", direction = Sort.Direction.DESC) Pageable pageable, HttpSession session) {
-        JpaQuery<App> q = new JpaQuery<>();
+        JpaQuery<App> q = buildQuery();
         if (StrUtil.isNotEmpty(keyword)) {
             q.like("name", keyword);
         }
 
 
-        Subject subject = SecurityUtils.getSubject();
-        Collection<String> orgIds = subject.getOrgPermissions();
-        //    q.in("sysOrg.id", orgIds);
 
         return service.findAll(q, pageable);
     }
@@ -85,10 +90,17 @@ public class AppController {
 
     @HasPermission("app:save")
     @RequestMapping("update")
-    public AjaxResult update(@RequestBody App project) {
-        service.save(project);
+    public AjaxResult update(@RequestBody App app) {
+        service.save(app);
         return AjaxResult.ok().msg("修改成功");
     }
+    @HasPermission("app:save")
+    @RequestMapping("updateBaseInfo")
+    public AjaxResult updateBaseInfo(@RequestBody App app) {
+        service.updateBaseInfo(app);
+        return AjaxResult.ok().msg("修改成功");
+    }
+
 
     @HasPermission("app:config")
     @RequestMapping("updateConfig")

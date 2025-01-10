@@ -41,7 +41,7 @@ public class ProjectController  {
     @HasPermission
     @PostMapping("page")
     public AjaxResult page(@RequestBody Project param, @PageableDefault(direction = Sort.Direction.DESC, sort = {"updateTime"}) Pageable pageable) {
-        JpaQuery<Project> q = new JpaQuery<>();
+        JpaQuery<Project> q = buildQuery();
         if (StrUtil.isNotEmpty(param.getName())) {
             q.like(Project.Fields.name, param.getName());
         }
@@ -51,6 +51,7 @@ public class ProjectController  {
 
 
         Page<Project> page = this.service.findAll(q, pageable);
+
         return AjaxResult.ok().data(page);
     }
 

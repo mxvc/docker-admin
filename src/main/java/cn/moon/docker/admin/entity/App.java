@@ -3,6 +3,7 @@ package cn.moon.docker.admin.entity;
 import cn.moon.docker.admin.entity.converter.AppConfigConverter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.tmgg.lang.dao.BaseEntity;
 import io.tmgg.lang.dao.DBConstants;
 
@@ -27,7 +28,6 @@ public class App extends BaseEntity {
     @Column(unique = true)
     String name;
 
-    @JsonIgnore
     @ManyToOne
     SysOrg sysOrg;
 
@@ -38,6 +38,8 @@ public class App extends BaseEntity {
 
 
     String imageUrl;
+
+    @Column(length = 20)
     String imageTag;
 
 

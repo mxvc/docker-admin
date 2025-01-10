@@ -16,6 +16,7 @@ import com.github.dockerjava.api.command.CreateContainerResponse;
 import com.github.dockerjava.api.model.*;
 import io.tmgg.lang.dao.BaseService;
 import io.tmgg.web.BizException;
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.MDC;
@@ -24,8 +25,6 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
-
-import jakarta.annotation.Resource;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -133,7 +132,7 @@ public class AppService extends BaseService<App> {
                             }
                             Integer privatePort = p.getPrivatePort();
                             Integer publicPort = p.getPublicPort();
-                            if(privatePort == null || publicPort == null){
+                            if (privatePort == null || publicPort == null) {
                                 continue;
                             }
 
@@ -398,5 +397,23 @@ public class AppService extends BaseService<App> {
                 $this.deploy(app);
             }
         }
+    }
+
+    /**
+     * 只修改简单信息， 其他信息设计到重新部署，如修改主机，比较复杂
+     *
+     * @param input
+     */
+    @Transactional
+    public void updateBaseInfo(App input) {
+        if(input.getSysOrg().getId() == null){
+            input.setSysOrg(null);
+        }
+
+        App old = appDao.findOne(input);
+        old.setSysOrg(input.getSysOrg());
+        old.setImageUrl(input.getImageUrl());
+        old.setImageTag(input.getImageTag());
+        appDao.save(old);
     }
 }
