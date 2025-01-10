@@ -1,8 +1,8 @@
 package cn.moon.docker.admin.entity;
 
-import cn.moon.validation.StartWithLetter;
 import io.tmgg.lang.ann.Remark;
 import io.tmgg.lang.dao.BaseEntity;
+import io.tmgg.lang.validator.ValidateStartWithLetter;
 import io.tmgg.modules.sys.entity.SysOrg;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -26,7 +26,7 @@ public class Project extends BaseEntity {
 
 
     @Remark("名称")
-    @StartWithLetter
+    @ValidateStartWithLetter
     @NotNull
     @Column(unique = true)
     String name;

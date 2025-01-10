@@ -1,12 +1,12 @@
 package cn.moon.docker.admin.entity;
 
 import cn.moon.docker.admin.entity.converter.AppConfigConverter;
-import cn.moon.validation.StartWithLetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.tmgg.lang.dao.BaseEntity;
 import io.tmgg.lang.dao.DBConstants;
 
+import io.tmgg.lang.validator.ValidateStartWithLetter;
 import io.tmgg.modules.sys.entity.SysOrg;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -22,7 +22,7 @@ import java.util.List;
 @Setter
 public class App extends BaseEntity {
 
-    @StartWithLetter
+    @ValidateStartWithLetter
     @NotNull
     @Column(unique = true)
     String name;
