@@ -14,9 +14,9 @@
   "dependencies": {
     "@ant-design/icons": "^5.4.0",
     "@tinymce/tinymce-react": "^5.0.0",
-    "@tmgg/tmgg-base": "^0.3.1",
-    "@tmgg/tmgg-commons-lang": "^0.3.1",
-    "@tmgg/tmgg-system": "^0.3.1",
+    "@tmgg/tmgg-base": "^0.3.17",
+    "@tmgg/tmgg-commons-lang": "^0.3.17",
+    "@tmgg/tmgg-system": "^0.3.17",
     "antd": "^5.20.3",
     "antd-img-crop": "^4.23.0",
     "axios": "^1.6.8",
