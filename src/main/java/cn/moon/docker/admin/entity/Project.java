@@ -1,6 +1,6 @@
 package cn.moon.docker.admin.entity;
 
-import io.tmgg.lang.ann.Remark;
+import io.tmgg.lang.ann.Msg;
 import io.tmgg.lang.dao.BaseEntity;
 import io.tmgg.lang.validator.ValidateStartWithLetter;
 import io.tmgg.modules.sys.entity.SysOrg;
@@ -13,19 +13,19 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
 
-@Remark("项目")
+@Msg("项目")
 @Getter
 @Setter
 @Entity
 @FieldNameConstants
 public class Project extends BaseEntity {
 
-    @Remark("组织")
+    @Msg("组织")
     @ManyToOne
     SysOrg sysOrg;
 
 
-    @Remark("名称")
+    @Msg("名称")
     @ValidateStartWithLetter
     @NotNull
     @Column(unique = true)
@@ -41,7 +41,7 @@ public class Project extends BaseEntity {
     String dockerfile;
 
     // 默认分支
-    @Remark("默认分支")
+    @Msg("默认分支")
     @NotNull
     String branch;
 
@@ -50,12 +50,12 @@ public class Project extends BaseEntity {
 
 
 
-    @Remark("注册中心")
+    @Msg("注册中心")
     @ManyToOne
     Registry registry;
 
     // 自动更新latest版本
-    @Remark("推送latest")
+    @Msg("推送latest")
     Boolean autoPushLatest;
 
 

@@ -1,6 +1,6 @@
 package cn.moon.docker.admin.entity;
 
-import io.tmgg.lang.ann.Remark;
+import io.tmgg.lang.ann.Msg;
 import io.tmgg.lang.dao.BaseEntity;
 import jakarta.persistence.Entity;
 import jakarta.validation.constraints.NotNull;
@@ -8,7 +8,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldNameConstants;
 
-@Remark("注册中心")
+@Msg("注册中心")
 @Getter
 @Setter
 @Entity
@@ -16,23 +16,23 @@ import lombok.experimental.FieldNameConstants;
 public class Registry extends BaseEntity {
 
 
-    @Remark("仓库地址")
+    @Msg("仓库地址")
     @NotNull
     String url;
 
 
-    @Remark("命名空间")
+    @Msg("命名空间")
     String namespace;
 
 
-    @Remark("账号")
+    @Msg("账号")
     String username;
 
 
-    @Remark("密码")
+    @Msg("密码")
     String password;
 
-    @Remark("是否默认")
+    @Msg("是否默认")
     @NotNull
     Boolean defaultRegistry;
 

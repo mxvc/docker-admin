@@ -149,7 +149,8 @@ public class AliyunSdk implements RegistrySdk {
             r.setName((String) aliRepos.get("repoName"));
             r.setSummary((String) aliRepos.get("summary"));
             r.setType((String) aliRepos.get("repoType"));
-            r.setTime(new Date((Long) aliRepos.get("gmtModified")));
+            r.setUpdateTime(new Date((Long) aliRepos.get("gmtModified")));
+            r.setCreateTime(new Date((Long) aliRepos.get("gmtCreate")));
 
             Map<String, String> repoDomainList = (Map<String, String>) aliRepos.get("repoDomainList");
 

@@ -14,7 +14,8 @@ public class ImageVo {
 
     String url;
 
-    Date time;
+    Date updateTime;
+    Date createTime;
     String latestVersion;
 
     String description;

@@ -47,7 +47,8 @@ public class TencentSdk implements RegistrySdk {
         for (RepoInfo info : data.getRepoInfo()) {
             ImageVo vo = new ImageVo();
             vo.setName( StrUtil.subAfter(info.getRepoName(), "/", true) );
-            vo.setTime(DateUtil.parseDateTime(info.getUpdateTime()));
+            vo.setUpdateTime(DateUtil.parseDateTime(info.getUpdateTime()));
+            vo.setCreateTime(DateUtil.parseDateTime(info.getCreationTime()));
             vo.setDescription(info.getDescription());
             vo.setType(info.getRepoType());
             vo.setTagCount(info.getTagCount());

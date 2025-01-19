@@ -42,7 +42,7 @@ export default class extends React.Component {
             }
         },
         {
-            title: 'Id',
+            title: '标识',
             dataIndex: 'Id',
             render(v) {
                 return v.substr(7, 12);
@@ -52,7 +52,7 @@ export default class extends React.Component {
             title: '版本',
             dataIndex: 'RepoTags',
             render(tags, row) {
-                return tags && tags.map(tag => <Tag>{tag}</Tag>)
+                return tags && tags.map(tag => <div>{tag}</div>)
             }
         },
 

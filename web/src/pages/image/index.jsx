@@ -51,10 +51,13 @@ export default class extends React.Component {
             title: '下载量',
             dataIndex: 'pullCount',
         },
-
+        {
+            title: '创建时间',
+            dataIndex: 'createTime',
+        },
         {
             title: '最近更新',
-            dataIndex: 'time',
+            dataIndex: 'updateTime',
         },
         {
             title: '-',
@@ -101,7 +104,7 @@ export default class extends React.Component {
                 searchFormItemsRender={() =>
                     <>
                         <Form.Item label='注册中心' name='registryId'>
-                            <Select options={this.state.registryOptions} />
+                            <Select options={this.state.registryOptions} style={{width:400}} />
                         </Form.Item>
                     </>}
             />
