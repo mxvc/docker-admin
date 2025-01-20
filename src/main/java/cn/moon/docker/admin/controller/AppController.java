@@ -38,7 +38,10 @@ public class AppController {
     private JpaQuery<App> buildQuery() {
         JpaQuery<App> q = new JpaQuery<>();
         Subject subject = SecurityUtils.getSubject();
-        q.in("sysOrg.id", subject.getOrgPermissions());
+        q.or(qq->{
+            qq.isNull("sysOrg.id");
+            qq.in("sysOrg.id", subject.getOrgPermissions());
+        });
         return q;
     }
 
@@ -50,8 +53,6 @@ public class AppController {
         if (StrUtil.isNotEmpty(keyword)) {
             q.like("name", keyword);
         }
-
-
 
         return service.findAll(q, pageable);
     }

@@ -12,7 +12,7 @@
     {
       "pid": "biz",
       "id": "project",
-      "name": "项目构建",
+      "name": "项目",
       "perm": "project",
       "path": "/project",
       "icon": "OrderedListOutlined",
@@ -21,7 +21,7 @@
     {
       "pid": "biz",
       "id": "app",
-      "name": "应用部署",
+      "name": "应用",
       "perm": "app",
       "path": "/app",
       "icon": "AppstoreOutlined",

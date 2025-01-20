@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.annotation.Resource;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -45,8 +46,6 @@ public class ContainerController {
 
     @Resource
     private ContainerService containerService;
-
-
 
 
     @RequestMapping("log/{hostId}/{containerId}")
@@ -162,13 +161,17 @@ public class ContainerController {
 
     @RequestMapping("status")
     public AjaxResult status(String hostId, String appName) {
-        Host host = hostService.findOne(hostId);
-
-
-        DockerClient client = dockerManager.getClient(host);
-        Map<String, String> appLabelFilter = dockerManager.getAppLabelFilter(appName);
-
+        log.info("查询容器状态:{}",appName);
+        if(appName.equals("paddle-ocr-server")){
+            System.out.println("xx");
+        }
         try {
+            Host host = hostService.findOne(hostId);
+
+
+            DockerClient client = dockerManager.getClient(host);
+            Map<String, String> appLabelFilter = dockerManager.getAppLabelFilter(appName);
+
 
             List<Container> list = client.listContainersCmd().withLabelFilter(appLabelFilter).withShowAll(true).exec();
             client.close();
@@ -180,7 +183,6 @@ public class ContainerController {
 
             return AjaxResult.ok().data(container.getStatus());
         } catch (Exception e) {
-
             return AjaxResult.ok().data("未知");
         }
 
@@ -263,8 +265,6 @@ public class ContainerController {
 
         return AjaxResult.ok().msg("获取文件列表成功").data(data);
     }
-
-
 
 
     @Data

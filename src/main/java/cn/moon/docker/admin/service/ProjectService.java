@@ -165,6 +165,7 @@ public class ProjectService extends BaseService<Project> {
             log.info("注册中心：{}", registry.getFullUrl());
             DockerClient client = dockerService.getClient(host, registry);
 
+
             String imageUrl = registry.getUrl() + "/" + registry.getNamespace() + "/" + project.getName();
 
             Set<String> imageTags = new HashSet<>();
@@ -176,6 +177,8 @@ public class ProjectService extends BaseService<Project> {
             log.info("目标镜像： {}", imageTags);
             Assert.state(!StrUtil.containsBlank(imageUrl), "镜像路径不能包含空格");
 
+
+
             buildLog.setImageUrl(imageUrl);
             File buildDir = new File(workDir, context);
 
@@ -186,17 +189,24 @@ public class ProjectService extends BaseService<Project> {
             log.info("是否拉取基础镜像 withPull {}", p.isPull());
             log.info("是否使用缓存 {}", p.isUseCache());
             File dockerfileFile = new File(buildDir, dockerfile);
-            log.info("Dockerfile内容如下：\n{}",FileUtil.readUtf8String(dockerfileFile));
 
+            log.info("是否拉取基础镜像:{}",p.isPull());
+
+
+
+            log.info("Dockerfile内容如下");
+            log.info("----------------------------------\n{}",FileUtil.readUtf8String(dockerfileFile));
+            log.info("----------------------------------");
             log.info("构建命令执行中...");
             client.buildImageCmd(buildDir)
                     // 删除构建产生的容器
                     .withForcerm(true)
-                    .withPull(p.isPull())
+                   // .withPull(p.isPull())
                     .withNetworkMode("host")
                     .withTags(imageTags)
                     .withNoCache(!p.isUseCache())
                     .withDockerfile(dockerfileFile)
+
                     .exec(buildCallback).awaitCompletion();
 
 

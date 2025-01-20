@@ -10,6 +10,7 @@ import io.tmgg.lang.dao.BaseEntity;
 import io.tmgg.lang.dao.specification.JpaQuery;
 import io.tmgg.lang.obj.AjaxResult;
 import io.tmgg.lang.obj.Option;
+import io.tmgg.web.CommonQueryParam;
 import io.tmgg.web.annotion.HasPermission;
 import io.tmgg.web.perm.SecurityUtils;
 import io.tmgg.web.perm.Subject;
@@ -40,14 +41,9 @@ public class ProjectController  {
 
     @HasPermission
     @PostMapping("page")
-    public AjaxResult page(@RequestBody Project param, @PageableDefault(direction = Sort.Direction.DESC, sort = {"updateTime"}) Pageable pageable) {
+    public AjaxResult page(@RequestBody CommonQueryParam param, @PageableDefault(direction = Sort.Direction.DESC, sort = {"updateTime"}) Pageable pageable) {
         JpaQuery<Project> q = buildQuery();
-        if (StrUtil.isNotEmpty(param.getName())) {
-            q.like(Project.Fields.name, param.getName());
-        }
-        if (StrUtil.isNotEmpty(param.getRemark())) {
-            q.like(Project.Fields.remark, param.getRemark());
-        }
+        q.searchText(param.getKeyword(), "name","remark");
 
 
         Page<Project> page = this.service.findAll(q, pageable);
@@ -58,7 +54,11 @@ public class ProjectController  {
     private JpaQuery<Project> buildQuery() {
         JpaQuery<Project> q = new JpaQuery<>();
         Subject subject = SecurityUtils.getSubject();
-        q.in("sysOrg.id", subject.getOrgPermissions());
+        q.or(qq->{
+            qq.isNull("sysOrg.id");
+            qq.in("sysOrg.id", subject.getOrgPermissions());
+        });
+
         return q;
     }
     @HasPermission
