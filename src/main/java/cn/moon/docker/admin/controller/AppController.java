@@ -9,6 +9,7 @@ import io.tmgg.lang.dao.BaseEntity;
 import io.tmgg.lang.dao.specification.JpaQuery;
 import io.tmgg.lang.obj.AjaxResult;
 import io.tmgg.lang.obj.Option;
+import io.tmgg.web.CommonQueryParam;
 import io.tmgg.web.annotion.HasPermission;
 import io.tmgg.web.perm.SecurityUtils;
 import io.tmgg.web.perm.Subject;
@@ -48,12 +49,11 @@ public class AppController {
 
     @HasPermission("app:list")
     @RequestMapping("list")
-    public Page<App> list(String keyword, @PageableDefault(sort = {"updateTime", "createTime"}, direction = Sort.Direction.DESC) Pageable pageable, HttpSession session) {
+    public Page<App> list(@RequestBody CommonQueryParam param, @PageableDefault(sort = {"updateTime", "createTime"}, direction = Sort.Direction.DESC) Pageable pageable, HttpSession session) {
         long  start = System.currentTimeMillis();
         JpaQuery<App> q = buildQuery();
-        if (StrUtil.isNotEmpty(keyword)) {
-            q.like("name", keyword);
-        }
+        String keyword = param.getKeyword();
+        q.searchText(keyword, "name", "remark");
 
         Page<App> list = service.findAll(q, pageable);
         log.info("查询app列表，耗时：{}毫秒", System.currentTimeMillis() - start);

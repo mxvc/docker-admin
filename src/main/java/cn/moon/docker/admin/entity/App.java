@@ -14,6 +14,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.FieldNameConstants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +23,7 @@ import java.util.List;
 @Getter
 @Setter
 @Table(name = "t_app")
+@FieldNameConstants
 public class App extends BaseEntity {
 
     @ValidateStartWithLetter

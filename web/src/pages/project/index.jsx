@@ -34,7 +34,7 @@ export default class extends React.Component {
 
         {
             title: 'git仓库',
-            dataIndex: 'gitUrl', hideInSearch: true
+            dataIndex: 'gitUrl',
         },
         {
             title: '备注',
@@ -48,14 +48,13 @@ export default class extends React.Component {
         },
         {
             title: 'dockerfile',
-            dataIndex: 'dockerfile', hideInSearch: true
+            dataIndex: 'dockerfile',
         },
 
 
         {
             title: '注册中心',
-            dataIndex: ['registry', 'fullUrl'],
-            hideInSearch: true
+            dataIndex: ['registry', 'namespace'],
         },
 
         {
