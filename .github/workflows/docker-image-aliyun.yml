@@ -1,7 +1,6 @@
 name: Aliyun Docker
 
 on:
-  push:
   release:
     types: [published]
 jobs:
