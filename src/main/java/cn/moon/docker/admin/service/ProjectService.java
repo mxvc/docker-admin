@@ -195,13 +195,13 @@ public class ProjectService extends BaseService<Project> {
 
 
             log.info("Dockerfile内容如下");
-            log.info("----------------------------------\n{}",FileUtil.readUtf8String(dockerfileFile));
+            log.info("----------------------------------\n{}",FileUtil.readUtf8String(dockerfileFile).trim());
             log.info("----------------------------------");
             log.info("构建命令执行中...");
             client.buildImageCmd(buildDir)
                     // 删除构建产生的容器
                     .withForcerm(true)
-                   // .withPull(p.isPull())
+                    .withPull(p.isPull())
                     .withNetworkMode("host")
                     .withTags(imageTags)
                     .withNoCache(!p.isUseCache())
