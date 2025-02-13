@@ -48,13 +48,16 @@ public class AppController {
 
     @HasPermission("app:list")
     @RequestMapping("list")
-    public Page<App> list(String keyword, @PageableDefault(sort = "updateTime", direction = Sort.Direction.DESC) Pageable pageable, HttpSession session) {
+    public Page<App> list(String keyword, @PageableDefault(sort = {"updateTime", "createTime"}, direction = Sort.Direction.DESC) Pageable pageable, HttpSession session) {
+        long  start = System.currentTimeMillis();
         JpaQuery<App> q = buildQuery();
         if (StrUtil.isNotEmpty(keyword)) {
             q.like("name", keyword);
         }
 
-        return service.findAll(q, pageable);
+        Page<App> list = service.findAll(q, pageable);
+        log.info("查询app列表，耗时：{}毫秒", System.currentTimeMillis() - start);
+        return list;
     }
 
     @RequestMapping("get")
