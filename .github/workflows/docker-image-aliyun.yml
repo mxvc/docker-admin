@@ -1,4 +1,4 @@
-name: Publish Docker image Aliyun
+name: Aliyun Docker
 
 on:
   push:
