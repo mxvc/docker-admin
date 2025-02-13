@@ -1,6 +1,7 @@
 package cn.moon.docker.admin.entity;
 
 import io.tmgg.lang.dao.BaseEntity;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldNameConstants;
@@ -12,6 +13,7 @@ import java.util.Date;
 @Getter
 @Setter
 @FieldNameConstants
+@Table(name = "t_deploy_log")
 public class DeployLog extends BaseEntity {
 
 

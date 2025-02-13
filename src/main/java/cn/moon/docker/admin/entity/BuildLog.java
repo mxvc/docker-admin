@@ -2,16 +2,13 @@ package cn.moon.docker.admin.entity;
 
 import io.tmgg.lang.dao.BaseEntity;
 import io.tmgg.lang.dao.DBConstants;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.FieldNameConstants;
 
 
-import jakarta.persistence.Lob;
-import jakarta.persistence.Transient;
 import java.util.Date;
 
 @Entity
@@ -19,6 +16,7 @@ import java.util.Date;
 @Setter
 @FieldNameConstants
 @ToString
+@Table(name = "t_build_log")
 public class BuildLog extends BaseEntity {
 
     @Lob

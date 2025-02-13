@@ -3,6 +3,7 @@ package cn.moon.docker.admin.entity;
 import io.tmgg.lang.ann.Msg;
 import io.tmgg.lang.dao.BaseEntity;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
@@ -13,6 +14,7 @@ import lombok.experimental.FieldNameConstants;
 @Setter
 @Entity
 @FieldNameConstants
+@Table(name = "t_registry")
 public class Registry extends BaseEntity {
 
 

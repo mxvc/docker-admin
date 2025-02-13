@@ -4,6 +4,7 @@ import io.tmgg.lang.ann.Msg;
 import io.tmgg.lang.dao.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,6 +20,7 @@ import lombok.experimental.FieldNameConstants;
 @Setter
 @ToString
 @FieldNameConstants
+@Table(name = "t_host")
 public class Host extends BaseEntity {
 
     @Msg("名称")

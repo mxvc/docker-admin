@@ -21,6 +21,7 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
+@Table(name = "t_app")
 public class App extends BaseEntity {
 
     @ValidateStartWithLetter

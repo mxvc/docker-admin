@@ -2,6 +2,7 @@ package cn.moon.docker.admin.entity;
 
 import io.tmgg.lang.ann.Msg;
 import io.tmgg.lang.dao.BaseEntity;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
@@ -12,6 +13,7 @@ import jakarta.persistence.Entity;
 @Entity
 @Getter
 @Setter
+@Table(name = "t_git_credential")
 public class GitCredential extends BaseEntity {
 
 

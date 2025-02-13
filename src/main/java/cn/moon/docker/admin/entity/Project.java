@@ -4,6 +4,7 @@ import io.tmgg.lang.ann.Msg;
 import io.tmgg.lang.dao.BaseEntity;
 import io.tmgg.lang.validator.ValidateStartWithLetter;
 import io.tmgg.modules.sys.entity.SysOrg;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
@@ -18,6 +19,7 @@ import jakarta.persistence.ManyToOne;
 @Setter
 @Entity
 @FieldNameConstants
+@Table(name = "t_project")
 public class Project extends BaseEntity {
 
     @Msg("组织")
