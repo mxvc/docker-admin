@@ -27,6 +27,7 @@
     "react-amap": "^1.2.8",
     "react-dom": "^18.2.0",
     "react-lazylog": "^4.5.3",
-    "umi": "^4.0.0"
+    "umi": "^4.0.0",
+    "react-activation" : "^0.13.0"
   }
 }
