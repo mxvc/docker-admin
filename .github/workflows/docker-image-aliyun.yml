@@ -23,11 +23,6 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: registry.cn-hangzhou.aliyuncs.com/mxvc/docker-admin
-          tags: |
-          # tag event
-            type=ref,event=tag
-          # set latest tag for default branch
-            type=raw,value=latest,enable={{is_default_branch}}
 
       - name: Build and push Docker image
         id: push
