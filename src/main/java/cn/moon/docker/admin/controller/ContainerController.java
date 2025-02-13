@@ -162,9 +162,6 @@ public class ContainerController {
     @RequestMapping("status")
     public AjaxResult status(String hostId, String appName) {
         log.info("查询容器状态:{}",appName);
-        if(appName.equals("paddle-ocr-server")){
-            System.out.println("xx");
-        }
         try {
             Host host = hostService.findOne(hostId);
 

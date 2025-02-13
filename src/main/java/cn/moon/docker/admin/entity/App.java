@@ -60,6 +60,8 @@ public class App extends BaseEntity {
     @ManyToOne
     Project project;
 
+    String remark;
+
 
     @Override
     public void prePersist() {
