@@ -106,7 +106,7 @@ public class AppController {
     }
 
 
-    @HasPermission("app:config")
+    @HasPermission(value = "app:config",label = "配置")
     @RequestMapping("updateConfig")
     public AjaxResult updateConfig(String id, @RequestBody App.AppConfig appConfig) {
         App app = service.updateConfig(id, appConfig);
@@ -156,7 +156,7 @@ public class AppController {
     }
 
 
-    @HasPermission("app:deploy")
+    @HasPermission(value = "app:deploy")
     @RequestMapping("autoDeploy")
     public AjaxResult autoDeploy(String id, boolean autoDeploy) throws InterruptedException {
 
@@ -170,7 +170,7 @@ public class AppController {
     }
 
 
-    @HasPermission("app:start")
+    @HasPermission(value = "app:start",label = "启动")
     @RequestMapping("start/{appId}")
     public AjaxResult start(@PathVariable String appId) {
         service.start(appId);
@@ -184,7 +184,7 @@ public class AppController {
         return AjaxResult.ok().msg("停止指令已发送");
     }
 
-    @HasPermission("app:config")
+    @HasPermission(value = "app:config",label = "配置")
     @RequestMapping("rename")
     public AjaxResult rename(@RequestBody Map<String, String> map) {
         String appId = map.get("appId");

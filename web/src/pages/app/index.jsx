@@ -3,7 +3,7 @@ import React from 'react';
 import ContainerStatus from "../../components/ContainerStatus";
 import {history} from "umi";
 import {notPermitted} from "../../utils/SysConfig";
-import {FieldOrgTreeSelect, FieldRemoteSelect, HttpUtil, ProTable} from "@tmgg/tmgg-base";
+import {FieldOrgTreeSelect, FieldRemoteSelect, HttpUtil, PageUtil, ProTable} from "@tmgg/tmgg-base";
 
 let api = 'app/';
 
@@ -18,7 +18,7 @@ export default class extends React.Component {
             dataIndex: 'name',
             sorter: true,
             render: (name, row) => {
-                return <a onClick={() => history.push('/app/view?id=' + row.id)}>{name}</a>
+                return <a onClick={() => PageUtil.open('/app/view?id=' + row.id,'应用-'+name)}>{name}</a>
             }
         },
 
@@ -31,7 +31,7 @@ export default class extends React.Component {
                 if (record.imageUrl) {
                     return record.imageUrl
                 }
-                return <a onClick={() => history.push('project/view?id=' + record.project.id)}>{record.project.name}</a>
+                return <a onClick={() => PageUtil.open('project/view?id=' + record.project.id,'镜像-' +record.project.name)}>{record.project.name}</a>
             }
         },
         {

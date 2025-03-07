@@ -1,7 +1,7 @@
 import {Button, Divider, Skeleton, Table} from 'antd';
 import React from 'react';
 import {history} from "umi";
-import {HttpUtil} from "@tmgg/tmgg-base";
+import {HttpUtil, PageUtil} from "@tmgg/tmgg-base";
 
 
 let api = 'host/';
@@ -56,7 +56,7 @@ export default class extends React.Component {
         const name = row.Names[0].substr(1)
         const id = row.Id.substr(0, 12)
         return <div>
-          <a onClick={() => history.push('/host/containerView?containerId=' + id + '&hostId=' + hostId)}>{name}</a>
+          <a onClick={() => PageUtil.open('/host/containerView?containerId=' + id + '&hostId=' + hostId,'容器-'+name)}>{name}</a>
           <br/> {id}
         </div>
       }

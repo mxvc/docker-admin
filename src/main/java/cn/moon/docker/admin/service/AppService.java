@@ -168,7 +168,7 @@ public class AppService extends BaseService<App> {
 
 
             // 是否自动启动
-            hostConfig.withRestartPolicy(RestartPolicy.unlessStoppedRestart());
+            hostConfig.withRestartPolicy(RestartPolicy.onFailureRestart(5));
 
             hostConfig.withPrivileged(true);
 
