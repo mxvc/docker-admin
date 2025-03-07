@@ -85,7 +85,7 @@ public class ProjectController  {
     }
 
 
-    @HasPermission("project:build")
+    @HasPermission(value = "project:build",label = "构建")
     @RequestMapping("build")
     public AjaxResult build(
             BuildParam buildParam,

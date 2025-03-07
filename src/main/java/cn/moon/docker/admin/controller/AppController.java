@@ -177,7 +177,7 @@ public class AppController {
         return AjaxResult.ok().msg("启动指令已发送");
     }
 
-    @HasPermission("app:stop")
+    @HasPermission(value = "app:stop",label = "停止")
     @RequestMapping("stop/{appId}")
     public AjaxResult stop(@PathVariable String appId) {
         service.stop(appId);
