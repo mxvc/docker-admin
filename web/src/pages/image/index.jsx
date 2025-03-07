@@ -100,11 +100,14 @@ export default class extends React.Component {
                     return HttpUtil.pageData('image/page', {...params, ...this.state.searchParams}, sort);
                 }}
                 columns={this.columns}
-                showSearch={true}
+                showSearch={false}
                 searchFormItemsRender={() =>
                     <>
                         <Form.Item label='注册中心' name='registryId'>
                             <Select options={this.state.registryOptions} style={{width:400}} />
+                        </Form.Item>
+                        <Form.Item  name='keyword'>
+                            <Input placeholder='名称、路径等'/>
                         </Form.Item>
                     </>}
             />

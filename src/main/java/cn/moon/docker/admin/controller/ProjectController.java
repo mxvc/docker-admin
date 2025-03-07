@@ -15,6 +15,7 @@ import io.tmgg.web.annotion.HasPermission;
 import io.tmgg.web.perm.SecurityUtils;
 import io.tmgg.web.perm.Subject;
 import jakarta.annotation.Resource;
+import lombok.Data;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -39,11 +40,21 @@ public class ProjectController  {
     @Resource
     private BuildLogService logService;
 
+    @Data
+    public static class QueryParam {
+        String keyword;
+        String orgId;
+    }
+
     @HasPermission
     @PostMapping("page")
-    public AjaxResult page(@RequestBody CommonQueryParam param, @PageableDefault(direction = Sort.Direction.DESC, sort = {"updateTime"}) Pageable pageable) {
+    public AjaxResult page(@RequestBody QueryParam param, @PageableDefault(direction = Sort.Direction.DESC, sort = {"updateTime"}) Pageable pageable) {
         JpaQuery<Project> q = buildQuery();
         q.searchText(param.getKeyword(), "name","remark");
+
+        if(StrUtil.isNotEmpty(param.getOrgId())){
+            q.eq(Project.Fields.sysOrg + ".id", param.getOrgId());
+        }
 
 
         Page<Project> page = this.service.findAll(q, pageable);

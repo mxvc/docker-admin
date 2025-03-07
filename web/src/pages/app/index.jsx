@@ -1,16 +1,15 @@
-import {AutoComplete, Button, Form, Input, Modal} from 'antd';
+import {AutoComplete, Button, Form, Input, Modal, Splitter} from 'antd';
 import React from 'react';
 import ContainerStatus from "../../components/ContainerStatus";
 import {history} from "umi";
 import {notPermitted} from "../../utils/SysConfig";
-import {FieldOrgTreeSelect, FieldRemoteSelect, HttpUtil, PageUtil, ProTable} from "@tmgg/tmgg-base";
+import {FieldOrgTreeSelect, FieldRemoteSelect, HttpUtil, OrgTree, PageUtil, ProTable} from "@tmgg/tmgg-base";
 
 let api = 'app/';
 
 
 export default class extends React.Component {
 
-    actionRef = React.createRef();
 
     columns = [
         {
@@ -70,12 +69,15 @@ export default class extends React.Component {
 
 
         imageList: [],
-        imageTagList: []
+        imageTagList: [],
+
+        selectedOrgId:null
+
     }
 
 
     reload = () => {
-        this.actionRef.current.reload()
+        this.tableRef.current.reload()
     }
 
 
@@ -87,7 +89,7 @@ export default class extends React.Component {
     }
 
     formRef = React.createRef()
-
+    tableRef = React.createRef()
     handleAdd = () => {
         this.setState({deployVisible: true})
         this.loadImageList();
@@ -112,23 +114,37 @@ export default class extends React.Component {
 
     render() {
         return (
-            <>
+            <> <Splitter>
+                <Splitter.Panel size={250}>
+                    <OrgTree onChange={(v) => {
+                        this.setState({selectedOrgId:v},()=>{
+                            this.tableRef.current.reload()
+                        })
+
+                    }}/>
+
+                </Splitter.Panel>
+                <Splitter.Panel style={{paddingLeft:16}}>
                 <ProTable
-                    actionRef={this.actionRef}
+                    actionRef={this.tableRef}
                     toolBarRender={(action, {selectedRows}) => [
                         <Button disabled={notPermitted('app:save')} type="primary"
                                 onClick={this.handleAdd}>
                             新增
                         </Button>,
                     ]}
-                    request={(params, sort) => HttpUtil.pageData(api + 'list', params, sort)}
+                    request={(params) => {
+                        params.orgId = this.state.selectedOrgId
+                        return HttpUtil.pageData(api + 'list', params);
+                    }}
                     columns={this.columns}
-                    rowSelection={false}
-                    rowKey="id"
-                    bordered={true}
-                    search={false}
-                    options={{search: true}}
+
+
+
+
                 />
+                </Splitter.Panel>
+            </Splitter>
                 <Modal title='新增应用' open={this.state.deployVisible} destroyOnClose={true}
                        onOk={()=>this.formRef.current.submit()}
                        onCancel={() => this.setState({deployVisible: false})}

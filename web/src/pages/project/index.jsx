@@ -1,5 +1,5 @@
 import {PlusOutlined} from '@ant-design/icons'
-import {Button, Form, Input, Modal, Popconfirm} from 'antd'
+import {Button, Form, Input, Modal, Popconfirm, Splitter} from 'antd'
 import React from 'react'
 
 import {
@@ -8,10 +8,10 @@ import {
     FieldRadioBoolean,
     FieldRemoteSelect,
     HttpUtil,
+    OrgTree,
     PageUtil,
     ProTable
 } from "@tmgg/tmgg-base"
-import {history} from "umi";
 
 
 export default class extends React.Component {
@@ -22,7 +22,11 @@ export default class extends React.Component {
         registryOptions: [],
         defaultRegistryId: null,
 
-        showMore: false
+        showMore: false,
+
+
+        selectedOrgId:null
+
     }
 
     formRef = React.createRef()
@@ -35,7 +39,7 @@ export default class extends React.Component {
             title: '名称',
             dataIndex: 'name',
             render: (name, row) => {
-                return <a onClick={() => PageUtil.open('/project/view?id=' + row.id,"项目-"+name)}>{name}</a>
+                return <a onClick={() => PageUtil.open('/project/view?id=' + row.id, "项目-" + name)}>{name}</a>
             },
 
         },
@@ -129,19 +133,36 @@ export default class extends React.Component {
 
     render() {
         return <>
-            <ProTable
-                actionRef={this.tableRef}
-                toolBarRender={() => {
-                    return <ButtonList>
-                        <Button perm='project:save' type='primary' onClick={this.handleAdd}>
-                            <PlusOutlined/> 新增
-                        </Button>
-                    </ButtonList>
-                }}
-                request={(jobParamDescs, sort) => HttpUtil.pageData('project/page', jobParamDescs, sort)}
-                columns={this.columns}
-                rowKey='id'
-            />
+            <Splitter>
+                <Splitter.Panel size={250}>
+                    <OrgTree onChange={(v) => {
+                        this.setState({selectedOrgId:v},()=>{
+                            this.tableRef.current.reload()
+                        })
+
+                    }}/>
+
+                        </Splitter.Panel>
+                        <Splitter.Panel style={{paddingLeft:16}}>
+                        <ProTable
+                            actionRef={this.tableRef}
+                            toolBarRender={() => {
+                                return <ButtonList>
+                                    <Button perm='project:save' type='primary' onClick={this.handleAdd}>
+                                        <PlusOutlined/> 新增
+                                    </Button>
+                                </ButtonList>
+                            }}
+                            request={(params) => {
+                                params.orgId = this.state.selectedOrgId
+                                return HttpUtil.pageData('project/page', params);
+                            }}
+                            columns={this.columns}
+                            rowKey='id'
+                        />
+                </Splitter.Panel>
+            </Splitter>
+
 
             <Modal title='项目信息'
                    open={this.state.formOpen}

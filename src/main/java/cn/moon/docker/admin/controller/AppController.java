@@ -9,12 +9,12 @@ import io.tmgg.lang.dao.BaseEntity;
 import io.tmgg.lang.dao.specification.JpaQuery;
 import io.tmgg.lang.obj.AjaxResult;
 import io.tmgg.lang.obj.Option;
-import io.tmgg.web.CommonQueryParam;
 import io.tmgg.web.annotion.HasPermission;
 import io.tmgg.web.perm.SecurityUtils;
 import io.tmgg.web.perm.Subject;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.*;
 import org.springframework.data.web.PageableDefault;
@@ -36,6 +36,13 @@ public class AppController {
     @Resource
     private AppService service;
 
+
+    @Data
+    public static class QueryParam {
+        String keyword;
+        String orgId;
+    }
+
     private JpaQuery<App> buildQuery() {
         JpaQuery<App> q = new JpaQuery<>();
         Subject subject = SecurityUtils.getSubject();
@@ -43,20 +50,21 @@ public class AppController {
             qq.isNull("sysOrg.id");
             qq.in("sysOrg.id", subject.getOrgPermissions());
         });
+
         return q;
     }
 
 
     @HasPermission("app:list")
     @RequestMapping("list")
-    public Page<App> list(@RequestBody CommonQueryParam param, @PageableDefault(sort = {"updateTime", "createTime"}, direction = Sort.Direction.DESC) Pageable pageable, HttpSession session) {
-        long  start = System.currentTimeMillis();
+    public Page<App> list(@RequestBody QueryParam param, @PageableDefault(sort = {"updateTime", "createTime"}, direction = Sort.Direction.DESC) Pageable pageable, HttpSession session) {
         JpaQuery<App> q = buildQuery();
         String keyword = param.getKeyword();
         q.searchText(keyword, "name", "remark");
-
+        if(StrUtil.isNotEmpty(param.getOrgId())){
+            q.eq(App.Fields.sysOrg + ".id", param.getOrgId());
+        }
         Page<App> list = service.findAll(q, pageable);
-        log.info("查询app列表，耗时：{}毫秒", System.currentTimeMillis() - start);
         return list;
     }
 
