@@ -1,5 +1,5 @@
 # 步骤1 前端打包
-FROM node:14-alpine as WEB
+FROM node:18-alpine as WEB
 WORKDIR /tmp/build
 
 
