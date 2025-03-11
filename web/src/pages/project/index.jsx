@@ -89,10 +89,10 @@ export default class extends React.Component {
             valueType: 'option',
             render: (_, record) => (
                 <ButtonList>
-                    <a perm='project:save' onClick={() => this.handleEdit(record)}> 修改 </a>
+                    <Button size='small' perm='project:save' onClick={() => this.handleEdit(record)}> 修改 </Button>
                     <Popconfirm perm='project:delete' title='是否确定删除项目'
                                 onConfirm={() => this.handleDelete(record)}>
-                        <a>删除</a>
+                        <Button size='small'>删除</Button>
                     </Popconfirm>
                 </ButtonList>
             ),
@@ -126,7 +126,7 @@ export default class extends React.Component {
 
 
     handleDelete = record => {
-        HttpUtil.post('project/delete', {id: record.id}).then(rs => {
+        HttpUtil.postForm('project/delete', {id: record.id}).then(rs => {
             this.tableRef.current.reload()
         })
     }
@@ -181,9 +181,7 @@ export default class extends React.Component {
                     <Form.Item label='名称' name='name' rules={[{required: true}]} help='不能包含中文，小写字母开头'>
                         <Input/>
                     </Form.Item>
-                    <Form.Item label='备注' name='remark'>
-                        <Input/>
-                    </Form.Item>
+
                     <Form.Item label='gi仓库' name='gitUrl' rules={[{required: true}]}>
                         <Input/>
                     </Form.Item>
@@ -196,7 +194,9 @@ export default class extends React.Component {
                     <Form.Item label='默认分支' name='branch' rules={[{required: true}]} initialValue='master'>
                         <Input/>
                     </Form.Item>
-
+                    <Form.Item label='备注' name='remark'>
+                        <Input/>
+                    </Form.Item>
                     <a onClick={() => this.setState({showMore: !this.state.showMore})}>高级设置</a>
                     <div style={{display: this.state.showMore ? 'block' : 'none'}}>
 
