@@ -197,7 +197,7 @@ export default class extends React.Component {
                     <Form.Item label='备注' name='remark'>
                         <Input/>
                     </Form.Item>
-                    <a onClick={() => this.setState({showMore: !this.state.showMore})}>高级设置</a>
+                    <a onClick={() => this.setState({showMore: !this.state.showMore})}>其他设置</a>
                     <div style={{display: this.state.showMore ? 'block' : 'none'}}>
 
                         <Form.Item label='注册中心' name={['registry', 'id']} rules={[{required: true}]}
