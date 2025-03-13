@@ -120,7 +120,7 @@ public class ProjectController  {
         service.buildImage(buildParam);
 
 
-        return AjaxResult.ok();
+        return AjaxResult.ok().msg("构建已触发");
     }
 
     @RequestMapping("stopBuild")
