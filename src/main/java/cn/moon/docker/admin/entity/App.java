@@ -4,6 +4,7 @@ import cn.moon.docker.admin.entity.converter.AppConfigConverter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.tmgg.lang.ann.Msg;
 import io.tmgg.lang.dao.BaseEntity;
 import io.tmgg.lang.dao.DBConstants;
 
@@ -19,6 +20,7 @@ import lombok.experimental.FieldNameConstants;
 import java.util.ArrayList;
 import java.util.List;
 
+@Msg("应用")
 @Entity
 @Getter
 @Setter

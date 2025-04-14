@@ -14,11 +14,13 @@ import io.tmgg.web.perm.SecurityUtils;
 import io.tmgg.web.perm.Subject;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.*;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.util.Assert;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.annotation.Resource;
@@ -46,7 +48,7 @@ public class AppController {
     private JpaQuery<App> buildQuery() {
         JpaQuery<App> q = new JpaQuery<>();
         Subject subject = SecurityUtils.getSubject();
-        q.or(qq->{
+        q.addSubOr(qq->{
             qq.isNull("sysOrg.id");
             qq.in("sysOrg.id", subject.getOrgPermissions());
         });
@@ -201,8 +203,14 @@ public class AppController {
         Assert.hasText(newName, "新名称不能为空");
         App app = service.rename(appId, newName);
 
-
         return AjaxResult.ok().msg("部署指令已发送").data(app);
+    }
+    @HasPermission(value = "app:copy",label = "复制应用")
+    @RequestMapping("copyApp")
+    public AjaxResult copyApp(@RequestBody @Validated MoveParam param) {
+        App app = service.copyApp(param.getAppId(), param.getHostId());
+
+        return AjaxResult.ok().msg("复制成功").data(app);
     }
 
 
@@ -221,4 +229,14 @@ public class AppController {
     }
 
 
+    @Data
+    public static class MoveParam {
+
+        @NotNull
+        String appId;
+
+        @NotNull
+        String hostId;
+
+    }
 }

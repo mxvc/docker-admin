@@ -10,7 +10,6 @@ import com.tencentcloudapi.common.Credential;
 import com.tencentcloudapi.tcr.v20190924.TcrClient;
 import com.tencentcloudapi.tcr.v20190924.models.*;
 import lombok.extern.slf4j.Slf4j;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -97,7 +96,6 @@ public class TencentSdk implements RegistrySdk {
 
         return page;
     }
-    @NotNull
     private static TcrClient getClient(Registry registry) {
         Credential cred = new Credential(registry.getAk(), registry.getSk());
         TcrClient client = new TcrClient(cred, registry.getRegion());

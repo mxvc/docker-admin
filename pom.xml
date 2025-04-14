@@ -5,11 +5,11 @@
     <parent>
         <groupId>io.github.tmgg</groupId>
         <artifactId>tmgg-system-parent</artifactId>
-        <version>0.3.61</version>
+        <version>0.3.88</version>
     </parent>
     <groupId>io.github.mxvc</groupId>
     <artifactId>docker-admin</artifactId>
-    <version>1.0.1</version>
+    <version>1.0.0</version>
     <name>docker-admin</name>
 
     <properties>

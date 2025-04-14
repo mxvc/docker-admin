@@ -193,10 +193,6 @@ public class ProjectService extends BaseService<Project> {
             log.info("是否拉取基础镜像:{}",p.isPull());
 
 
-
-            log.info("Dockerfile内容如下");
-            log.info("----------------------------------\n{}",FileUtil.readUtf8String(dockerfileFile).trim());
-            log.info("----------------------------------");
             log.info("构建命令执行中...");
             client.buildImageCmd(buildDir)
                     // 删除构建产生的容器
@@ -208,7 +204,7 @@ public class ProjectService extends BaseService<Project> {
                     .withDockerfile(dockerfileFile)
 
                     .exec(buildCallback).awaitCompletion();
-
+            log.info("构建命令执行完毕");
 
 
             // 判断是构建被中途取消，如手动取消，重复构建取消

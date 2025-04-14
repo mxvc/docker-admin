@@ -1,6 +1,6 @@
 import React from "react";
 import {Card, Col, message, Row, Splitter, Table, Tree} from "antd";
-import {HttpUtil} from "@tmgg/tmgg-base";
+import {HttpUtil, Page, SysUtil} from "@tmgg/tmgg-base";
 import {TreeUtil} from "@tmgg/tmgg-commons-lang";
 
 
@@ -64,9 +64,7 @@ export default class extends React.Component {
   }
 
   render() {
-    let {hostId, containerId} = this.props;
-
-    return <div >
+    return <Page>
       <Splitter>
         <Splitter.Panel defaultSize={300}>
           <Card style={{height: '80vh', overflowY: "auto"}}>
@@ -77,7 +75,8 @@ export default class extends React.Component {
           </Card>
         </Splitter.Panel>
         <Splitter.Panel>
-          <Card title={'文件列表：' + this.state.curNode?.path}>
+          <Card title={'文件列表：' + (this.state.curNode?.path || '') } extra={this.getDownloadUrl(this.state.curNode?.path)}>
+
             <Table pagination={false}
                    dataSource={this.state.curNode?.fileList}
                    columns={[
@@ -87,8 +86,7 @@ export default class extends React.Component {
                      {
                        title: '-', dataIndex: 'option',
                        render: (_, row) => {
-                         let url = 'container/downloadFile?hostId=' + hostId + "&containerId=" + containerId + "&file=" + row.path
-                         return <a href={url} target='_blank'>下载</a>
+                         return  this.getDownloadUrl(row.path)
                        }
                      }
                    ]}>
@@ -97,6 +95,16 @@ export default class extends React.Component {
         </Splitter.Panel>
       </Splitter>
 
-    </div>
+    </Page>
+  }
+
+  getDownloadUrl(path){
+    if(!path) {
+      return
+    }
+    let {hostId, containerId} = this.props;
+    let url =  'container/downloadFile?hostId=' + hostId + "&containerId=" + containerId + "&file=" +path
+    url = SysUtil.wrapServerUrl(url)
+    return <a href={url} target='_blank'>下载</a>
   }
 }

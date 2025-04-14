@@ -13,20 +13,30 @@ import java.util.List;
 public class BuildLogDao extends BaseDao<BuildLog> {
 
     public List<BuildLog> findByProjectIdAndSuccessIsTrue(String projectId) {
-
-        return findAllByField(BuildLog.Fields.projectId,projectId, BuildLog.Fields.success, true);
+        JpaQuery<BuildLog> q = new JpaQuery<>();
+        q.eq(BuildLog.Fields.projectId,projectId);
+        q.eq(BuildLog.Fields.success, true);
+        return super.findAll(q);
     }
 
     public List<BuildLog> findByProjectIdAndSuccessIsFalse(String projectId) {
-        return findAllByField(BuildLog.Fields.projectId,projectId, BuildLog.Fields.success, false);
+        JpaQuery<BuildLog> q = new JpaQuery<>();
+        q.eq(BuildLog.Fields.projectId,projectId);
+        q.eq(BuildLog.Fields.success, false);
+        return super.findAll(q);
     }
 
     public List<BuildLog> findByProjectId(String projectId) {
-        return findAllByField(BuildLog.Fields.projectId,projectId);
+        JpaQuery<BuildLog> q = new JpaQuery<>();
+        q.eq(BuildLog.Fields.projectId,projectId);
+        return super.findAll(q);
     }
 
     public List<BuildLog> findByProjectIdAndSuccessIsNull(String projectId) {
-        return findAllByField(BuildLog.Fields.projectId,projectId, BuildLog.Fields.success,null);
+        JpaQuery<BuildLog> q = new JpaQuery<>();
+        q.eq(BuildLog.Fields.projectId,projectId);
+        q.isNull(BuildLog.Fields.success);
+        return super.findAll(q);
     }
 
     public BuildLog findTop1ByProjectIdOrderByCreateTimeDesc(String projectId) {

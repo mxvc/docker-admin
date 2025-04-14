@@ -20,6 +20,7 @@ import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.MDC;
+import org.springframework.beans.BeanUtils;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -406,14 +407,27 @@ public class AppService extends BaseService<App> {
      */
     @Transactional
     public void updateBaseInfo(App input) {
-        if(input.getSysOrg().getId() == null){
+        if (input.getSysOrg().getId() == null) {
             input.setSysOrg(null);
         }
 
-        App old = appDao.findOne(input);
+        App old = appDao.findOne(input.getId());
         old.setSysOrg(input.getSysOrg());
         old.setImageUrl(input.getImageUrl());
         old.setImageTag(input.getImageTag());
         appDao.save(old);
+    }
+
+
+    public App copyApp(String appId, String hostId) {
+        App app = this.findOne(appId);
+
+        App newApp = new App();
+        BeanUtils.copyProperties(app, newApp, "id");
+        newApp.setName(app.getName() + "副本");
+
+        appDao.save(newApp);
+
+        return newApp;
     }
 }

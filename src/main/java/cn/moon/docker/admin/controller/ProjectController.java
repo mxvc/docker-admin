@@ -65,7 +65,7 @@ public class ProjectController  {
     private JpaQuery<Project> buildQuery() {
         JpaQuery<Project> q = new JpaQuery<>();
         Subject subject = SecurityUtils.getSubject();
-        q.or(qq->{
+        q.addSubOr(qq->{
             qq.isNull("sysOrg.id");
             qq.in("sysOrg.id", subject.getOrgPermissions());
         });
