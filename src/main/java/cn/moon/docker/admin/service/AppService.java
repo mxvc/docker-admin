@@ -6,6 +6,7 @@ import cn.moon.base.tool.YamlTool;
 import cn.moon.docker.admin.BuildSuccessEvent;
 import cn.moon.docker.admin.dao.AppDao;
 import cn.moon.docker.admin.dao.DeployLogDao;
+import cn.moon.docker.admin.dao.HostDao;
 import cn.moon.docker.admin.entity.*;
 import cn.moon.docker.admin.vo.ContainerVo;
 import cn.moon.docker.sdk.engine.DefaultCallback;
@@ -44,7 +45,10 @@ public class AppService extends BaseService<App> {
     DockerSdkManager dockerManager;
 
     @Resource
-    AppDao appDao;
+    private AppDao appDao;
+
+    @Resource
+    private HostDao hostDao;
 
 
     @Resource
@@ -421,10 +425,14 @@ public class AppService extends BaseService<App> {
 
     public App copyApp(String appId, String hostId) {
         App app = this.findOne(appId);
+        Host host = hostDao.findOne(hostId);
 
         App newApp = new App();
-        BeanUtils.copyProperties(app, newApp, "id");
+        BeanUtils.copyProperties(app, newApp, "id","name","host");
         newApp.setName(app.getName() + "副本");
+        newApp.setHost(host);
+
+
 
         appDao.save(newApp);
 
