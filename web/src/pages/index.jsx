@@ -35,7 +35,7 @@ export default class extends React.Component {
 
                     {dataIndex: 'createTime', title: '时间'}
 
-                ]} bordered></Table>
+                ]} ></Table>
 
             </Card>
         </Page>

@@ -1,7 +1,6 @@
 package cn.moon.docker.admin.controller;
 
 import cn.hutool.core.util.StrUtil;
-import cn.moon.docker.admin.entity.Project;
 import cn.moon.docker.admin.vo.ContainerVo;
 import cn.moon.docker.admin.entity.App;
 import cn.moon.docker.admin.service.AppService;
@@ -12,7 +11,6 @@ import io.tmgg.lang.obj.Option;
 import io.tmgg.web.annotion.HasPermission;
 import io.tmgg.web.perm.SecurityUtils;
 import io.tmgg.web.perm.Subject;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
@@ -71,7 +69,7 @@ public class AppController {
     }
 
     @RequestMapping("get")
-    public App view(HttpServletRequest request, String id) throws UnsupportedEncodingException {
+    public App view(String id) throws UnsupportedEncodingException {
         App app = service.findOne(id);
 
         if (app.getImageUrl() == null) {
@@ -79,7 +77,7 @@ public class AppController {
             app.setImageUrl(fullUrl + "/" + app.getProject().getName());
         }
 
-        String url = LogUrlTool.getLogViewUrl(request, id);
+        String url = LogUrlTool.getLogViewUrl(id);
         app.setLogUrl(url);
         return app;
     }
