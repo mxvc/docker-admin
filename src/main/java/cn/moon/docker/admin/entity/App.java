@@ -8,6 +8,8 @@ import io.tmgg.lang.ann.Msg;
 import io.tmgg.lang.dao.BaseEntity;
 import io.tmgg.lang.dao.DBConstants;
 
+import io.tmgg.lang.validator.ValidateContainsChinese;
+import io.tmgg.lang.validator.ValidateGeneral;
 import io.tmgg.lang.validator.ValidateStartWithLetter;
 import io.tmgg.modules.sys.entity.SysOrg;
 import jakarta.persistence.*;
@@ -28,6 +30,7 @@ import java.util.List;
 @FieldNameConstants
 public class App extends BaseEntity {
 
+    @ValidateGeneral
     @ValidateStartWithLetter
     @NotNull
     @Column(unique = true)

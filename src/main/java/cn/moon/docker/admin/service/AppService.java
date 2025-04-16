@@ -429,7 +429,7 @@ public class AppService extends BaseService<App> {
 
         App newApp = new App();
         BeanUtils.copyProperties(app, newApp, "id","name","host");
-        newApp.setName(app.getName() + "副本");
+        newApp.setName(app.getName() + "_copy");
         newApp.setHost(host);
 
 
