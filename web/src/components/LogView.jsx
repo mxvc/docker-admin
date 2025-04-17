@@ -30,6 +30,7 @@ export default class extends React.Component {
                          follow={follow}
                          fetchOptions={{credentials: 'include', ...headers}}
                          websocket={true}
+                         selectableLines={true}
                          onScroll={onScroll}/>
             )}
         />
