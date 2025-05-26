@@ -39,7 +39,7 @@ public class AppController {
 
     @Data
     public static class QueryParam {
-        String keyword;
+
         String orgId;
     }
 
@@ -57,10 +57,9 @@ public class AppController {
 
     @HasPermission("app:list")
     @RequestMapping("list")
-    public Page<App> list(@RequestBody QueryParam param, @PageableDefault(sort = {"updateTime", "createTime"}, direction = Sort.Direction.DESC) Pageable pageable, HttpSession session) {
+    public Page<App> list(@RequestBody QueryParam param, String searchText, @PageableDefault(sort = {"updateTime", "createTime"}, direction = Sort.Direction.DESC) Pageable pageable, HttpSession session) {
         JpaQuery<App> q = buildQuery();
-        String keyword = param.getKeyword();
-        q.searchText(keyword, "name", "remark");
+        q.searchText(searchText, "name", "remark");
         if(StrUtil.isNotEmpty(param.getOrgId())){
             q.eq(App.Fields.sysOrg + ".id", param.getOrgId());
         }

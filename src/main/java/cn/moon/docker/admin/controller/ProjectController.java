@@ -44,15 +44,14 @@ public class ProjectController  {
 
     @Data
     public static class QueryParam {
-        String keyword;
         String orgId;
     }
 
     @HasPermission
     @PostMapping("page")
-    public AjaxResult page(@RequestBody QueryParam param, @PageableDefault(direction = Sort.Direction.DESC, sort = {"updateTime"}) Pageable pageable) {
+    public AjaxResult page(@RequestBody QueryParam param, String searchText, @PageableDefault(direction = Sort.Direction.DESC, sort = {"updateTime"}) Pageable pageable) {
         JpaQuery<Project> q = buildQuery();
-        q.searchText(param.getKeyword(), "name","remark");
+        q.searchText(searchText, "name","remark");
 
         if(StrUtil.isNotEmpty(param.getOrgId())){
             q.eq(Project.Fields.sysOrg + ".id", param.getOrgId());
