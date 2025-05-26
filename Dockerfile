@@ -1,4 +1,9 @@
-FROM registry.cn-hangzhou.aliyuncs.com/mxvc/tmgg-base-node AS web
+FROM node:20 AS web
+WORKDIR build-node
+
+RUN npm config set fund false
+RUN npm config set registry https://registry.npmmirror.com
+
 ADD web/package.json ./
 RUN npm install --force
 ADD web/ ./
