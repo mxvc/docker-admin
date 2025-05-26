@@ -4,3 +4,6 @@ spring:
     active: default,dev
 
 
+logging:
+  file:
+    path: ./logs
