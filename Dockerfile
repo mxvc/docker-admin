@@ -1,8 +1,8 @@
-FROM node:20 AS web
+FROM node:22 AS web
 WORKDIR build-node
 
 RUN npm config set fund false
-RUN npm config set registry https://registry.npmmirror.com
+#RUN npm config set registry https://registry.npmmirror.com
 
 ADD web/package.json ./
 RUN npm install --force
