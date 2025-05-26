@@ -1,6 +1,6 @@
 FROM registry.cn-hangzhou.aliyuncs.com/mxvc/tmgg-base-node AS web
 ADD web/package.json ./
-RUN npm install
+RUN npm install --force
 ADD web/ ./
 RUN npm run build
 
