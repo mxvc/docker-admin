@@ -26,7 +26,6 @@ import java.util.List;
 @FieldNameConstants
 public class App extends BaseEntity {
 
-    @ValidateGeneral
     @ValidateStartWithLetter
     @NotNull
     @Column(unique = true)
