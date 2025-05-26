@@ -1,11 +1,11 @@
-FROM registry.cn-hangzhou.aliyuncs.com/mxvc/tmgg-base-node as web
+FROM registry.cn-hangzhou.aliyuncs.com/mxvc/tmgg-base-node AS web
 ADD web/package.json ./
 RUN npm install
 ADD web/ ./
 RUN npm run build
 
 
-FROM registry.cn-hangzhou.aliyuncs.com/mxvc/tmgg-base-java as java
+FROM registry.cn-hangzhou.aliyuncs.com/mxvc/tmgg-base-java AS java
 # 缓存， -T 1C 表示 Maven 将在每个可用内核上使用一个线程。
 ADD pom.xml ./
 RUN mvn dependency:go-offline -q -B -T 1C --fail-never
