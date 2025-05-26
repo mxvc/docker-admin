@@ -14,7 +14,8 @@ import cn.moon.docker.sdk.engine.DockerSdkManager;
 import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.command.PushImageCmd;
 import com.github.dockerjava.api.model.BuildResponseItem;
-import io.tmgg.lang.dao.BaseService;
+
+import io.tmgg.web.persistence.BaseService;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
@@ -202,6 +203,9 @@ public class ProjectService extends BaseService<Project> {
                     .withTags(imageTags)
                     .withNoCache(!p.isUseCache())
                     .withDockerfile(dockerfileFile)
+                    // 使用代理https://neucrack.com/p/286
+                    //  http_proxy=http://172.17.0.1:8123 --build-arg https_proxy=http://172.17.0.1:8123
+//                    .withBuildArg()
 
                     .exec(buildCallback).awaitCompletion();
             log.info("构建命令执行完毕");

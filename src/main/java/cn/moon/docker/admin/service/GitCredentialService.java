@@ -2,7 +2,8 @@ package cn.moon.docker.admin.service;
 
 import cn.moon.docker.admin.entity.GitCredential;
 import cn.moon.docker.admin.dao.GitCredentialDao;
-import io.tmgg.lang.dao.BaseService;
+
+import io.tmgg.web.persistence.BaseService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 

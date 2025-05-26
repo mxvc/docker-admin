@@ -5,15 +5,17 @@ import cn.moon.docker.admin.BuildParam;
 import cn.moon.docker.admin.entity.Project;
 import cn.moon.docker.admin.service.BuildLogService;
 import cn.moon.docker.admin.service.ProjectService;
-import io.tmgg.lang.dao.BaseController;
-import io.tmgg.lang.dao.BaseEntity;
-import io.tmgg.lang.dao.specification.JpaQuery;
+
+
+
 import io.tmgg.lang.obj.AjaxResult;
 import io.tmgg.lang.obj.Option;
-import io.tmgg.web.CommonQueryParam;
 import io.tmgg.web.annotion.HasPermission;
+import io.tmgg.web.argument.RequestBodyKeys;
 import io.tmgg.web.perm.SecurityUtils;
 import io.tmgg.web.perm.Subject;
+import io.tmgg.web.persistence.BaseEntity;
+import io.tmgg.web.persistence.specification.JpaQuery;
 import jakarta.annotation.Resource;
 import lombok.Data;
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -74,13 +76,15 @@ public class ProjectController  {
     }
     @HasPermission
     @PostMapping({"save"})
-    public AjaxResult save(@RequestBody Project param) throws Exception {
+    public AjaxResult save(@RequestBody Project param,  RequestBodyKeys updateFields) throws Exception {
         if(param.getSysOrg().getId() == null){
             param.setSysOrg(null);
         }
-        Project result = this.service.saveOrUpdate(param);
+        Project result = this.service.saveOrUpdate(param,updateFields);
         return AjaxResult.ok().data(result.getId()).msg("保存成功");
     }
+
+
 
     @HasPermission
     @PostMapping({"delete"})

@@ -15,8 +15,8 @@ import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.command.CreateContainerCmd;
 import com.github.dockerjava.api.command.CreateContainerResponse;
 import com.github.dockerjava.api.model.*;
-import io.tmgg.lang.dao.BaseService;
-import io.tmgg.web.BizException;
+import io.tmgg.web.CodeException;
+import io.tmgg.web.persistence.BaseService;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
@@ -320,7 +320,7 @@ public class AppService extends BaseService<App> {
                 return list.get(0);
             }
         } catch (Exception e) {
-            throw new BizException("查询容器状态失败", e);
+            throw new CodeException("查询容器状态失败", e);
         } finally {
             IOUtils.closeQuietly(client);
         }

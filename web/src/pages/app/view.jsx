@@ -20,7 +20,7 @@ import {history} from "umi";
 
 import ContainerLog from "../../components/container/ContainerLog";
 import ContainerFile from "../../components/container/ContainerFile";
-import {FieldOrgTreeSelect, FieldRadioBoolean, FieldRemoteSelect, HasPerm, HttpUtil, PageUtil} from "@tmgg/tmgg-base";
+import {FieldOrgTreeSelect, HasPerm, HttpUtil, PageUtil} from "@tmgg/tmgg-base";
 import LogView from "../../components/LogView";
 import PublishForm from "./PublishForm";
 import {SyncOutlined} from "@ant-design/icons";

@@ -12,7 +12,7 @@ import {
     Typography,
     Modal
 } from "antd";
-import {FieldRemoteSelect, Gap, HttpUtil, PageUtil} from "@tmgg/tmgg-base";
+import {FieldSelect, Gap, HttpUtil, PageUtil} from "@tmgg/tmgg-base";
 
 /**
  * 发布标签页
@@ -117,7 +117,7 @@ export default class extends React.Component {
                     children:<>
                             <Form onFinish={this.copyApp}>
                                 <Form.Item name='hostId' rules={[{required:true}]} >
-                                    <FieldRemoteSelect url='/host/options' placeholder='请选择新主机' style={{width:300}} />
+                                    <FieldSelect url='/host/options' placeholder='请选择新主机' style={{width:300}} />
                                 </Form.Item>
                                 <div>
                                 <Typography.Text italic>注意：复制应用不会自动部署，也不会复制主机上的文件</Typography.Text>

@@ -1,7 +1,7 @@
 package cn.moon.docker.admin.entity;
 
-import io.tmgg.lang.dao.BaseEntity;
-import io.tmgg.lang.dao.DBConstants;
+import io.tmgg.web.persistence.BaseEntity;
+import io.tmgg.web.persistence.DBConstants;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;

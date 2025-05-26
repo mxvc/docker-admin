@@ -1,9 +1,11 @@
 package cn.moon.docker.admin.dao;
 
 import cn.moon.docker.admin.entity.BuildLog;
-import io.tmgg.lang.dao.BaseDao;
-import io.tmgg.lang.dao.BaseEntity;
-import io.tmgg.lang.dao.specification.JpaQuery;
+
+
+import io.tmgg.web.persistence.BaseDao;
+import io.tmgg.web.persistence.BaseEntity;
+import io.tmgg.web.persistence.specification.JpaQuery;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 

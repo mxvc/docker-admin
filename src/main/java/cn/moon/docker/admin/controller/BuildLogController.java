@@ -3,8 +3,10 @@ package cn.moon.docker.admin.controller;
 import cn.hutool.core.date.DateUtil;
 import cn.moon.docker.admin.entity.BuildLog;
 import cn.moon.docker.admin.service.BuildLogService;
-import io.tmgg.lang.dao.BaseEntity;
-import io.tmgg.lang.dao.specification.JpaQuery;
+
+
+import io.tmgg.web.persistence.BaseEntity;
+import io.tmgg.web.persistence.specification.JpaQuery;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

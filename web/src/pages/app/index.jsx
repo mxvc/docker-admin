@@ -1,9 +1,8 @@
 import {AutoComplete, Button, Form, Input, Modal, Splitter} from 'antd';
 import React from 'react';
 import ContainerStatus from "../../components/ContainerStatus";
-import {history} from "umi";
 import {notPermitted} from "../../utils/SysConfig";
-import {FieldOrgTreeSelect, FieldRemoteSelect, HttpUtil, OrgTree, PageUtil, ProTable} from "@tmgg/tmgg-base";
+import {FieldOrgTreeSelect, FieldSelect, HttpUtil, OrgTree, PageUtil, ProTable} from "@tmgg/tmgg-base";
 
 let api = 'app/';
 
@@ -177,7 +176,7 @@ export default class extends React.Component {
 
 
                         <Form.Item name={['host', 'id']} label='部署主机' required rules={[{required: true}]}>
-                            <FieldRemoteSelect showSearch url="host/options"/>
+                            <FieldSelect showSearch url="host/options"/>
                         </Form.Item>
 
 

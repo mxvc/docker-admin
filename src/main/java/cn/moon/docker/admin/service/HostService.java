@@ -6,7 +6,8 @@ import cn.moon.docker.admin.entity.Host;
 import cn.moon.docker.sdk.engine.DockerSdkManager;
 import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.model.*;
-import io.tmgg.lang.dao.BaseService;
+
+import io.tmgg.web.persistence.BaseService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;

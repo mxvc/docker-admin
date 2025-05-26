@@ -1,7 +1,7 @@
 package cn.moon.docker.admin.controller;
 
 import io.tmgg.modules.sys.entity.SysLog;
-import io.tmgg.modules.sys.service.SysOpLogService;
+import io.tmgg.modules.sys.service.SysLogService;
 import jakarta.annotation.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,7 +18,7 @@ import java.util.List;
 public class HomeController {
 
     @Resource
-    SysOpLogService sysOpLogService;
+    SysLogService sysOpLogService;
 
     @GetMapping("eventList")
     public List<SysLog> eventList(@PageableDefault(direction = Sort.Direction.DESC,sort = "createTime") Pageable pageable){

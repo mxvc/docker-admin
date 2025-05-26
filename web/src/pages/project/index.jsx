@@ -5,8 +5,7 @@ import React from 'react'
 import {
     ButtonList,
     FieldOrgTreeSelect,
-    FieldRadioBoolean,
-    FieldRemoteSelect,
+    FieldRadioBoolean, FieldSelect,
     HttpUtil,
     OrgTree,
     PageUtil,
@@ -202,7 +201,7 @@ export default class extends React.Component {
 
                         <Form.Item label='注册中心' name={['registry', 'id']} rules={[{required: true}]}
                                    initialValue={this.state.defaultRegistryId}>
-                            <FieldRemoteSelect url='registry/options'/>
+                            <FieldSelect url='registry/options'/>
                         </Form.Item>
 
 

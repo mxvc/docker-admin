@@ -1,36 +1,32 @@
 package cn.moon.docker.admin.controller;
 
-import cn.hutool.core.util.StrUtil;
 import cn.moon.docker.admin.entity.Host;
 import cn.moon.docker.admin.service.HostService;
 import cn.moon.docker.admin.vo.DockerInfo;
 import com.github.dockerjava.api.exception.ConflictException;
 import com.github.dockerjava.api.model.Image;
 import com.github.dockerjava.api.model.Info;
-import io.tmgg.lang.dao.BaseCURDController;
-import io.tmgg.lang.dao.BaseEntity;
-import io.tmgg.lang.dao.specification.JpaQuery;
 import io.tmgg.lang.obj.AjaxResult;
 import io.tmgg.lang.obj.Option;
-import io.tmgg.web.annotion.HasPermission;
-import io.tmgg.web.perm.SecurityUtils;
-import io.tmgg.web.perm.Subject;
+import io.tmgg.web.persistence.BaseController;
+import io.tmgg.web.persistence.specification.JpaQuery;
+import jakarta.annotation.Resource;
 import jakarta.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-import jakarta.annotation.Resource;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @Slf4j
 @RequestMapping("host")
-public class HostController extends BaseCURDController<Host> {
+public class HostController extends BaseController<Host> {
 
 
     @Resource

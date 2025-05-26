@@ -1,7 +1,7 @@
 package cn.moon.docker.admin.entity;
 
 import io.tmgg.lang.ann.Msg;
-import io.tmgg.lang.dao.BaseEntity;
+import io.tmgg.web.persistence.BaseEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;

@@ -1,8 +1,8 @@
-import {Button, Card, Form, Input, Modal, Radio, Select} from 'antd';
+import {Button, Form, Input, Modal, Select} from 'antd';
 import React from 'react';
 
 
-import {FieldRemoteSelect, HttpUtil, PageUtil, ProTable} from "@tmgg/tmgg-base";
+import {FieldSelect, HttpUtil, ProTable} from "@tmgg/tmgg-base";
 
 
 export default class extends React.Component {
@@ -161,10 +161,10 @@ export default class extends React.Component {
                         <Input disabled/>
                     </Form.Item>
                     <Form.Item label='版本' name='tag' rules={[{required: true}]}>
-                        <FieldRemoteSelect url={'/image/tagOptions?url=' + this.state.curRecord.url}/>
+                        <FieldSelect url={'/image/tagOptions?url=' + this.state.curRecord.url}/>
                     </Form.Item>
                     <Form.Item label='主机' name='hostId' rules={[{required: true}]}>
-                        <FieldRemoteSelect url={'/host/options'}/>
+                        <FieldSelect url={'/host/options'}/>
                     </Form.Item>
                     <Form.Item label='重命名' name='newName'>
                         <Input placeholder='如openjdk,mysql等，不修改则留空'/>

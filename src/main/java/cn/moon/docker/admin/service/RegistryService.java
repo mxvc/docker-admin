@@ -5,7 +5,8 @@ import cn.moon.docker.admin.entity.Registry;
 import cn.moon.docker.sdk.registry.RegistrySdk;
 import cn.moon.docker.sdk.registry.tencent.AliyunSdk;
 import cn.moon.docker.sdk.registry.tencent.TencentSdk;
-import io.tmgg.lang.dao.BaseService;
+
+import io.tmgg.web.persistence.BaseService;
 import org.springframework.stereotype.Service;
 
 import jakarta.annotation.Resource;

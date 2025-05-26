@@ -1,17 +1,13 @@
 package cn.moon.docker.admin.entity;
 
 import cn.moon.docker.admin.entity.converter.AppConfigConverter;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import io.tmgg.lang.ann.Msg;
-import io.tmgg.lang.dao.BaseEntity;
-import io.tmgg.lang.dao.DBConstants;
-
-import io.tmgg.lang.validator.ValidateContainsChinese;
 import io.tmgg.lang.validator.ValidateGeneral;
 import io.tmgg.lang.validator.ValidateStartWithLetter;
 import io.tmgg.modules.sys.entity.SysOrg;
+import io.tmgg.web.persistence.BaseEntity;
+import io.tmgg.web.persistence.DBConstants;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;

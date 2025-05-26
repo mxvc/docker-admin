@@ -4,8 +4,9 @@ import io.tmgg.lang.obj.AjaxResult;
 import io.tmgg.lang.obj.Option;
 import cn.moon.docker.admin.entity.Registry;
 import cn.moon.docker.admin.service.RegistryService;
-import io.tmgg.lang.dao.BaseCURDController;
-import io.tmgg.lang.dao.BaseEntity;
+
+
+import io.tmgg.web.persistence.BaseController;
 import jakarta.ws.rs.GET;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,7 +21,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("registry")
-public class RegistryController extends BaseCURDController<Registry> {
+public class RegistryController extends BaseController<Registry> {
 
     @Resource
     RegistryService service;

@@ -4,8 +4,9 @@ import io.tmgg.lang.obj.AjaxResult;
 import io.tmgg.lang.obj.Option;
 import cn.moon.docker.admin.entity.GitCredential;
 import cn.moon.docker.admin.service.GitCredentialService;
-import io.tmgg.lang.dao.BaseCURDController;
-import io.tmgg.lang.dao.BaseEntity;
+
+
+import io.tmgg.web.persistence.BaseController;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,7 +17,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("gitCredential")
-public class GitCredentialController extends BaseCURDController<GitCredential> {
+public class GitCredentialController extends BaseController<GitCredential> {
 
     @Resource
     GitCredentialService service;
