@@ -14,10 +14,10 @@ public interface  RegistrySdk {
 
 
 
-    Page<ImageVo> imageList(Registry registry, Pageable pageable, String keyword) throws Exception;
+    Page<ImageVo> imageList(Registry registry, Pageable pageable, String searchText) throws Exception;
 
 
-    Page<TagVo> tagList(Registry registry, String imageUrl,String keyword, Pageable pageable) throws Exception;
+    Page<TagVo> tagList(Registry registry, String imageUrl,String searchText, Pageable pageable) throws Exception;
 
 
 }

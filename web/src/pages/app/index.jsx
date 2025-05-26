@@ -95,14 +95,14 @@ export default class extends React.Component {
     }
 
     loadImageList = (text) => {
-        HttpUtil.get('image/options', {keyword: text}).then(rs => {
+        HttpUtil.get('image/options', {searchText: text}).then(rs => {
             this.setState({imageList: rs})
         })
     };
     loadImageTagList = (text) => {
         const url = this.formRef.current.getFieldValue('imageUrl')
         if (url) {
-            HttpUtil.get('image/tagOptions', {url, keyword: text}).then(rs => {
+            HttpUtil.get('image/tagOptions', {url, searchText: text}).then(rs => {
                 this.setState({imageTagList: rs})
             })
         } else {

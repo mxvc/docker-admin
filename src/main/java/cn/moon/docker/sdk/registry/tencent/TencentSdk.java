@@ -26,14 +26,14 @@ public class TencentSdk implements RegistrySdk {
 
 
     @Override
-    public Page<ImageVo> imageList(cn.moon.docker.admin.entity.Registry registry, Pageable pageable, String keyword) throws Exception {
+    public Page<ImageVo> imageList(cn.moon.docker.admin.entity.Registry registry, Pageable pageable, String searchText) throws Exception {
         TcrClient client = getClient(registry);
 
         DescribeRepositoryOwnerPersonalRequest req = new DescribeRepositoryOwnerPersonalRequest();
         req.setOffset(pageable.getOffset());
         req.setLimit((long) pageable.getPageSize());
-        if(StrUtil.isNotEmpty(keyword)){
-            req.setRepoName(keyword);
+        if(StrUtil.isNotEmpty(searchText)){
+            req.setRepoName(searchText);
         }
 
 
@@ -64,7 +64,7 @@ public class TencentSdk implements RegistrySdk {
 
 
     @Override
-    public Page<TagVo> tagList(cn.moon.docker.admin.entity.Registry registry, String imageUrl, String keyword, Pageable pageable) throws Exception {
+    public Page<TagVo> tagList(cn.moon.docker.admin.entity.Registry registry, String imageUrl, String searchText, Pageable pageable) throws Exception {
         String repoName = imageUrl.replace(registry.getUrl(), "");
         repoName = StrUtil.removePrefix(repoName,"/");
 
@@ -74,8 +74,8 @@ public class TencentSdk implements RegistrySdk {
         req.setRepoName(repoName);
         req.setOffset(pageable.getOffset());
         req.setLimit((long) pageable.getPageSize());
-        if(StrUtil.isNotEmpty(keyword)){
-            req.setTag(keyword);
+        if(StrUtil.isNotEmpty(searchText)){
+            req.setTag(searchText);
         }
 
 

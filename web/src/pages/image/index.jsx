@@ -96,8 +96,8 @@ export default class extends React.Component {
 
             <ProTable
                 actionRef={this.actionRef}
-                request={(params, sort) => {
-                    return HttpUtil.pageData('image/page', {...params, ...this.state.searchParams}, sort);
+                request={(params) => {
+                    return HttpUtil.pageData('image/page', {...params, ...this.state.searchParams});
                 }}
                 columns={this.columns}
                 showSearch={false}
@@ -106,7 +106,7 @@ export default class extends React.Component {
                         <Form.Item label='注册中心' name='registryId'>
                             <Select options={this.state.registryOptions} style={{width:400}} />
                         </Form.Item>
-                        <Form.Item  name='keyword'>
+                        <Form.Item  name='searchText'>
                             <Input placeholder='名称、路径等'/>
                         </Form.Item>
                     </>}

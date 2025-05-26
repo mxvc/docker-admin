@@ -299,9 +299,9 @@ public class ProjectService extends BaseService<Project> {
         buildLogService.cleanErrorLog(projectId);
     }
 
-    public Page<Project> findAll(String keyword, Pageable pageable) {
-        if (StrUtil.isNotEmpty(keyword)) {
-            return projectDao.findByNameLike("%" + keyword.trim() + "%", pageable);
+    public Page<Project> findAll(String searchText, Pageable pageable) {
+        if (StrUtil.isNotEmpty(searchText)) {
+            return projectDao.findByNameLike("%" + searchText.trim() + "%", pageable);
         }
         return projectDao.findAll(pageable);
     }

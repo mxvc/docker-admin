@@ -35,7 +35,7 @@ public class AliyunSdk implements RegistrySdk {
 
 
 
-    public Page<ImageVo> imageList(Registry registry, Pageable pageable, String keyword) throws Exception {
+    public Page<ImageVo> imageList(Registry registry, Pageable pageable, String searchText) throws Exception {
         IAcsClient client = getClient(registry);
         CommonRequest request = getCommonRequest(registry);
 
@@ -46,8 +46,8 @@ public class AliyunSdk implements RegistrySdk {
         request.setHttpContent(requestBody.getBytes(), "utf-8", FormatType.JSON);
         request.putQueryParameter("PageSize", String.valueOf(pageable.getPageSize()));
         request.putQueryParameter("Page", String.valueOf(pageable.getPageNumber() +1));
-        if (keyword != null) {
-            request.putQueryParameter("RepoNamePrefix", keyword);
+        if (searchText != null) {
+            request.putQueryParameter("RepoNamePrefix", searchText);
         }
         CommonResponse response = client.getCommonResponse(request);
         String data = response.getData();
@@ -58,7 +58,7 @@ public class AliyunSdk implements RegistrySdk {
 
 
     @Override
-    public Page<TagVo> tagList(Registry registry, String imageUrl,String keyword, Pageable pageable) throws ClientException {
+    public Page<TagVo> tagList(Registry registry, String imageUrl, String searchText, Pageable pageable) throws ClientException {
         int page = pageable.getPageNumber() + 1;
         int pageSize = pageable.getPageSize();
         CommonRequest request = getCommonRequest(registry);

@@ -14,9 +14,9 @@ import org.springframework.stereotype.Repository;
 public class ProjectDao extends BaseDao<Project> {
 
 
-    public Page<Project> findByNameLike(String keyword, Pageable pageable) {
+    public Page<Project> findByNameLike(String searchText, Pageable pageable) {
         JpaQuery<Project> q= new JpaQuery<>();
-        q.like("name", keyword);
+        q.like("name", searchText);
         return findAll(q, pageable);
     }
 }

@@ -29,57 +29,57 @@ public class ImageController {
     @Data
     public static class QueryParam{
         String registryId;
-        String keyword;
+        String searchText;
     }
 
 
     @PostMapping("page")
     public AjaxResult page(@RequestBody QueryParam param, @PageableDefault(direction = Sort.Direction.DESC, sort = {"updateTime"}) Pageable pageable) throws Exception {
-        String keyword = param.getKeyword();
+        String searchText = param.getSearchText();
         String registryId = param.getRegistryId();
         Registry registry = StrUtil.isNotEmpty(registryId) ? registryService.findOne(registryId) : registryService.checkAndFindDefault();
 
 
         RegistrySdk sdk = registryService.findSdkByUrl(registry.getUrl());
 
-        Page<ImageVo> page = sdk.imageList(registry, pageable, keyword);
+        Page<ImageVo> page = sdk.imageList(registry, pageable, searchText);
 
         return AjaxResult.ok().data(page);
     }
 
 
     @GetMapping("tagPage")
-    public AjaxResult tagPage(String url, String keyword, Pageable pageable) throws Exception {
+    public AjaxResult tagPage(String url, String searchText, Pageable pageable) throws Exception {
         RegistrySdk sdk = registryService.findSdkByUrl(url);
         Registry registry = registryService.findByUrl(url);
 
-        Page<TagVo> page = sdk.tagList(registry, url, keyword, pageable);
+        Page<TagVo> page = sdk.tagList(registry, url, searchText, pageable);
 
         return AjaxResult.ok().data(page);
     }
 
     @GetMapping("options")
-    public AjaxResult options(String registryId, String keyword,
+    public AjaxResult options(String registryId, String searchText,
                               @PageableDefault(direction = Sort.Direction.DESC, sort = {"updateTime"}) Pageable pageable) throws Exception {
         Registry registry = StrUtil.isNotEmpty(registryId) ? registryService.findOne(registryId) : registryService.checkAndFindDefault();
 
         RegistrySdk sdk = registryService.findSdkByUrl(registry.getUrl());
 
-        Page<ImageVo> page = sdk.imageList(registry, pageable, keyword);
+        Page<ImageVo> page = sdk.imageList(registry, pageable, searchText);
 
         List<Option> options = Option.convertList(page, ImageVo::getUrl, ImageVo::getUrl);
         return AjaxResult.ok().data(options);
     }
 
     @GetMapping("tagOptions")
-    public AjaxResult tagOptions(String url, String keyword, Pageable pageable) throws Exception {
+    public AjaxResult tagOptions(String url, String searchText, Pageable pageable) throws Exception {
         RegistrySdk sdk = registryService.findSdkByUrl(url);
         Registry registry = registryService.findByUrl(url);
         if(registry == null){
             return AjaxResult.ok().data(Collections.emptyList());
         }
 
-        Page<TagVo> page = sdk.tagList(registry, url, keyword, pageable);
+        Page<TagVo> page = sdk.tagList(registry, url, searchText, pageable);
         List<Option> options = Option.convertList(page, TagVo::getTagName, TagVo::getTagName);
         return AjaxResult.ok().data(options);
     }
