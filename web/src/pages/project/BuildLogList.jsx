@@ -211,7 +211,7 @@ export default class extends React.Component {
           </Space>;
         }}
         actionRef={this.actionRef}
-        request={(params, sort) => HttpUtil.pageData(this.listURL, params, sort)}
+        request={(params) => HttpUtil.pageData(this.listURL, params)}
         columns={this.columns}
         showSearch={false}
       />
