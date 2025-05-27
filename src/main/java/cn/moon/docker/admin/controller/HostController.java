@@ -35,11 +35,12 @@ public class HostController extends BaseController<Host> {
 
 
     @RequestMapping("options")
-    public List<Option> options(@RequestParam(defaultValue = "false") boolean onlyRunner) {
+    public List<Option> options(@RequestParam(defaultValue = "false") boolean onlyRunner,String searchText) {
         JpaQuery<Host> q = new JpaQuery<>();
         if(onlyRunner){
             q.eq(Host.Fields.isRunner, true);
         }
+        q.searchText(searchText,Host.Fields.name, Host.Fields.remark, Host.Fields.dockerHost, Host.Fields.dockerHostHeader);
         List<Host> list = service.findAll(q, Sort.by(Host.Fields.name));
         List<Option> options = new ArrayList<>();
         for (Host h : list) {
