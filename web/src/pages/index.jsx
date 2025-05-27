@@ -1,4 +1,4 @@
-import {Modal, Space, Tooltip} from 'antd';
+import {Card, Modal, Space, Tooltip} from 'antd';
 import React from 'react';
 import {
     CheckCircleFilled,
@@ -7,7 +7,7 @@ import {
     Loading3QuartersOutlined,
     MinusCircleTwoTone
 } from "@ant-design/icons";
-import {HttpUtil, ProTable} from "@tmgg/tmgg-base";
+import {HttpUtil, PageUtil, ProTable} from "@tmgg/tmgg-base";
 import {DateUtil, StrUtil} from "@tmgg/tmgg-commons-lang";
 import LogView from "../components/LogView";
 
@@ -56,6 +56,9 @@ export default class extends React.Component {
         {
             title: '项目',
             dataIndex: 'projectName',
+            render: (name, row) => {
+                return <a onClick={() => PageUtil.open('/project/view?id=' + row.projectId, "项目-" + name)}>{name}</a>
+            },
         },
         {
             title: '开始时间',
@@ -125,12 +128,12 @@ export default class extends React.Component {
                         let logUrl = row.logUrl;
 
                         Modal.info({
-                            title: '构建日志' ,
+                            title: '构建日志',
                             width: 1024,
                             closable: true,
                             icon: null,
-                            okText:'关闭',
-                            content: <LogView url={logUrl} />
+                            okText: '关闭',
+                            content: <LogView url={logUrl}/>
                         })
                     }}>日志</a>
                 </Space>
@@ -139,22 +142,14 @@ export default class extends React.Component {
     ]
 
 
-
-
-
-
-
-
-
-
-
     render() {
         return (<>
-
-            <ProTable
-                request={(params) => HttpUtil.pageData('/home/buildingPage', params)}
-                columns={this.columns}
-            />
+            <Card title='构建中的任务'>
+                <ProTable
+                    request={(params) => HttpUtil.pageData('/home/buildingPage', params)}
+                    columns={this.columns}
+                />
+            </Card>
 
         </>)
     }
