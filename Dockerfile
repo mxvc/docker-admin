@@ -1,8 +1,7 @@
 FROM node:20 AS web
-WORKDIR build-node
+WORKDIR /build
 
 RUN npm config set fund false
-RUN npm config set registry https://registry.npmmirror.com
 
 ADD web/package.json ./
 RUN npm install --force
@@ -21,7 +20,7 @@ RUN mvn clean package -DskipTests -q -B -T 1C &&    mv target/*.jar /app.jar && 
 FROM registry.cn-hangzhou.aliyuncs.com/mxvc/tmgg-base-jdk
 WORKDIR /home
 COPY --from=java /app.jar ./
-COPY --from=web /build-node/dist/ ./static/
+COPY --from=web /build/dist/ ./static/
 EXPOSE 80
 
 ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-Duser.timezone=Asia/Shanghai","-jar","app.jar"]
