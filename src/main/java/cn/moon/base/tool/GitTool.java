@@ -1,6 +1,7 @@
 package cn.moon.base.tool;
 
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.io.FileUtil;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -10,6 +11,7 @@ import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.LogCommand;
 import org.eclipse.jgit.api.ResetCommand;
 import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.lib.TextProgressMonitor;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 
@@ -25,10 +27,10 @@ public class GitTool {
         File dir;
         String codeMessage;
 
-        String commitTime;
+        Date commitTime;
     }
 
-    public static CloneResult clone(String url, String user, String password, String value) throws GitAPIException {
+    public static CloneResult clone(String url, String user, String password, String branch) throws GitAPIException {
 
         String dirName = url.substring(url.lastIndexOf("/") + 1);
         dirName = dirName.replace(".git", "");
@@ -37,21 +39,20 @@ public class GitTool {
 
         long start = System.currentTimeMillis();
 
-        // 是提交ID，就是指某一次具体的提交，
-        boolean isCommitRef = value.length() == 40;
 
         log.info("工作目录为 {}", workDir.getAbsolutePath());
         log.info("克隆代码 {}", url);
 
-        if (workDir.exists()) {
-            workDir.delete();
-        }
+        FileUtil.del(workDir);
 
 
         CloneCommand cloneCommand = Git.cloneRepository()
                 .setCloneSubmodules(true)
                 .setURI(url)
-                .setDirectory(workDir);
+                .setDirectory(workDir)
+                .setBranch(branch)
+                .setProgressMonitor(new TextProgressMonitor())
+                ;
 
         // support public project by anon
         if (user != null && password != null) {
@@ -59,14 +60,10 @@ public class GitTool {
             cloneCommand.setCredentialsProvider(provider);
         }
 
-        if (!isCommitRef) {
-            cloneCommand.setBranch(value);
-        }
+
         Git git = cloneCommand.call();
 
-        if (isCommitRef) {
-            git.reset().setRef(value).setMode(ResetCommand.ResetType.HARD).call();
-        }
+
 
         LogCommand logcmd = git.log();
         Iterable<RevCommit> logResult = logcmd.call();
@@ -77,12 +74,12 @@ public class GitTool {
 
 
         git.close();
-        log.info("代码获取完毕, 共 {} M", FileUtils.sizeOfDirectory(workDir) / 1024 / 1024);
+        log.info("代码获取完毕, 共 {} M", FileUtil.readableFileSize(FileUtils.sizeOfDirectory(workDir) ) );
 
         log.info("耗时：{} 秒", (System.currentTimeMillis() - start) / 1000);
 
 
-        return new CloneResult(workDir, submitMessage.trim(), DateUtil.formatDateTime(new Date(next.getCommitTime() * 1000L)));
+        return new CloneResult(workDir, submitMessage.trim(), new Date(next.getCommitTime() * 1000L));
     }
 
 }

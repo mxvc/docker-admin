@@ -85,7 +85,7 @@ public class ProjectController  {
     @HasPermission
     @PostMapping({"delete"})
     public AjaxResult delete(String id) {
-        this.service.deleteById(id);
+        this.service.deleteProject(id);
         return AjaxResult.ok().msg("删除成功");
     }
 

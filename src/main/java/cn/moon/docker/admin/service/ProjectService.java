@@ -1,10 +1,10 @@
 package cn.moon.docker.admin.service;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.date.DateTime;
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.unit.DataSizeUtil;
-import cn.hutool.core.net.URLDecoder;
-import cn.hutool.core.net.URLEncodeUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.moon.base.tool.GitTool;
 import cn.moon.docker.admin.BuildParam;
@@ -13,17 +13,16 @@ import cn.moon.docker.admin.dao.ProjectDao;
 import cn.moon.docker.admin.entity.*;
 import cn.moon.docker.sdk.engine.DefaultCallback;
 import cn.moon.docker.sdk.engine.DockerSdkManager;
-import com.ctc.wstx.util.URLUtil;
 import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.command.BuildImageCmd;
 import com.github.dockerjava.api.command.PushImageCmd;
 import com.github.dockerjava.api.model.BuildResponseItem;
 
-import io.tmgg.lang.URLTool;
 import io.tmgg.web.persistence.BaseService;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
+import org.eclipse.jgit.api.errors.GitAPIException;
 import org.slf4j.MDC;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
@@ -138,31 +137,18 @@ public class ProjectService extends BaseService<Project> {
             Assert.notNull(host, "无构建主机");
             log.info("构建主机信息... 名称：{}, host:{}, 备注:{}", host.getName(), host.getDockerHost(), StrUtil.emptyIfNull(host.getRemark()));
 
-            String username = null;
-            String password = null;
-            GitCredential credential = gitCredentialService.findBestByUrl(project.getGitUrl());
-            if (credential != null) {
-                username = credential.getUsername();
-                password = credential.getPassword();
-            }
-
-            log.info("代码下载中...");
-            GitTool.CloneResult cloneResult = GitTool.clone(project.getGitUrl(), username, password, branchOrTag);
+            GitTool.CloneResult cloneResult = gitClone(project);
             File workDir = cloneResult.getDir();
             log.info("代码下载完毕 " + workDir);
             log.info("代码提交信息: {}" , cloneResult.getCodeMessage());
-            log.info("代码提交时间: {}" , cloneResult.getCommitTime());
+            Date commitTime = cloneResult.getCommitTime();
+            log.info("代码提交时间: {}, {}" , DateUtil.formatDateTime(commitTime), DateUtil.formatBetween(commitTime, new Date()));
             log.info("代码文件大小: {}", DataSizeUtil.format(FileUtil.size(workDir)));
 
-            log.info("dockerfile {}", dockerfile);
-            {
-                // 修复三方接口bug，必须要有Dockerfile在根目录
-                File temp = new File(workDir, "Dockerfile");
-                if (!temp.exists()) {
-                    temp.createNewFile();
-                    FileUtils.writeStringToFile(temp, "FROM centos", "utf-8");
-                }
-            }
+
+            log.info("dockerfile {},  内容如下", dockerfile);
+
+
 
 
             buildLog.setBuildHostName(host.getName());
@@ -198,7 +184,7 @@ public class ProjectService extends BaseService<Project> {
             log.info("是否拉取基础镜像 withPull {}", p.isPull());
             log.info("是否使用缓存 {}", p.isUseCache());
             File dockerfileFile = new File(buildDir, dockerfile);
-
+            log.info("dockerfile绝对路径: {}", dockerfileFile.getAbsolutePath());
             log.info("是否拉取基础镜像:{}",p.isPull());
 
 
@@ -223,11 +209,7 @@ public class ProjectService extends BaseService<Project> {
 
 
 
-            // 使用代理https://neucrack.com/p/286
-                    //  http_proxy=http://172.17.0.1:8123 --build-arg https_proxy=http://172.17.0.1:8123
-//                    .withBuildArg()
-
-            buildImageCmd .exec(buildCallback).awaitCompletion();
+            buildImageCmd.exec(buildCallback).awaitCompletion();
             log.info("构建命令执行完毕");
 
 
@@ -288,6 +270,21 @@ public class ProjectService extends BaseService<Project> {
         MDC.remove("logFileId");
     }
 
+    private GitTool.CloneResult gitClone(Project project) throws GitAPIException {
+        String username = null;
+        String password = null;
+        String branch = project.getBranch();
+        GitCredential credential = gitCredentialService.findBestByUrl(project.getGitUrl());
+        if (credential != null) {
+            username = credential.getUsername();
+            password = credential.getPassword();
+        }
+
+        log.info("代码下载中...");
+        GitTool.CloneResult cloneResult = GitTool.clone(project.getGitUrl(), username, password, branch);
+        return cloneResult;
+    }
+
 
     @Transactional
     public void deleteProject(String id) {
@@ -300,22 +297,10 @@ public class ProjectService extends BaseService<Project> {
         projectDao.deleteById(id);
     }
 
-    @Transactional
-    public Project saveProject(Project project) {
-        project.setName(project.getName().trim());
-        project.setGitUrl(project.getGitUrl().trim());
-        if (project.getBranch() != null) {
-            project.setBranch(project.getBranch().trim());
-        }
 
-        project = projectDao.save(project);
-        return project;
-    }
 
     @Transactional
     public void cleanErrorLog(String projectId) {
-
-
         buildLogService.cleanErrorLog(projectId);
     }
 
@@ -326,9 +311,4 @@ public class ProjectService extends BaseService<Project> {
         return projectDao.findAll(pageable);
     }
 
-    @Transactional
-    public void updateAutoPushLatest(String id, boolean value) {
-        Project project = projectDao.findOne(id);
-        project.setAutoPushLatest(value);
-    }
 }
