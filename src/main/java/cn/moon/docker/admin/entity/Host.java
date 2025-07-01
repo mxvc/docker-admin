@@ -1,6 +1,6 @@
 package cn.moon.docker.admin.entity;
 
-import io.tmgg.lang.ann.Msg;
+import io.tmgg.lang.ann.Remark;
 import io.tmgg.web.persistence.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -14,7 +14,7 @@ import lombok.experimental.FieldNameConstants;
 /**
  * 主机信息
  */
-@Msg("主机")
+@Remark("主机")
 @Entity
 @Getter
 @Setter
@@ -23,21 +23,21 @@ import lombok.experimental.FieldNameConstants;
 @Table(name = "t_host")
 public class Host extends BaseEntity {
 
-    @Msg("名称")
+    @Remark("名称")
     @NotNull
     @Column(unique = true)
     String name;
 
-    @Msg("构建节点")
+    @Remark("构建节点")
     Boolean isRunner;
 
 
     String dockerHost;
 
-    @Msg("指定host头")
+    @Remark("指定host头")
     String dockerHostHeader;
 
-    @Msg("备注")
+    @Remark("备注")
     String remark;
 
     @Override

@@ -1,6 +1,6 @@
 package cn.moon.docker.admin.entity;
 
-import io.tmgg.lang.ann.Msg;
+import io.tmgg.lang.ann.Remark;
 import io.tmgg.web.persistence.BaseEntity;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
@@ -9,7 +9,7 @@ import lombok.Setter;
 
 import jakarta.persistence.Entity;
 
-@Msg("GIT凭据")
+@Remark("GIT凭据")
 @Entity
 @Getter
 @Setter
@@ -17,15 +17,15 @@ import jakarta.persistence.Entity;
 public class GitCredential extends BaseEntity {
 
 
-    @Msg("前缀")
+    @Remark("前缀")
     @NotNull
     String url;
 
-    @Msg("账号")
+    @Remark("账号")
     @NotNull
     String username;
 
-    @Msg("密码")
+    @Remark("密码")
     @NotNull
     String password;
 

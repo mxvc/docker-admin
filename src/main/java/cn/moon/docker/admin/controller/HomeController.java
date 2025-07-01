@@ -1,7 +1,7 @@
 package cn.moon.docker.admin.controller;
 
-import io.tmgg.modules.sys.entity.SysLog;
-import io.tmgg.modules.sys.service.SysLogService;
+import io.tmgg.modules.system.entity.SysLog;
+import io.tmgg.modules.system.service.SysLogService;
 import jakarta.annotation.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
