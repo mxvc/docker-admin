@@ -5,7 +5,8 @@ import React from 'react'
 import {
     ButtonList,
     FieldOrgTreeSelect,
-    FieldRadioBoolean, FieldSelect,
+    FieldRadioBoolean,
+    FieldSelect,
     HttpUtil,
     OrgTree,
     PageUtil,
@@ -21,10 +22,8 @@ export default class extends React.Component {
         registryOptions: [],
         defaultRegistryId: null,
 
-        showMore: false,
 
-
-        selectedOrgId:null
+        selectedOrgId: null
 
     }
 
@@ -48,15 +47,16 @@ export default class extends React.Component {
             dataIndex: 'gitUrl',
         },
         {
+            title: '分支',
+            dataIndex: 'branch',
+            hideInSearch: true
+        },
+        {
             title: '备注',
             dataIndex: 'remark',
         },
 
-        {
-            title: '默认分支',
-            dataIndex: 'branch',
-            hideInSearch: true
-        },
+
         {
             title: 'dockerfile',
             dataIndex: 'dockerfile',
@@ -135,30 +135,30 @@ export default class extends React.Component {
             <Splitter>
                 <Splitter.Panel size={250}>
                     <OrgTree onChange={(v) => {
-                        this.setState({selectedOrgId:v},()=>{
+                        this.setState({selectedOrgId: v}, () => {
                             this.tableRef.current.reload()
                         })
 
                     }}/>
 
-                        </Splitter.Panel>
-                        <Splitter.Panel style={{paddingLeft:16}}>
-                        <ProTable
-                            actionRef={this.tableRef}
-                            toolBarRender={() => {
-                                return <ButtonList>
-                                    <Button perm='project:save' type='primary' onClick={this.handleAdd}>
-                                        <PlusOutlined/> 新增
-                                    </Button>
-                                </ButtonList>
-                            }}
-                            request={(params) => {
-                                params.orgId = this.state.selectedOrgId
-                                return HttpUtil.pageData('project/page', params);
-                            }}
-                            columns={this.columns}
-                            rowKey='id'
-                        />
+                </Splitter.Panel>
+                <Splitter.Panel style={{paddingLeft: 16}}>
+                    <ProTable
+                        actionRef={this.tableRef}
+                        toolBarRender={() => {
+                            return <ButtonList>
+                                <Button perm='project:save' type='primary' onClick={this.handleAdd}>
+                                    <PlusOutlined/> 新增
+                                </Button>
+                            </ButtonList>
+                        }}
+                        request={(params) => {
+                            params.orgId = this.state.selectedOrgId
+                            return HttpUtil.pageData('project/page', params);
+                        }}
+                        columns={this.columns}
+                        rowKey='id'
+                    />
                 </Splitter.Panel>
             </Splitter>
 
@@ -173,7 +173,7 @@ export default class extends React.Component {
 
             >
 
-                <Form ref={this.formRef} labelCol={{flex: '100px'}}
+                <Form ref={this.formRef} labelCol={{flex: '120px'}}
                       initialValues={this.state.formValues}
                       onFinish={this.onFinish}>
                     <Form.Item name='id' noStyle></Form.Item>
@@ -185,34 +185,37 @@ export default class extends React.Component {
                         <Input/>
                     </Form.Item>
 
+                    <Form.Item label='分支' name='branch' rules={[{required: true}]} initialValue='master'>
+                        <Input/>
+                    </Form.Item>
 
                     <Form.Item label='dockerfile' name='dockerfile' rules={[{required: true}]}
                                initialValue='Dockerfile'>
                         <Input/>
                     </Form.Item>
-                    <Form.Item label='默认分支' name='branch' rules={[{required: true}]} initialValue='master'>
+                    <Form.Item label='构建参数' name='buildArg' rules={[{required: true}]} help='格式: key=value&key2=value2'
+                               >
                         <Input/>
                     </Form.Item>
+
+
+                    <Form.Item label='推送注册中心' name={['registry', 'id']} rules={[{required: true}]}
+                               initialValue={this.state.defaultRegistryId}>
+                        <FieldSelect url='registry/options'/>
+                    </Form.Item>
+
+
+                    <Form.Item label='推送latest版本' name='autoPushLatest' rules={[{required: true}]}
+                               initialValue={false}>
+                        <FieldRadioBoolean/>
+                    </Form.Item>
+                    <Form.Item label='所属组织' name={['sysOrg', 'id']}>
+                        <FieldOrgTreeSelect/>
+                    </Form.Item>
+
                     <Form.Item label='备注' name='remark'>
                         <Input/>
                     </Form.Item>
-                    <a onClick={() => this.setState({showMore: !this.state.showMore})}>其他设置</a>
-                    <div style={{display: this.state.showMore ? 'block' : 'none'}}>
-
-                        <Form.Item label='注册中心' name={['registry', 'id']} rules={[{required: true}]}
-                                   initialValue={this.state.defaultRegistryId}>
-                            <FieldSelect url='registry/options'/>
-                        </Form.Item>
-
-
-                        <Form.Item label='推送latest' name='autoPushLatest' rules={[{required: true}]}
-                                   initialValue={false}>
-                            <FieldRadioBoolean/>
-                        </Form.Item>
-                        <Form.Item label='所属组织' name={['sysOrg', 'id']}>
-                            <FieldOrgTreeSelect/>
-                        </Form.Item>
-                    </div>
                 </Form>
             </Modal>
         </>

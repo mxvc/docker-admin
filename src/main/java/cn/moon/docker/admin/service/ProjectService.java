@@ -3,6 +3,8 @@ package cn.moon.docker.admin.service;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.unit.DataSizeUtil;
+import cn.hutool.core.net.URLDecoder;
+import cn.hutool.core.net.URLEncodeUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.moon.base.tool.GitTool;
 import cn.moon.docker.admin.BuildParam;
@@ -11,10 +13,13 @@ import cn.moon.docker.admin.dao.ProjectDao;
 import cn.moon.docker.admin.entity.*;
 import cn.moon.docker.sdk.engine.DefaultCallback;
 import cn.moon.docker.sdk.engine.DockerSdkManager;
+import com.ctc.wstx.util.URLUtil;
 import com.github.dockerjava.api.DockerClient;
+import com.github.dockerjava.api.command.BuildImageCmd;
 import com.github.dockerjava.api.command.PushImageCmd;
 import com.github.dockerjava.api.model.BuildResponseItem;
 
+import io.tmgg.lang.URLTool;
 import io.tmgg.web.persistence.BaseService;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
@@ -27,9 +32,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 import jakarta.annotation.Resource;
+import org.springframework.web.util.UriComponentsBuilder;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
+
 
 @Service
 @Slf4j
@@ -195,19 +203,31 @@ public class ProjectService extends BaseService<Project> {
 
 
             log.info("构建命令执行中...");
-            client.buildImageCmd(buildDir)
+            BuildImageCmd buildImageCmd = client.buildImageCmd(buildDir)
                     // 删除构建产生的容器
                     .withForcerm(true)
                     .withPull(p.isPull())
                     .withNetworkMode("host")
                     .withTags(imageTags)
                     .withNoCache(!p.isUseCache())
-                    .withDockerfile(dockerfileFile)
-                    // 使用代理https://neucrack.com/p/286
+                    .withDockerfile(dockerfileFile);
+
+
+            if(StrUtil.isNotEmpty(project.getBuildArg())){
+                Map<String, String> buildArgsMap = UriComponentsBuilder.newInstance().query(project.getBuildArg()).build().getQueryParams().toSingleValueMap();
+                for (Map.Entry<String, String> e : buildArgsMap.entrySet()) {
+                    log.info("构建参数: {}={}",e.getKey(),e.getValue());
+                    buildImageCmd.withBuildArg(e.getKey(), e.getValue());
+                }
+            }
+
+
+
+            // 使用代理https://neucrack.com/p/286
                     //  http_proxy=http://172.17.0.1:8123 --build-arg https_proxy=http://172.17.0.1:8123
 //                    .withBuildArg()
 
-                    .exec(buildCallback).awaitCompletion();
+            buildImageCmd .exec(buildCallback).awaitCompletion();
             log.info("构建命令执行完毕");
 
 

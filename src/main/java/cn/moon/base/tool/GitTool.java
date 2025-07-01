@@ -41,7 +41,7 @@ public class GitTool {
         boolean isCommitRef = value.length() == 40;
 
         log.info("工作目录为 {}", workDir.getAbsolutePath());
-        log.info("获取代码 git clone {}", url);
+        log.info("克隆代码 {}", url);
 
         if (workDir.exists()) {
             workDir.delete();

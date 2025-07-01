@@ -42,8 +42,11 @@ public class Project extends BaseEntity {
     @NotNull
     String dockerfile;
 
+    @Remark("构建参数")
+    String buildArg;
+
     // 默认分支
-    @Remark("默认分支")
+    @Remark("分支")
     @NotNull
     String branch;
 

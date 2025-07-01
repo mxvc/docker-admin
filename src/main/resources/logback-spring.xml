@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-
+    <include resource="org/springframework/boot/logging/logback/base.xml"/>
     <!-- 构建日志-->
     <appender name="docker-log-appender" class="ch.qos.logback.classic.sift.SiftingAppender">
         <discriminator>
