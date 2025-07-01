@@ -26,17 +26,12 @@ public class ImageController {
     @Resource
     RegistryService registryService;
 
-    @Data
-    public static class QueryParam{
-        String registryId;
-        String searchText;
-    }
 
 
-    @PostMapping("page")
-    public AjaxResult page(@RequestBody QueryParam param, @PageableDefault(direction = Sort.Direction.DESC, sort = {"updateTime"}) Pageable pageable) throws Exception {
-        String searchText = param.getSearchText();
-        String registryId = param.getRegistryId();
+
+    @RequestMapping("page")
+    public AjaxResult page(  String registryId,
+    String searchText, @PageableDefault(direction = Sort.Direction.DESC, sort = {"updateTime"}) Pageable pageable) throws Exception {
         Registry registry = StrUtil.isNotEmpty(registryId) ? registryService.findOne(registryId) : registryService.checkAndFindDefault();
 
 

@@ -42,19 +42,16 @@ public class ProjectController  {
     @Resource
     private BuildLogService logService;
 
-    @Data
-    public static class QueryParam {
-        String orgId;
-    }
+
 
     @HasPermission
-    @PostMapping("page")
-    public AjaxResult page(@RequestBody QueryParam param, String searchText, @PageableDefault(direction = Sort.Direction.DESC, sort = {"updateTime"}) Pageable pageable) {
+    @RequestMapping("page")
+    public AjaxResult page(String orgId, String searchText, @PageableDefault(direction = Sort.Direction.DESC, sort = {"updateTime"}) Pageable pageable) {
         JpaQuery<Project> q = buildQuery();
         q.searchText(searchText, "name","remark");
 
-        if(StrUtil.isNotEmpty(param.getOrgId())){
-            q.eq(Project.Fields.sysOrg + ".id", param.getOrgId());
+        if(StrUtil.isNotEmpty(orgId)){
+            q.eq(Project.Fields.sysOrg + ".id", orgId);
         }
 
 

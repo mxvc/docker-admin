@@ -26,7 +26,7 @@ public class HomeController {
     @Resource
     BuildLogService buildLogService;
 
-    @PostMapping("buildingPage")
+    @RequestMapping("buildingPage")
     public AjaxResult buildingPage(@PageableDefault(direction = Sort.Direction.DESC,sort = "createTime") Pageable pageable) throws UnsupportedEncodingException {
         JpaQuery<BuildLog> q = new JpaQuery<>();
         q.isNull(BuildLog.Fields.success);
