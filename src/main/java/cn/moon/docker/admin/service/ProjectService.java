@@ -1,6 +1,7 @@
 package cn.moon.docker.admin.service;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.date.BetweenFormatter;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.FileUtil;
@@ -142,7 +143,7 @@ public class ProjectService extends BaseService<Project> {
             log.info("代码下载完毕 " + workDir);
             log.info("代码提交信息: {}" , cloneResult.getCodeMessage());
             Date commitTime = cloneResult.getCommitTime();
-            log.info("代码提交时间: {}, {}" , DateUtil.formatDateTime(commitTime), DateUtil.formatBetween(commitTime, new Date()));
+            log.info("代码提交时间: {}, {}前" , DateUtil.formatDateTime(commitTime), DateUtil.formatBetween(commitTime, new Date(), BetweenFormatter.Level.MINUTE));
             log.info("代码文件大小: {}", DataSizeUtil.format(FileUtil.size(workDir)));
 
 
