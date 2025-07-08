@@ -193,8 +193,7 @@ export default class extends React.Component {
                                initialValue='Dockerfile'>
                         <Input/>
                     </Form.Item>
-                    <Form.Item label='构建参数' name='buildArg' rules={[{required: true}]} help='格式: key=value&key2=value2'
-                               >
+                    <Form.Item label='构建参数' name='buildArg' help='格式: key=value&key2=value2'>
                         <Input/>
                     </Form.Item>
 
