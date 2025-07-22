@@ -5,6 +5,7 @@ import { AttachAddon } from '@xterm/addon-attach';
 
 import { FitAddon } from 'xterm-addon-fit'
 import {SysUtil} from "@tmgg/tmgg-base";
+import {Alert} from "antd";
 
 export default class extends React.Component {
 
@@ -67,8 +68,10 @@ export default class extends React.Component {
     }
     render() {
         return <div>
-            提示：由于网络原因，网页版终端速度较慢，可到服务器上执行命令
-            <div ref={this.domRef} ></div>
+            <Alert message='提示：由于网络原因，网页版终端速度较慢，且不能保证正常使用。 建议到服务器上执行命令' />
+            <div style={{padding:16,background:'black'}}>
+            <div ref={this.domRef} style={{marginTop:8}}></div>
+            </div>
         </div>
     }
 }
