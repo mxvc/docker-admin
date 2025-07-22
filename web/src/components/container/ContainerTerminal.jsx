@@ -9,7 +9,6 @@ import {SysUtil} from "@tmgg/tmgg-base";
 export default class extends React.Component {
 
 
-    cmd = ""
 
     domRef = React.createRef();
 
@@ -68,8 +67,8 @@ export default class extends React.Component {
     }
     render() {
         return <div>
+            提示：由于网络原因，网页版终端速度较慢，可到服务器上执行命令
             <div ref={this.domRef} ></div>
-
         </div>
     }
 }
