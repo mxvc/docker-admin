@@ -8,6 +8,7 @@ import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.model.Frame;
 import com.github.dockerjava.core.command.ExecStartResultCallback;
 import jakarta.annotation.Resource;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 import org.springframework.stereotype.Component;
@@ -34,24 +35,13 @@ public class TerminalHandler extends AbstractWebSocketHandler {
     @Resource
     DockerSdkManager dockerManager;
 
-    Map<String, OutputStream> streamMap = new ConcurrentHashMap<>();
+    Map<String, OutputStream> inputStreamMap = new ConcurrentHashMap<>();
 
-    Map<String, Closeable[]> closeableMap = new ConcurrentHashMap<>();
-
-    @Override
-    protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
-        String payload = message.getPayload();
-
-        OutputStream os = streamMap.get(session.getId());
-        if (os != null) {
-            os.write(payload.getBytes(StandardCharsets.UTF_8));
-        } else {
-            send(session, "与容器的连接异常");
-        }
-
-    }
+    Map<String, Closeable[]> callbackMap = new ConcurrentHashMap<>();
 
 
+
+    @SneakyThrows
     @Override
     public void afterConnectionEstablished(WebSocketSession session) {
         log.info("打开连接 {} {}", session.getId(), session.getUri());
@@ -59,6 +49,7 @@ public class TerminalHandler extends AbstractWebSocketHandler {
         send(session, "服务器连接成功\n");
 
         String query = session.getUri().getQuery();
+
 
         String[] arr = query.split("&");
 
@@ -89,11 +80,8 @@ public class TerminalHandler extends AbstractWebSocketHandler {
 
 
         PipedInputStream pipedInputStream = new PipedInputStream();
-        try {
-            streamMap.put(session.getId(), new PipedOutputStream(pipedInputStream));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        inputStreamMap.put(session.getId(), new PipedOutputStream(pipedInputStream));
+
 
         ExecStartResultCallback callback = client.execStartCmd(id)
                 .withDetach(false)
@@ -135,17 +123,23 @@ public class TerminalHandler extends AbstractWebSocketHandler {
                     }
                 });
 
-        closeableMap.put(session.getId(), new Closeable[] {callback, client});
+        callbackMap.put(session.getId(), new Closeable[]{callback, client});
 
     }
 
-    private static void send(WebSocketSession session, String str) {
-        try {
-            session.sendMessage(new TextMessage(str));
-        } catch (IOException e) {
-            e.getMessage();
+    @Override
+    protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
+        String payload = message.getPayload();
+
+        OutputStream os = inputStreamMap.get(session.getId());
+        if (os != null) {
+            os.write(payload.getBytes(StandardCharsets.UTF_8));
+        } else {
+            send(session, "与容器的连接异常");
         }
+
     }
+
 
 
     @Override
@@ -153,13 +147,16 @@ public class TerminalHandler extends AbstractWebSocketHandler {
         log.info("关闭连接 {} {}", session.getId(), status);
 
 
-        IOUtils.closeQuietly(streamMap.get(session.getId()));
+        IOUtils.closeQuietly(inputStreamMap.get(session.getId()));
+        IOUtils.closeQuietly(callbackMap.get(session.getId()));
 
-        IOUtils.closeQuietly(closeableMap.get(session.getId()));
-
-        streamMap.remove(session.getId());
-        closeableMap.remove(session.getId());
+        inputStreamMap.remove(session.getId());
+        callbackMap.remove(session.getId());
     }
 
+    @SneakyThrows
+    private static void send(WebSocketSession session, String str) {
+        session.sendMessage(new TextMessage(str));
+    }
 
 }
