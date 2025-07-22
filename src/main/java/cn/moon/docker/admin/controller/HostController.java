@@ -15,10 +15,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Sort;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,18 +30,17 @@ public class HostController extends BaseController<Host> {
     private HostService service;
 
 
-
     @RequestMapping("options")
-    public List<Option> options(@RequestParam(defaultValue = "false") boolean onlyRunner,String searchText) {
+    public List<Option> options(@RequestParam(defaultValue = "false") boolean onlyRunner, String searchText) {
         JpaQuery<Host> q = new JpaQuery<>();
-        if(onlyRunner){
+        if (onlyRunner) {
             q.eq(Host.Fields.isRunner, true);
         }
-        q.searchText(searchText,Host.Fields.name, Host.Fields.remark, Host.Fields.dockerHost, Host.Fields.dockerHostHeader);
+        q.searchText(searchText, Host.Fields.name, Host.Fields.remark, Host.Fields.dockerHost, Host.Fields.dockerHostHeader);
         List<Host> list = service.findAll(q, Sort.by(Host.Fields.name));
         List<Option> options = new ArrayList<>();
         for (Host h : list) {
-            if(onlyRunner && !h.getIsRunner() ){
+            if (onlyRunner && !h.getIsRunner()) {
                 continue;
             }
             options.add(Option.builder().label(h.getName()).value(h.getId()).build());
@@ -63,18 +59,18 @@ public class HostController extends BaseController<Host> {
     public AjaxResult runtime(String id) {
         Host host = service.findOne(id);
 
-            Info info = service.getDockerInfo(host);
+        Info info = service.getDockerInfo(host);
 
-            DockerInfo dockerInfo = new DockerInfo();
-            BeanUtils.copyProperties(info, dockerInfo);
+        DockerInfo dockerInfo = new DockerInfo();
+        BeanUtils.copyProperties(info, dockerInfo);
 
-            return AjaxResult.ok().data(dockerInfo);
+        return AjaxResult.ok().data(dockerInfo);
     }
 
 
     @RequestMapping("containers")
     public AjaxResult containers(String id) {
-            return AjaxResult.ok().data(service.getContainers(id));
+        return AjaxResult.ok().data(service.getContainers(id));
     }
 
     @RequestMapping("images")
@@ -89,7 +85,7 @@ public class HostController extends BaseController<Host> {
         } catch (ConflictException e) {
             return AjaxResult.err().msg("删除镜像失败" + e.getMessage());
         }
-        return AjaxResult.ok().msg("删除镜像"+imageId +"成功");
+        return AjaxResult.ok().msg("删除镜像" + imageId + "成功");
     }
 
     @RequestMapping("cleanImage")
@@ -105,12 +101,17 @@ public class HostController extends BaseController<Host> {
     @PostMapping("syncImageToHost")
     public AjaxResult syncImageToHost(@NotNull String hostId, @NotNull String url, @NotNull String tag, String newName) {
         try {
-            service.syncImageToHost(hostId, url, tag ,newName);
+            service.syncImageToHost(hostId, url, tag, newName);
         } catch (Exception e) {
             return AjaxResult.err().msg("拉取镜像失败" + e.getMessage());
         }
         return AjaxResult.ok().msg("拉取镜像成功");
     }
 
+    @ExceptionHandler(Exception.class)
+    public AjaxResult exception(Exception e){
+        log.error(e.getMessage());
+        return AjaxResult.err("连接容器引擎失败");
+    }
 
 }

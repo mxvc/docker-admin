@@ -1,11 +1,13 @@
 package cn.moon.docker.admin.controller;
 
 import cn.hutool.core.util.StrUtil;
+import cn.moon.docker.admin.entity.Project;
 import cn.moon.docker.admin.vo.ContainerVo;
 import cn.moon.docker.admin.entity.App;
 import cn.moon.docker.admin.service.AppService;
 import io.tmgg.lang.obj.AjaxResult;
 import io.tmgg.lang.obj.Option;
+import io.tmgg.modules.system.service.SysOrgService;
 import io.tmgg.web.annotion.HasPermission;
 import io.tmgg.web.perm.SecurityUtils;
 import io.tmgg.web.perm.Subject;
@@ -37,27 +39,19 @@ public class AppController {
     private AppService service;
 
 
-
-
-    private JpaQuery<App> buildQuery() {
-        JpaQuery<App> q = new JpaQuery<>();
-        Subject subject = SecurityUtils.getSubject();
-        q.addSubOr(qq->{
-            qq.isNull("sysOrg.id");
-            qq.in("sysOrg.id", subject.getOrgPermissions());
-        });
-
-        return q;
-    }
+    @Resource
+    private SysOrgService sysOrgService;
 
 
     @HasPermission("app:list")
     @RequestMapping("list")
-    public Page<App> list( String orgId, String searchText, @PageableDefault(sort = {"updateTime", "createTime"}, direction = Sort.Direction.DESC) Pageable pageable, HttpSession session) {
-        JpaQuery<App> q = buildQuery();
+    public Page<App> list(String orgId, String searchText, @PageableDefault(sort = {"updateTime", "createTime"}, direction = Sort.Direction.DESC) Pageable pageable, HttpSession session) {
+        JpaQuery<App> q = new JpaQuery<>();
         q.searchText(searchText, "name", "remark");
-        if(StrUtil.isNotEmpty(orgId)){
-            q.eq(App.Fields.sysOrg + ".id", orgId);
+        if (StrUtil.isNotEmpty(orgId)) {
+            List<String> orgIds = sysOrgService.findChildIdListById(orgId);
+            orgIds.add(orgId);
+            q.in(App.Fields.sysOrg + ".id", orgIds);
         }
         Page<App> list = service.findAll(q, pageable);
         return list;
@@ -101,6 +95,7 @@ public class AppController {
         service.save(app);
         return AjaxResult.ok().msg("修改成功");
     }
+
     @HasPermission("app:save")
     @RequestMapping("updateBaseInfo")
     public AjaxResult updateBaseInfo(@RequestBody App app) {
@@ -109,7 +104,7 @@ public class AppController {
     }
 
 
-    @HasPermission(value = "app:config",label = "配置")
+    @HasPermission(value = "app:config", label = "配置")
     @RequestMapping("updateConfig")
     public AjaxResult updateConfig(String id, @RequestBody App.AppConfig appConfig) {
         App app = service.updateConfig(id, appConfig);
@@ -173,21 +168,21 @@ public class AppController {
     }
 
 
-    @HasPermission(value = "app:start",label = "启动")
+    @HasPermission(value = "app:start", label = "启动")
     @RequestMapping("start/{appId}")
     public AjaxResult start(@PathVariable String appId) {
         service.start(appId);
         return AjaxResult.ok().msg("启动指令已发送");
     }
 
-    @HasPermission(value = "app:stop",label = "停止")
+    @HasPermission(value = "app:stop", label = "停止")
     @RequestMapping("stop/{appId}")
     public AjaxResult stop(@PathVariable String appId) {
         service.stop(appId);
         return AjaxResult.ok().msg("停止指令已发送");
     }
 
-    @HasPermission(value = "app:config",label = "配置")
+    @HasPermission(value = "app:config", label = "配置")
     @RequestMapping("rename")
     public AjaxResult rename(@RequestBody Map<String, String> map) {
         String appId = map.get("appId");
@@ -198,7 +193,8 @@ public class AppController {
 
         return AjaxResult.ok().msg("部署指令已发送").data(app);
     }
-    @HasPermission(value = "app:copy",label = "复制应用")
+
+    @HasPermission(value = "app:copy", label = "复制应用")
     @RequestMapping("copyApp")
     public AjaxResult copyApp(@RequestBody @Validated MoveParam param) {
         App app = service.copyApp(param.getAppId(), param.getHostId());

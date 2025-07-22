@@ -10,6 +10,7 @@ import cn.moon.docker.admin.service.ProjectService;
 
 import io.tmgg.lang.obj.AjaxResult;
 import io.tmgg.lang.obj.Option;
+import io.tmgg.modules.system.service.SysOrgService;
 import io.tmgg.web.annotion.HasPermission;
 import io.tmgg.web.argument.RequestBodyKeys;
 import io.tmgg.web.perm.SecurityUtils;
@@ -27,6 +28,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -42,6 +44,9 @@ public class ProjectController  {
     @Resource
     private BuildLogService logService;
 
+    @Resource
+    private SysOrgService sysOrgService;
+
 
 
     @HasPermission
@@ -50,8 +55,12 @@ public class ProjectController  {
         JpaQuery<Project> q = buildQuery();
         q.searchText(searchText, "name","remark");
 
+
         if(StrUtil.isNotEmpty(orgId)){
-            q.eq(Project.Fields.sysOrg + ".id", orgId);
+            List<String> orgIds = sysOrgService.findChildIdListById(orgId);
+            orgIds.add(orgId);
+
+            q.in(Project.Fields.sysOrg + ".id", orgIds);
         }
 
 

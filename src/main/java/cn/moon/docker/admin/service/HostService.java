@@ -5,14 +5,17 @@ import cn.moon.docker.admin.dao.HostDao;
 import cn.moon.docker.admin.entity.Host;
 import cn.moon.docker.sdk.engine.DockerSdkManager;
 import com.github.dockerjava.api.DockerClient;
-import com.github.dockerjava.api.model.*;
-
+import com.github.dockerjava.api.model.Container;
+import com.github.dockerjava.api.model.Image;
+import com.github.dockerjava.api.model.Info;
+import com.github.dockerjava.api.model.PruneType;
 import io.tmgg.web.persistence.BaseService;
+import jakarta.annotation.Resource;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import jakarta.annotation.Resource;
 import java.io.IOException;
 import java.util.List;
 
@@ -29,16 +32,17 @@ public class HostService extends BaseService<Host> {
 
     /**
      * 获得镜像构建主机
+     *
      * @return
      */
-    public Host getDefaultDockerRunner(){
+    public Host getDefaultDockerRunner() {
         Host host = hostDao.findTop1ByIsRunnerOrderByModifyTimeDesc(true);
 
         return host;
     }
 
-
     public Info getDockerInfo(Host host) {
+
         DockerClient client = sdkManager.getClient(host);
         Info info = client.infoCmd().exec();
 
@@ -47,13 +51,13 @@ public class HostService extends BaseService<Host> {
 
 
     public List<Container> getContainers(String id) {
-        Host db = this.findOne(id);
-        DockerClient client = sdkManager.getClient(db);
+            Host db = this.findOne(id);
+            DockerClient client = sdkManager.getClient(db);
 
-        List<Container> list = client.listContainersCmd().withShowAll(true).exec();
-        return list;
+            List<Container> list = client.listContainersCmd().withShowAll(true).exec();
+            return list;
+
     }
-
     public List<Image> getImages(String id) {
         Host db = this.findOne(id);
         DockerClient client = sdkManager.getClient(db);
@@ -79,7 +83,7 @@ public class HostService extends BaseService<Host> {
         Host host = this.findOne(hostId);
         DockerClient client = sdkManager.getClient(host);
 
-        ImageSyncToHostTool.syncImageToHost(client, url,tag, newName);
+        ImageSyncToHostTool.syncImageToHost(client, url, tag, newName);
     }
 
     @Async
