@@ -1,4 +1,4 @@
-import {Card, Modal, Space, Tooltip} from 'antd';
+import {Card, Col, Modal, Row, Space, Statistic, Tooltip} from 'antd';
 import React from 'react';
 import {
     CheckCircleFilled,
@@ -7,7 +7,7 @@ import {
     Loading3QuartersOutlined,
     MinusCircleTwoTone
 } from "@ant-design/icons";
-import {HttpUtil, PageUtil, ProTable} from "@tmgg/tmgg-base";
+import {HttpUtil, Page, PageUtil, ProTable} from "@tmgg/tmgg-base";
 import {DateUtil, StrUtil} from "@tmgg/tmgg-commons-lang";
 import LogView from "../components/LogView";
 
@@ -143,15 +143,27 @@ export default class extends React.Component {
 
 
     render() {
-        return (<>
-            <Card title='构建中的任务'>
-                <ProTable
-                    request={(params) => HttpUtil.pageData('/home/buildingPage', params)}
-                    columns={this.columns}
-                />
-            </Card>
+        return (<Page padding>
+            <Row gutter={[16, 16]}>
+                <Col span={12}>
+                    <Card title='应用状态'>
+                        <Statistic title='运行中'>0</Statistic>
+                        <Statistic title='已停止'>0</Statistic>
+                    </Card>
+                </Col>
+                <Col span={12}>
+                    <Card title='构建状态'>
+                        <ProTable
+                            request={(params) => HttpUtil.pageData('/home/buildingPage', params)}
+                            columns={this.columns}
+                        />
+                    </Card>
+                </Col>
 
-        </>)
+            </Row>
+
+
+        </Page>)
     }
 
 
