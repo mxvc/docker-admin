@@ -1,6 +1,7 @@
 import {Tag} from "antd";
 import React from "react";
 import {HttpUtil} from "@tmgg/tmgg-base";
+import {StrUtil} from "@tmgg/tmgg-commons-lang";
 
 
 /**
@@ -13,8 +14,8 @@ export default class extends React.Component {
   }
 
   componentDidMount() {
-    const {hostId, appName} = this.props
-    HttpUtil.get("container/status", {hostId, appName},false).then(rs => {
+    const {hostId, appName,containerId} = this.props
+    HttpUtil.get("container/status", {hostId, appName,containerId}).then(rs => {
       this.setState({status: rs})
     }).catch(()=>{
       this.setState({status:'未知'})
@@ -23,7 +24,7 @@ export default class extends React.Component {
 
   render() {
     const s = this.state.status;
-    if (s && s.indexOf('Up') >= 0) {
+    if (s && (StrUtil.contains(s,'Up') || StrUtil.contains(s, "running"))) {
       return <Tag color={"green"}>{s} </Tag>
     }
     return <Tag color={"red"}>{s}</Tag>

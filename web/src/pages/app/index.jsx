@@ -144,7 +144,7 @@ export default class extends React.Component {
                 />
                 </Splitter.Panel>
             </Splitter>
-                <Modal title='新增应用' open={this.state.deployVisible} destroyOnClose={true}
+                <Modal title='新增应用' open={this.state.deployVisible} destroyOnHidden={true}
                        onOk={()=>this.formRef.current.submit()}
                        onCancel={() => this.setState({deployVisible: false})}
                     width={800}

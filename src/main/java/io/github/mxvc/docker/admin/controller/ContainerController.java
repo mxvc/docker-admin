@@ -6,8 +6,9 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.io.unit.DataSizeUtil;
 import cn.hutool.core.util.StrUtil;
+import com.github.dockerjava.api.command.InspectContainerResponse;
+import com.github.dockerjava.api.command.ListContainersCmd;
 import io.github.mxvc.docker.admin.entity.Host;
-import io.github.mxvc.docker.admin.service.ContainerService;
 import io.github.mxvc.docker.admin.service.HostService;
 import io.github.mxvc.docker.sdk.engine.DockerSdkManager;
 import com.github.dockerjava.api.DockerClient;
@@ -25,10 +26,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FilenameUtils;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -46,15 +44,15 @@ public class ContainerController {
     HostService hostService;
 
     @Resource
-    private DockerSdkManager dockerManager;
+    private DockerSdkManager sdk;
 
-    @Resource
-    private ContainerService containerService;
+
 
 
     @RequestMapping("log/{hostId}/{containerId}")
     public void logByHost(@PathVariable String hostId, @PathVariable String containerId, HttpServletResponse response) throws Exception {
-        DockerClient client = containerService.responseLog(hostId);
+        Host host = hostService.findOne(hostId);
+        DockerClient client = sdk.getClient(host);
 
 
         PrintWriter out = response.getWriter();
@@ -79,7 +77,7 @@ public class ContainerController {
     public void downloadLog(String hostId, String containerId, HttpServletResponse response) throws Exception {
         Host host = hostService.findOne(hostId);
 
-        DockerClient client = dockerManager.getClient(host);
+        DockerClient client = sdk.getClient(host);
 
 
         ResponseTool.setDownloadHeader(containerId + ".log", null, response);
@@ -115,7 +113,7 @@ public class ContainerController {
     @RequestMapping("remove")
     public AjaxResult removeContainer(String hostId, String containerId) throws IOException {
         Host host = hostService.findOne(hostId);
-        DockerClient client = dockerManager.getClient(host);
+        DockerClient client = sdk.getClient(host);
 
         client.removeContainerCmd(containerId)
                 .exec();
@@ -128,7 +126,7 @@ public class ContainerController {
     @RequestMapping("stop")
     public AjaxResult stop(String hostId, String containerId) throws IOException {
         Host host = hostService.findOne(hostId);
-        DockerClient client = dockerManager.getClient(host);
+        DockerClient client = sdk.getClient(host);
         client.stopContainerCmd(containerId)
                 .exec();
         client.close();
@@ -139,7 +137,7 @@ public class ContainerController {
     public AjaxResult start(String hostId, String containerId) throws IOException {
         Host host = hostService.findOne(hostId);
 
-        DockerClient client = dockerManager.getClient(host);
+        DockerClient client = sdk.getClient(host);
 
         client.startContainerCmd(containerId)
                 .exec();
@@ -148,23 +146,41 @@ public class ContainerController {
     }
 
     @RequestMapping("status")
-    public AjaxResult status(String hostId, String appName) {
+    public AjaxResult status(String hostId, String appName /*即将弃用*/, String containerId) {
         log.info("查询容器状态:{}", appName);
         try {
             Host host = hostService.findOne(hostId);
 
 
-            DockerClient client = dockerManager.getClient(host);
-            Map<String, String> appLabelFilter = dockerManager.getAppLabelFilter(appName);
+            DockerClient cli = sdk.getClient(host);
+
+            if(containerId != null){
+                InspectContainerResponse res = cli.inspectContainerCmd(containerId).exec();
+
+                return AjaxResult.ok().data(res.getState().getStatus());
+            }
 
 
-            List<Container> list = client.listContainersCmd().withLabelFilter(appLabelFilter).withShowAll(true).exec();
-            client.close();
+            ListContainersCmd cmd = cli.listContainersCmd();
+
+            if(appName!= null){
+                Map<String, String> appLabelFilter = sdk.getAppLabelFilter(appName);
+                cmd.withLabelFilter(appLabelFilter);
+            }
+
+
+
+
+            List<Container> list = cmd.withShowAll(true).exec();
+            cli.close();
             if (list.isEmpty()) {
                 return AjaxResult.ok().data("未知");
             }
 
             Container container = list.get(0);
+
+
+
 
             return AjaxResult.ok().data(container.getStatus());
         } catch (Exception e) {
@@ -178,7 +194,7 @@ public class ContainerController {
     public AjaxResult file(String hostId, String containerId, @RequestParam(defaultValue = "/", required = false) String path) throws Exception {
         Host host = hostService.findOne(hostId);
 
-        DockerClient client = dockerManager.getClient(host);
+        DockerClient client = sdk.getClient(host);
 
         // --time-style=long-iso 参数不一定每个容器都支持
         String cmd = "ls -lt " + path;
@@ -278,7 +294,7 @@ public class ContainerController {
         log.info("进入下载文件");
         Host host = hostService.findOne(hostId);
 
-        DockerClient client = dockerManager.getClient(host);
+        DockerClient client = sdk.getClient(host);
 
         InputStream is = client.copyArchiveFromContainerCmd(containerId, file).exec();
 

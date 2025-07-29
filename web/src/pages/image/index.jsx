@@ -115,7 +115,7 @@ export default class extends React.Component {
 
             <Modal title='版本列表' open={this.state.tagTableModalOpen}
                    width={700}
-                   destroyOnClose
+                   destroyOnHidden
                    onCancel={() => this.setState({tagTableModalOpen: false})}
                    footer={null}
             >
@@ -147,7 +147,7 @@ export default class extends React.Component {
 
             <Modal title='拉取镜像' open={this.state.pullModalOpen}
                    width={700}
-                   destroyOnClose
+                   destroyOnHidden
                    onCancel={() => this.setState({pullModalOpen: false})}
                    onOk={() => this.pullFormRef.current.submit()}
                    okButtonProps={{

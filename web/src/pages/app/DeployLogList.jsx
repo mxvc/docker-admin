@@ -145,7 +145,7 @@ export default class extends React.Component {
       <Modal
         width={1200}
         maskClosable={false}
-        destroyOnClose
+        destroyOnHidden
         title="构建的日志"
         visible={this.state.showLog}
         onCancel={() => {

@@ -1,0 +1,11 @@
+{
+  "SysMenu" : [ {
+    "pid" : "biz",
+    "id" : "dockerCompose",
+    "name" : "容器编排",
+    "perm" : "dockerCompose",
+    "path" : "/dockerCompose",
+    "seq" : 4,
+    "icon" : "AppstoreOutlined"
+  } ]
+}

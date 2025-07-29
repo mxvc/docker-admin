@@ -96,4 +96,10 @@ public class HostService extends BaseService<Host> {
         client.close();
         log.info("清理完成");
     }
+
+    public void start(String hostId, String containerId) {
+    }
+
+    public void stop(String hostId, String containerId) {
+    }
 }

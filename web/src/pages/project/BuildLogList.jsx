@@ -218,7 +218,7 @@ export default class extends React.Component {
 
 
       <Modal open={showTrigger} title="手动触发流水线"
-             destroyOnClose={true}
+             destroyOnHidden={true}
              footer={null}
              onCancel={() => this.setState({showTrigger: false})}>
 

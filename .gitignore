@@ -40,3 +40,4 @@ build/
 /web/dist/
 /web/src/.umi-production/
 /logs/spring.log.2025-07-01.0.gz
+/logs/spring.log.2025-07-22.0.gz

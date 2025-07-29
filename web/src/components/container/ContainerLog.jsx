@@ -20,6 +20,12 @@ export default class ContainerLog extends React.Component {
 
     render() {
         const {hostId, containerId} = this.props;
+        if(!hostId){
+            return  '未指定主机'
+        }
+        if(!containerId) {
+            return '未指定容器'
+        }
 
         let url = SysUtil.getServerUrl() + "container/log/" + hostId + "/" + containerId;
         const downloadUrl = SysUtil.getServerUrl() + `container/downloadLog?hostId=${hostId}&containerId=${containerId}`

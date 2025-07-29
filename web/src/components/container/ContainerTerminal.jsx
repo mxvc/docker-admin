@@ -68,7 +68,6 @@ export default class extends React.Component {
     }
     render() {
         return <div>
-            <Alert message='提示：由于网络原因，网页版终端速度较慢，且不能保证正常使用。 建议到服务器上执行命令' />
             <div style={{marginTop:8,padding:16,background:'black'}}>
             <div ref={this.domRef}></div>
             </div>
