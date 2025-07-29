@@ -32,10 +32,4 @@ public class DockerCompose extends BaseEntity {
     Host host;
 
 
-    @Remark("内容")
-    @Lob
-    String content;
-
-    @Transient
-    List<DockerComposeServiceItem> services;
 }

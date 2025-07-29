@@ -1,7 +1,5 @@
 package io.github.mxvc.docker.admin.controller;
 
-import cn.hutool.setting.yaml.YamlUtil;
-import io.github.mxvc.base.tool.YamlTool;
 import io.github.mxvc.docker.admin.entity.DockerCompose;
 import io.github.mxvc.docker.admin.entity.DockerComposeServiceItem;
 import io.tmgg.lang.obj.AjaxResult;
@@ -39,7 +37,7 @@ public class DockerComposeController  extends BaseController<DockerCompose>{
     public AjaxResult services(String id) throws IOException {
         DockerCompose one = service.findOne(id);
 
-        List<DockerComposeServiceItem> items = DockerComposeServiceItem.load(one.getContent());
+        List<DockerComposeServiceItem> items = DockerComposeServiceItem.load("");
 
         return AjaxResult.ok().data(items);
     }
@@ -52,6 +50,10 @@ public class DockerComposeController  extends BaseController<DockerCompose>{
         return AjaxResult.ok();
     }
 
-
+    @GetMapping("delete")
+    public AjaxResult delete(String id,String name) throws IOException, InterruptedException {
+        service.delete(id, name);
+        return AjaxResult.ok();
+    }
 }
 

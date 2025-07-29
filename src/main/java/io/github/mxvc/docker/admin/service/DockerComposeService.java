@@ -5,6 +5,7 @@ import cn.hutool.core.util.StrUtil;
 import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.command.CreateContainerCmd;
 import com.github.dockerjava.api.command.CreateContainerResponse;
+import com.github.dockerjava.api.command.InspectContainerResponse;
 import com.github.dockerjava.api.model.*;
 import io.github.mxvc.docker.admin.dao.DockerComposeDao;
 import io.github.mxvc.docker.admin.entity.DockerCompose;
@@ -40,7 +41,7 @@ public class DockerComposeService extends BaseService<DockerCompose> {
     public void deploy(String id, String name) throws IOException, InterruptedException {
         DockerCompose dockerCompose = dao.findOne(id);
 
-        List<DockerComposeServiceItem> items = DockerComposeServiceItem.load(dockerCompose.getContent());
+        List<DockerComposeServiceItem> items = DockerComposeServiceItem.load("");
         DockerComposeServiceItem cfg = items.stream().filter(t -> t.getName().equals(name)).findFirst().orElse(null);
 
         Registry registry = registryService.checkAndFindDefault();
@@ -77,6 +78,29 @@ public class DockerComposeService extends BaseService<DockerCompose> {
 
     }
 
+    public void delete(String id, String name) {
+        DockerCompose dockerCompose = dao.findOne(id);
+
+
+        String containerId = getContainerId(id, name);
+        Registry registry = registryService.checkAndFindDefault();
+        DockerClient cli = sdk.getClient(dockerCompose.getHost(), registry);
+
+        try {
+
+
+            InspectContainerResponse res = cli.inspectContainerCmd(containerId).exec();
+
+            if (res.getState().getStatus().equals("running")) {
+                cli.stopContainerCmd(containerId).exec();
+            }
+            cli.removeContainerCmd(containerId).exec();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+    }
 
 
     private void convertConfigToCmd(DockerComposeServiceItem cfg, CreateContainerCmd cmd) {
@@ -136,7 +160,7 @@ public class DockerComposeService extends BaseService<DockerCompose> {
             cmd.withEnv(envs);
         }
 
-        if(StrUtil.isNotEmpty(cfg.getCommand())){
+        if (StrUtil.isNotEmpty(cfg.getCommand())) {
             List<String> list = StrUtil.splitTrim(cfg.getCommand(), " ");
             cmd.withCmd(list);
         }
@@ -159,16 +183,10 @@ public class DockerComposeService extends BaseService<DockerCompose> {
     }
 
 
-
-
-
-
-    public void remove(String id, String name) {
-
-    }
-
     private static String getContainerId(String id, String name) {
         return id + "_" + name;
     }
+
+
 }
 

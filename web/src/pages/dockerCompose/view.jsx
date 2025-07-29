@@ -36,19 +36,6 @@ export default class extends React.Component {
         })
     };
 
-    start = (name) => {
-        const id = this.id
-        HttpUtil.get('dockerCompose/start', {id, name}).then(rs => {
-            message.success('启动命令已发送')
-        })
-    };
-
-    stop = (name) => {
-        const id = this.id
-        HttpUtil.get('dockerCompose/stop', {id, name}).then(rs => {
-            message.success('停止命令已发送')
-        })
-    };
 
     deploy = (name) => {
         const id = this.id
@@ -56,6 +43,13 @@ export default class extends React.Component {
             message.success('部署命令已发送')
         })
     };
+    delete = (name) => {
+        const id = this.id
+        HttpUtil.get('dockerCompose/delete', {id, name}).then(rs => {
+            message.success('部署命令已发送')
+        })
+    };
+
 
     render() {
         let {info} = this.state;
@@ -95,7 +89,9 @@ export default class extends React.Component {
                             <List dataSource={this.state.services} renderItem={item => (
                                 <List.Item actions={[
                                     <Button type='primary' size='small'
-                                            onClick={() => this.deploy(item.name)}>部署</Button>
+                                            onClick={() => this.deploy(item.name)}>部署</Button>,
+                                    <Button type='primary' size='small'
+                                            onClick={() => this.delete(item.name)}>删除</Button>
                                 ]}
                                            onClick={() => this.onSelect(item)}
                                 >
@@ -113,7 +109,7 @@ export default class extends React.Component {
                             <Gap/>
 
                             <Button icon={<PlusOutlined/>} color="default" variant="dashed">
-                                添加服务
+                                添加容器
                             </Button>
                         </Splitter.Panel>
                         <Splitter.Panel>

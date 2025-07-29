@@ -122,9 +122,6 @@ export default class extends React.Component {
                     </Form.Item>
 
 
-                    <Form.Item label='内容' name='content' rules={[{required: true}]} >
-                        <CodeMirrorEditor/>
-                    </Form.Item>
                 </Form>
             </Modal>
         </Page>

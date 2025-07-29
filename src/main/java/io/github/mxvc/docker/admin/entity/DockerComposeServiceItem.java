@@ -1,38 +1,56 @@
 package io.github.mxvc.docker.admin.entity;
 
 import io.tmgg.jackson.JsonTool;
-import lombok.Data;
+import io.tmgg.web.persistence.BaseEntity;
+import io.tmgg.web.persistence.converter.ToListConverter;
+import io.tmgg.web.persistence.converter.ToMapConverter;
+import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
+import jakarta.persistence.Entity;
+import lombok.Getter;
+import lombok.Setter;
 import org.yaml.snakeyaml.LoaderOptions;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-@Data
-public class DockerComposeServiceItem {
+@Entity
+@Getter
+@Setter
+public class DockerComposeServiceItem extends BaseEntity {
 
+    @Column(length = 50)
     String name;
 
+    @Column(length = 32)
+    String dockerComposeId;
+
+
+    // 以下为docker-compose 格式
     String image;
 
     String networkMode; // host
 
     Boolean privileged;
 
+    @Convert(converter = ToMapConverter.class)
     Map<String,String> environment ;
 
     String command ;
 
+    @Convert(converter = ToListConverter.class)
     List<String> ports;
 
+    @Convert(converter = ToListConverter.class)
     List<String> volumes;
 
     String restart;
 
+    @Convert(converter = ToListConverter.class)
     List<String> extraHosts;
 
     public static List<DockerComposeServiceItem> load(String content) throws IOException {
@@ -58,35 +76,5 @@ public class DockerComposeServiceItem {
         return items;
     }
 
-    public static void main(String[] args) throws IOException {
-        String str = """
-                services:
-                  mysql:
-                    image: registry.cn-hangzhou.aliyuncs.com/mxvc/mysql:5.7.35
-                    privileged: true
-                    environment:
-                      MYSQL_ROOT_PASSWORD: 123456
-                      MYSQL_DATABASE: ykt_hlt
-                      TZ: Asia/Shanghai
-                    command:
-                      --lower_case_table_names=2
-                      --max_connections=1000
-                      --character-set-server=utf8mb4
-                      --collation-server=utf8mb4_general_ci
-                      --wait_timeout=31536000
-                      --interactive_timeout=31536000
-                      --default-authentication-plugin=mysql_native_password
-                      --max_allowed_packet=100M
-                      --transaction-isolation=READ-COMMITTED
-                    ports:
-                      - 3309:3306
-                    volumes:
-                      - ./mysql_data:/var/lib/mysql
-                  redis:
-                    image: registry.cn-hangzhou.aliyuncs.com/mxvc/redis:latest
-                    ports:
-                      - 6379:6379
-                """;
-        System.out.println(load(str));
-    }
+
 }
