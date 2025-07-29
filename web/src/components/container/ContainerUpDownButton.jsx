@@ -13,18 +13,23 @@ export default class extends React.Component {
   }
 
   componentDidMount() {
-    const {hostId,containerId} = this.props
+    this.loadStatus();
+  }
+
+  loadStatus = () => {
+    const {hostId, containerId} = this.props
     HttpUtil.get("container/status", {hostId, containerId}).then(rs => {
       this.setState({status: rs})
-    }).catch(()=>{
-      this.setState({status:'未知'})
+    }).catch(() => {
+      this.setState({status: '未知'})
     })
-  }
+  };
 
   start = () => {
     const {hostId,containerId} = this.props
     HttpUtil.get("container/start", {hostId, containerId}).then(rs => {
         message.success("启动命令已执行")
+      this.loadStatus()
     })
   };
 
@@ -32,6 +37,7 @@ export default class extends React.Component {
     const {hostId,containerId} = this.props
     HttpUtil.get("container/stop", {hostId, containerId}).then(rs => {
       message.success("停止命令已执行")
+      this.loadStatus()
     })
   };
   render() {
