@@ -181,7 +181,7 @@ export default class extends React.Component {
                         <Input/>
                     </Form.Item>
 
-                    <Form.Item label='gi仓库' name='gitUrl' rules={[{required: true}]}>
+                    <Form.Item label='git仓库' name='gitUrl' rules={[{required: true}]}>
                         <Input/>
                     </Form.Item>
 

@@ -83,6 +83,8 @@ public class ProjectController  {
         if(param.getSysOrg().getId() == null){
             param.setSysOrg(null);
         }
+        param.setGitUrl(param.getGitUrl().trim());
+        param.setName(param.getName().trim());
         Project result = this.service.saveOrUpdate(param,updateFields);
         return AjaxResult.ok().data(result.getId()).msg("保存成功");
     }
