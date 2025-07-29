@@ -1,0 +1,24 @@
+package io.github.mxvc.docker.admin.websocket;
+
+import jakarta.annotation.Resource;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.socket.config.annotation.EnableWebSocket;
+import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
+import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
+
+
+
+@Configuration
+@EnableWebSocket
+@Slf4j
+public class MyWebSocketConfig implements WebSocketConfigurer {
+
+    @Resource
+    TerminalHandler terminalHandler;
+
+    @Override
+    public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
+        registry.addHandler(terminalHandler, "api/ws/terminal").setAllowedOrigins("*");
+    }
+}

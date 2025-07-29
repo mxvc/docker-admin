@@ -22,13 +22,13 @@
 
 
 
-    <logger name="cn.moon.docker.admin.service.ProjectService">
+    <logger name="io.github.mxvc.docker.admin.service.ProjectService">
         <appender-ref ref="docker-log-appender" />
     </logger>
-    <logger name="cn.moon.docker.admin.service.AppService">
+    <logger name="io.github.mxvc.docker.admin.service.AppService">
         <appender-ref ref="docker-log-appender" />
     </logger>
-    <logger name="cn.moon.docker.sdk">
+    <logger name="io.github.mxvc.docker.sdk">
         <appender-ref ref="docker-log-appender" />
     </logger>
 
