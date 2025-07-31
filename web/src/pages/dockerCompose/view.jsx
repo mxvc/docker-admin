@@ -1,17 +1,46 @@
 import React from "react";
-import {Avatar, Button, Card, Col, Descriptions, List, message, Row, Splitter} from "antd";
+import {
+    AutoComplete,
+    Avatar,
+    Button,
+    Card,
+    Col,
+    Descriptions,
+    Form,
+    List,
+    message,
+    Modal,
+    Row,
+    Spin,
+    Splitter,
+    Typography
+} from "antd";
 import {Gap, HttpUtil, Page, PageLoading, PageUtil} from "@tmgg/tmgg-base";
-import {PlusOutlined} from "@ant-design/icons";
+import {DeleteOutlined, PlusOutlined} from "@ant-design/icons";
 import ContainerTabs from "../../components/container/ContainerTabs";
-import ContainerStatus from "../../components/ContainerStatus";
+import CodeMirrorEditor from "../../components/CodeMirrorEditor";
+import ActiveDot from "../../components/ActiveDot";
 
 export default class extends React.Component {
 
     state = {
         info: {},
         services: [],
-        curService: null
+        servicesStatus: {},
+
+        curService: null,
+
+        formOpen: false,
+        formValues: {},
+        imageList: [],
+        imageTagList: [],
+
+
+        configOpen: false,
+        configContent: null,
+
     }
+    formRef = React.createRef()
 
 
     componentDidMount() {
@@ -20,15 +49,22 @@ export default class extends React.Component {
         HttpUtil.get('dockerCompose/get', {id}).then(rs => {
             this.setState({info: rs})
         })
+        this.loadServices(id);
+    }
 
-        HttpUtil.get('dockerCompose/services', {id}).then(rs => {
+
+    loadServices = () => {
+        HttpUtil.get('dockerCompose/services', {id: this.id}).then(rs => {
             this.setState({services: rs})
-            if (rs.length > 0) {
+            if (rs.length > 0 && this.state.curService == null) {
                 this.setState({curService: rs[0]})
             }
         })
-    }
 
+        HttpUtil.get('dockerCompose/servicesStatus', {id: this.id}).then(rs => {
+            this.setState({servicesStatus: rs})
+        })
+    };
 
     onSelect = service => {
         this.setState({curService: null}, () => {
@@ -37,19 +73,58 @@ export default class extends React.Component {
     };
 
 
-    deploy = (name) => {
-        const id = this.id
-        HttpUtil.get('dockerCompose/deploy', {id, name}).then(rs => {
-            message.success('部署命令已发送')
+    deploy = (id) => {
+        HttpUtil.get('dockerComposeServiceItem/deploy', {id}).then(rs => {
+          this.loadServices()
         })
     };
-    delete = (name) => {
-        const id = this.id
-        HttpUtil.get('dockerCompose/delete', {id, name}).then(rs => {
-            message.success('部署命令已发送')
+    delete = (id) => {
+        HttpUtil.get('dockerComposeServiceItem/delete', {id}).then(rs => {
+            message.success('删除命令已发送')
+            this.loadServices()
         })
     };
 
+    onClickAdd = () => {
+        this.setState({formOpen: true, formValues: {pid: this.id}})
+        this.loadImageList()
+    }
+    onFinish = values => {
+        HttpUtil.post('dockerComposeServiceItem/save', values).then(rs => {
+            this.setState({formOpen: false})
+            this.loadServices()
+        })
+    }
+
+    loadImageList = (text) => {
+        HttpUtil.get('image/options', {searchText: text}).then(rs => {
+            this.setState({imageList: rs})
+        })
+    };
+    loadImageTagList = (text) => {
+        const url = this.formRef.current.getFieldValue('imageUrl')
+        if (url) {
+            HttpUtil.get('image/tagOptions', {url, searchText: text}).then(rs => {
+                this.setState({imageTagList: rs})
+            })
+        } else {
+            this.setState({imageTagList: []})
+        }
+
+    };
+
+    onClickConfig = () => {
+        this.setState({configOpen: true, configContent: null})
+        HttpUtil.get('dockerCompose/configFile', {id: this.id}).then(rs => {
+            this.setState({configContent: rs || ''})
+        })
+    }
+    submitContent = () => {
+        HttpUtil.post('dockerCompose/saveConfigFile',{id: this.id, content: this.state.configContent}).then(rs=>{
+            this.setState({configOpen: false, configContent: null})
+            this.loadServices()
+        })
+    }
 
     render() {
         let {info} = this.state;
@@ -73,9 +148,7 @@ export default class extends React.Component {
                         </Col>
                         <Col span={12}>
                             <div style={{display: 'flex', justifyContent: 'right', gap: 8}}>
-                                <Button variant='outlined' color='default'>配置</Button>
-
-
+                                <Button onClick={this.onClickConfig}>配置文件</Button>
                             </div>
                         </Col>
                     </Row>
@@ -89,16 +162,15 @@ export default class extends React.Component {
                             <List dataSource={this.state.services} renderItem={item => (
                                 <List.Item actions={[
                                     <Button type='primary' size='small'
-                                            onClick={() => this.deploy(item.name)}>部署</Button>,
-                                    <Button type='primary' size='small'
-                                            onClick={() => this.delete(item.name)}>删除</Button>
+                                            onClick={() => this.deploy(item.id)}>部署</Button>,
+                                    <Button size='small'
+                                            icon={<DeleteOutlined/>}
+                                            onClick={() => this.delete(item.id)}></Button>
                                 ]}
                                            onClick={() => this.onSelect(item)}
                                 >
                                     <List.Item.Meta
-                                        avatar={<Avatar/>}
-                                        title={<div>{item.name} <ContainerStatus hostId={hostId}
-                                                                                 containerId={this.id + '_' + item.name}/>
+                                        title={<div><ActiveDot value={this.state.servicesStatus[item.containerName]} /> {item.name}
                                         </div>}
                                         description={<> {item.ports}</>}
                                     />
@@ -108,7 +180,7 @@ export default class extends React.Component {
 
                             <Gap/>
 
-                            <Button icon={<PlusOutlined/>} color="default" variant="dashed">
+                            <Button icon={<PlusOutlined/>} color="default" variant="dashed" onClick={this.onClickAdd}>
                                 添加容器
                             </Button>
                         </Splitter.Panel>
@@ -117,6 +189,56 @@ export default class extends React.Component {
                         </Splitter.Panel>
                     </Splitter>
                 </Card>
+
+                <Modal title='添加容器'
+                       open={this.state.formOpen}
+                       onOk={() => this.formRef.current.submit()}
+                       onCancel={() => this.setState({formOpen: false})}
+                       destroyOnHidden
+                       maskClosable={false}
+
+                >
+
+                    <Form ref={this.formRef} labelCol={{flex: '100px'}}
+                          initialValues={this.state.formValues}
+                          onFinish={this.onFinish}
+                    >
+                        <Form.Item name='pid' noStyle></Form.Item>
+
+                        <Form.Item name='imageUrl' label='镜像' required rules={[{required: true}]}>
+                            <AutoComplete options={this.state.imageList} onSearch={this.loadImageList}></AutoComplete>
+                        </Form.Item>
+
+
+                        <Form.Item name='imageTag' label='版本' required rules={[{required: true}]}>
+                            <AutoComplete options={this.state.imageTagList}
+                                          onSearch={this.loadImageTagList}></AutoComplete>
+                        </Form.Item>
+
+
+                    </Form>
+                </Modal>
+
+
+                <Modal title='容器编排配置文件'
+                       open={this.state.configOpen}
+                       onOk={this.submitContent}
+                       onCancel={() => this.setState({configOpen: false})}
+                       destroyOnHidden
+                       maskClosable={false}
+                       width={800}
+                >
+                    <p>
+                        <Typography.Text>docker-compose 格式</Typography.Text>
+                    </p>
+
+                    {this.state.configContent == null ? <Spin/> :
+                        <CodeMirrorEditor value={this.state.configContent}
+                                          onChange={v => this.setState({configContent: v})}/>}
+
+                </Modal>
+
+
             </Page>
         );
     }
@@ -128,7 +250,7 @@ export default class extends React.Component {
         }
         let hostId = info.host?.id;
 
-        let containerId = info.id + '_' + curService?.name;
+        let containerId =  curService?.containerName;
         if (!hostId) {
             return "主机基本信息未获得"
         }

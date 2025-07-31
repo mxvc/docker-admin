@@ -1,14 +1,15 @@
 package io.github.mxvc.docker.admin.entity;
 
 import io.tmgg.jackson.JsonTool;
+import io.tmgg.lang.validator.ValidateStartWithLetter;
 import io.tmgg.web.persistence.BaseEntity;
 import io.tmgg.web.persistence.converter.ToListConverter;
 import io.tmgg.web.persistence.converter.ToMapConverter;
-import jakarta.persistence.Column;
-import jakarta.persistence.Convert;
-import jakarta.persistence.Entity;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.FieldNameConstants;
 import org.yaml.snakeyaml.LoaderOptions;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
@@ -21,13 +22,23 @@ import java.util.Map;
 @Entity
 @Getter
 @Setter
+@FieldNameConstants
+@Table(uniqueConstraints = @UniqueConstraint(name = "uk_name",columnNames = {"pid","name"}))
 public class DockerComposeServiceItem extends BaseEntity {
 
+    @NotNull
+    @ValidateStartWithLetter
     @Column(length = 50)
     String name;
 
+    @NotNull
     @Column(length = 32)
-    String dockerComposeId;
+    String pid;
+
+    Integer seq;
+
+    @NotNull
+    String containerName;
 
 
     // 以下为docker-compose 格式
@@ -40,6 +51,7 @@ public class DockerComposeServiceItem extends BaseEntity {
     @Convert(converter = ToMapConverter.class)
     Map<String,String> environment ;
 
+    @Lob
     String command ;
 
     @Convert(converter = ToListConverter.class)
@@ -53,28 +65,8 @@ public class DockerComposeServiceItem extends BaseEntity {
     @Convert(converter = ToListConverter.class)
     List<String> extraHosts;
 
-    public static List<DockerComposeServiceItem> load(String content) throws IOException {
-        Yaml yaml = new Yaml(new Constructor(Map.class, new LoaderOptions()));
 
-        // 解析YAML文件
-        Map<String, Object> composeConfig = yaml.load(content);
 
-        Map<String,Object> services = (Map<String, Object>) composeConfig.get("services");
-
-        List<DockerComposeServiceItem> items = new ArrayList<>();
-        for (Map.Entry<String, Object> entry : services.entrySet()) {
-            String k = entry.getKey();
-            Map<String,Object> v = (Map<String, Object>) entry.getValue();
-
-            String json = JsonTool.toJson(v);
-            DockerComposeServiceItem item = JsonTool.jsonToBean(json, DockerComposeServiceItem.class);
-
-            item.setName(k);
-            items.add(item);
-        }
-
-        return items;
-    }
 
 
 }
