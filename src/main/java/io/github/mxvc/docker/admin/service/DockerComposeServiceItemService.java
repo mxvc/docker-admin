@@ -108,6 +108,7 @@ public class DockerComposeServiceItemService extends BaseService<DockerComposeSe
     private DockerClient getCli(DockerCompose dockerCompose) {
         Registry registry = registryService.checkAndFindDefault();
         DockerClient cli = sdk.getClient(dockerCompose.getHost(), registry);
+
         return cli;
     }
 

@@ -55,6 +55,8 @@ public class DockerComposeServiceItem extends BaseEntity {
 
 
     // 以下为docker-compose 格式
+
+    // 镜像，如 ubuntu:latest
     String image;
 
     String networkMode; // host
