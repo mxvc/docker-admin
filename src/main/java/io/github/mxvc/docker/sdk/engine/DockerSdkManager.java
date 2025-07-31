@@ -68,10 +68,5 @@ public class DockerSdkManager {
         return labels;
     }
 
-    public  Map<String, String> getDockerComposeFilter(String id,String name) {
-        Map<String, String> labels = new HashMap<>();
-        labels.put("docker-compose-id", id);
-        labels.put("docker-compose-name",name);
-        return labels;
-    }
+
 }

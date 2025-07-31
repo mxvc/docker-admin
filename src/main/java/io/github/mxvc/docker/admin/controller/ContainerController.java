@@ -146,7 +146,7 @@ public class ContainerController {
     }
 
     @RequestMapping("status")
-    public AjaxResult status(String hostId, String appName /*即将弃用*/, String containerId) {
+    public AjaxResult status(String hostId, String appName /*即将弃用*/, String containerId, String cont) {
         log.info("查询容器状态:{}", appName);
         try {
             Host host = hostService.findOne(hostId);

@@ -41,6 +41,14 @@ export default class extends React.Component {
         })
     };
 
+    remove = () => {
+        const {hostId, containerId} = this.props
+        HttpUtil.get("container/remove", {hostId, containerId}).then(rs => {
+            message.success("删除命令已执行")
+            this.loadStatus()
+        })
+    };
+
     render() {
         const s = this.state.status;
         if (s == null) {
@@ -51,6 +59,8 @@ export default class extends React.Component {
         return <Button.Group>
             <Button type='primary' disabled={running} onClick={this.start}>启动</Button>
             <Button type='primary' danger disabled={!running} onClick={this.stop}>停止</Button>
+            <Button type='primary' danger disabled={running} onClick={this.remove}>删除</Button>
+
         </Button.Group>
 
     }

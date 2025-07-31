@@ -16,14 +16,16 @@ export default class extends React.Component {
     tableRef = React.createRef()
 
     columns = [
-
         {
-            title: '名称',
-            dataIndex: 'name',
+            title: '中文名称',
+            dataIndex: 'label',
             render: (name, row) => {
                 return <a onClick={() => PageUtil.open('/dockerCompose/view?id=' + row.id,'容器编排-'+name)}>{name}</a>
             }
-
+        },
+        {
+            title: '名称',
+            dataIndex: 'name',
         },
 
         {
@@ -100,7 +102,6 @@ export default class extends React.Component {
                    onCancel={() => this.setState({formOpen: false})}
                    destroyOnHidden
                    maskClosable={false}
-                   width='80vw'
             >
 
                 <Form ref={this.formRef} labelCol={{flex: '100px'}}
@@ -108,9 +109,11 @@ export default class extends React.Component {
                       onFinish={this.onFinish}
                 >
                     <Form.Item name='id' noStyle></Form.Item>
-
-                    <Form.Item label='名称' name='name' rules={[{required: true}]}>
+                    <Form.Item label='中文名称' name='label' rules={[{required: true}]}>
                         <Input/>
+                    </Form.Item>
+                    <Form.Item label='名称' name='name' rules={[{required: true}]}>
+                        <Input placeholder='英文+数字'/>
                     </Form.Item>
 
                     <Form.Item name={['host', 'id']} label='部署主机' required rules={[{required: true}]}>
