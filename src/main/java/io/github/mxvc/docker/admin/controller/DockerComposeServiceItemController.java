@@ -34,7 +34,7 @@ public class DockerComposeServiceItemController {
 
         DockerComposeServiceItem item = new DockerComposeServiceItem();
         item.setPid(input.getPid());
-        item.setImage(input.getImageUrl() +":" + input.getImageTag());
+        item.setImage(input.getImageUrl() + ":" + input.getImageTag());
         item.setName(name);
         item.setContainerName(service.getContainerName(dockerCompose, item));
 
@@ -43,10 +43,11 @@ public class DockerComposeServiceItemController {
     }
 
     @GetMapping("deploy")
-    public AjaxResult deploy(String id,String tag) throws InterruptedException {
-        service.deploy(id,tag);
+    public AjaxResult deploy(String id, String tag) throws InterruptedException {
+        service.deploy(id, tag);
         return AjaxResult.ok().msg("部署完成");
     }
+
     @GetMapping("delete")
     public AjaxResult delete(String id) throws IOException, InterruptedException {
         service.delete(id);
@@ -63,5 +64,6 @@ public class DockerComposeServiceItemController {
         String imageTag;
 
     }
+
 }
 
