@@ -17,10 +17,13 @@ import io.tmgg.web.persistence.BaseService;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Component
@@ -58,7 +61,8 @@ public class DockerComposeServiceItemService extends BaseService<DockerComposeSe
         dao.deleteById(id);
     }
 
-    public void deploy(String id) throws InterruptedException {
+
+    public void deploy(String id, String tag) throws InterruptedException {
         DockerComposeServiceItem cfg = dao.findOne(id);
         String pid = cfg.getPid();
         DockerCompose dockerCompose = dockerComposeDao.findOne(pid);
@@ -67,6 +71,12 @@ public class DockerComposeServiceItemService extends BaseService<DockerComposeSe
         DockerClient cli = getCli(dockerCompose);
 
         String image = cfg.getImage();
+        if (!cfg.getImageTag().equals(tag)) {
+            image = cfg.getImageUrl() + ":" + tag;
+            cfg.setImage(image);
+            dao.save(cfg);
+        }
+
 
         log.info("开始拉取镜像 {}", image);
         cli.pullImageCmd(image).exec(new DefaultCallback<>(id)).awaitCompletion();
@@ -102,7 +112,6 @@ public class DockerComposeServiceItemService extends BaseService<DockerComposeSe
     }
 
 
-
     private void convertConfigToCmd(DockerComposeServiceItem cfg, CreateContainerCmd cmd) {
         {
             HostConfig hostConfig = HostConfig.newHostConfig();
@@ -117,6 +126,11 @@ public class DockerComposeServiceItemService extends BaseService<DockerComposeSe
             if (CollUtil.isNotEmpty(ports) && (StrUtil.isBlank(cfg.getNetworkMode()) || cfg.getNetworkMode().equals("bridge"))) {
                 List<PortBinding> portBindings = ports.stream().map(PortBinding::parse).toList();
                 hostConfig.withPortBindings(portBindings);
+
+                // 修复某些dockerfile 未配置 EXPOSE 8080
+                List<ExposedPort> exposedPorts = portBindings.stream().map(PortBinding::getExposedPort).collect(Collectors.toList());
+                cmd.withExposedPorts(exposedPorts);
+
             }
 
 
@@ -164,6 +178,9 @@ public class DockerComposeServiceItemService extends BaseService<DockerComposeSe
             List<String> list = StrUtil.splitTrim(cfg.getCommand(), " ");
             cmd.withCmd(list);
         }
+
+
+
     }
 
 
@@ -185,7 +202,7 @@ public class DockerComposeServiceItemService extends BaseService<DockerComposeSe
     public void deleteContainers(DockerCompose dockerCompose) {
         DockerClient cli = getCli(dockerCompose);
 
-        Map<String, String> filter =  new HashMap<>();
+        Map<String, String> filter = new HashMap<>();
         Map<String, String> labels = new HashMap<>();
         labels.put(DOCKER_COMPOSE_ITEM_PID, dockerCompose.getId());
 
@@ -234,7 +251,7 @@ public class DockerComposeServiceItemService extends BaseService<DockerComposeSe
 
         List<Container> list = cli.listContainersCmd().withShowAll(true).withLabelFilter(labels).exec();
 
-        Map<String,Object> rs = new HashMap<>();
+        Map<String, Object> rs = new HashMap<>();
 
         for (Container container : list) {
             rs.put(container.getNames()[0].replace("/", ""), container.getState());

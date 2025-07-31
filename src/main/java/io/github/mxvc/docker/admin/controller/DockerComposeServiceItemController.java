@@ -43,9 +43,9 @@ public class DockerComposeServiceItemController {
     }
 
     @GetMapping("deploy")
-    public AjaxResult deploy(String id) throws InterruptedException {
-        service.deploy(id);
-        return AjaxResult.ok();
+    public AjaxResult deploy(String id,String tag) throws InterruptedException {
+        service.deploy(id,tag);
+        return AjaxResult.ok().msg("部署完成");
     }
     @GetMapping("delete")
     public AjaxResult delete(String id) throws IOException, InterruptedException {

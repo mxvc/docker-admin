@@ -39,6 +39,13 @@ export default class extends React.Component {
         configOpen: false,
         configContent: null,
 
+
+        deployOpen: false,
+        deployItem: null,
+        deployTagList: [],
+        deployTag: null,
+        deployProcessing: false
+
     }
     formRef = React.createRef()
 
@@ -72,10 +79,30 @@ export default class extends React.Component {
         })
     };
 
+    onDeployClick(item) {
+        this.setState({deployOpen: true, deployItem: item, deployTagList: []}, this.loadDeployTagList)
+    }
 
-    deploy = (id) => {
-        HttpUtil.get('dockerComposeServiceItem/deploy', {id}).then(rs => {
-          this.loadServices()
+    loadDeployTagList = (text) => {
+        let {deployItem} = this.state;
+        const url = deployItem.imageUrl;
+        const tag = deployItem.imageTag;
+
+        this.setState({deployTag: tag})
+
+        HttpUtil.get('image/tagOptions', {url, searchText: text}).then(rs => {
+            this.setState({deployTagList: rs})
+        })
+
+    };
+
+    deploy = () => {
+        this.setState({deployProcessing:true})
+        HttpUtil.get('dockerComposeServiceItem/deploy', {id: this.state.deployItem.id, tag: this.state.deployTag}).then(rs => {
+            this.setState({deployOpen:false})
+            this.loadServices()
+        }).finally(()=>{
+            this.setState({deployProcessing:false})
         })
     };
     delete = (id) => {
@@ -120,7 +147,7 @@ export default class extends React.Component {
         })
     }
     submitContent = () => {
-        HttpUtil.post('dockerCompose/saveConfigFile',{id: this.id, content: this.state.configContent}).then(rs=>{
+        HttpUtil.post('dockerCompose/saveConfigFile', {id: this.id, content: this.state.configContent}).then(rs => {
             this.setState({configOpen: false, configContent: null})
             this.loadServices()
         })
@@ -162,7 +189,7 @@ export default class extends React.Component {
                             <List dataSource={this.state.services} renderItem={item => (
                                 <List.Item actions={[
                                     <Button type='primary' size='small'
-                                            onClick={() => this.deploy(item.id)}>部署</Button>,
+                                            onClick={() => this.onDeployClick(item)}>部署</Button>,
                                     <Button size='small'
                                             icon={<DeleteOutlined/>}
                                             onClick={() => this.delete(item.id)}></Button>
@@ -170,9 +197,13 @@ export default class extends React.Component {
                                            onClick={() => this.onSelect(item)}
                                 >
                                     <List.Item.Meta
-                                        title={<div><ActiveDot value={this.state.servicesStatus[item.containerName]} /> {item.name}
+                                        title={<div>
+                                            <ActiveDot
+                                            value={this.state.servicesStatus[item.containerName]}/> {item.name}
                                         </div>}
-                                        description={<> {item.ports}</>}
+                                        description={<>
+                                            {item.imageTag} &nbsp;
+                                            {item.ports}</>}
                                     />
                                 </List.Item>
 
@@ -238,7 +269,29 @@ export default class extends React.Component {
 
                 </Modal>
 
+                <Modal title='重新部署'
+                       open={this.state.deployOpen}
+                       onOk={this.deploy}
+                       onCancel={() => this.setState({deployOpen: false})}
+                       destroyOnHidden
+                       maskClosable={false}
 
+                       okButtonProps={{
+                           loading: this.state.deployProcessing
+                       }}
+
+                >
+
+                    部署版本：<AutoComplete
+                        value={this.state.deployTag}
+                        onChange={v=>this.setState({deployTag:v})}
+                        options={this.state.deployTagList}
+                        style={{width: 150}}
+                        onSearch={this.loadDeployTagList}
+                        placeholder='版本'
+                    />
+
+                </Modal>
             </Page>
         );
     }
@@ -250,7 +303,7 @@ export default class extends React.Component {
         }
         let hostId = info.host?.id;
 
-        let containerId =  curService?.containerName;
+        let containerId = curService?.containerName;
         if (!hostId) {
             return "主机基本信息未获得"
         }

@@ -40,6 +40,19 @@ public class DockerComposeServiceItem extends BaseEntity {
     @NotNull
     String containerName;
 
+    @Transient
+    public String getImageUrl(){
+        String[] arr = image.split(":");
+        return arr[0];
+    }
+
+    @Transient
+    public String getImageTag(){
+        String[] arr = image.split(":");
+        return arr[1];
+    }
+
+
 
     // 以下为docker-compose 格式
     String image;
