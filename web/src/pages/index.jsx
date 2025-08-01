@@ -67,18 +67,7 @@ export default class extends React.Component {
                 return <Tooltip title={row.createTime}> {DateUtil.friendlyTime(row.createTime)}</Tooltip>
             }
         },
-        {
-            title: '分支/标签',
-            dataIndex: 'value',
-        },
-        {
-            title: '目录',
-            dataIndex: 'context',
-        },
-        {
-            title: 'Dockerfile',
-            dataIndex: 'dockerfile',
-        },
+
         {
             title: '版本',
             dataIndex: 'version',
@@ -90,10 +79,7 @@ export default class extends React.Component {
                 return StrUtil.ellipsis(v, 20)
             }
         },
-        {
-            title: '构建主机',
-            dataIndex: 'buildHostName',
-        },
+
         {
             title: '状态',
             dataIndex: 'success',
