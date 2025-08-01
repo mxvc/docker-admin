@@ -210,6 +210,7 @@ public class DockerComposeServiceItemService extends BaseService<DockerComposeSe
                 .withLabelFilter(filter)
                 .withShowAll(true)
                 .exec();
+        Assert.state(list.size() < 10, "可能有错");
         for (Container container : list) {
             Object names = container.getNames();
             log.info("准备删除容器: {}", names);
