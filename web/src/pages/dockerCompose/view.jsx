@@ -187,7 +187,7 @@ export default class extends React.Component {
                         </Col>
                         <Col span={12}>
                             <div style={{display: 'flex', justifyContent: 'right', gap: 8}}>
-                                <Button onClick={this.onClickConfig}>配置文件</Button>
+                                <Button onClick={this.onClickConfig}>全局配置</Button>
                                 <Button onClick={this.onClickMoveApp}>复制应用</Button>
                             </div>
                         </Col>
@@ -203,6 +203,8 @@ export default class extends React.Component {
                                 <List.Item actions={[
                                     <Button type='primary' size='small'
                                             onClick={() => this.onDeployClick(item)}>部署</Button>,
+
+
 
                                     <Popconfirm title='确定删除容器和配置' onConfirm={() => this.delete(item.id)}>
                                         <Button size='small'
