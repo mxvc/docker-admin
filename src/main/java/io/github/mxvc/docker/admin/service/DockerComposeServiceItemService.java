@@ -204,8 +204,7 @@ public class DockerComposeServiceItemService extends BaseService<DockerComposeSe
         DockerClient cli = getCli(dockerCompose);
 
         Map<String, String> filter = new HashMap<>();
-        Map<String, String> labels = new HashMap<>();
-        labels.put(DOCKER_COMPOSE_ITEM_PID, dockerCompose.getId());
+        filter.put(DOCKER_COMPOSE_ITEM_PID, dockerCompose.getId());
 
         List<Container> list = cli.listContainersCmd()
                 .withLabelFilter(filter)
