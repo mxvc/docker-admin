@@ -13,9 +13,12 @@ import io.github.mxvc.docker.admin.entity.DockerComposeServiceItem;
 import io.github.mxvc.docker.admin.entity.Registry;
 import io.github.mxvc.docker.sdk.engine.DefaultCallback;
 import io.github.mxvc.docker.sdk.engine.DockerSdkManager;
+import io.tmgg.lang.SpringTool;
 import io.tmgg.web.persistence.BaseService;
 import jakarta.annotation.Resource;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
@@ -61,6 +64,11 @@ public class DockerComposeServiceItemService extends BaseService<DockerComposeSe
         dao.deleteById(id);
     }
 
+    @Async
+    @SneakyThrows
+    public void deployAsync(String id, String tag)  {
+        this.deploy(id,tag);
+    }
 
     public void deploy(String id, String tag) throws InterruptedException {
         DockerComposeServiceItem cfg = dao.findOne(id);

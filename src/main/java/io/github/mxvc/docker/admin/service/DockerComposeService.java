@@ -46,6 +46,8 @@ public class DockerComposeService extends BaseService<DockerCompose> {
             item.setPid(id);
             item.setContainerName(itemService.getContainerName(dockerCompose, item));
             itemService.save(item);
+
+            itemService.deployAsync(item.getId(), item.getImageTag());
         }
 
 
