@@ -20,7 +20,7 @@ export default class extends React.Component {
             title: '中文名称',
             dataIndex: 'label',
             render: (name, row) => {
-                return <a onClick={() => PageUtil.open('/dockerCompose/view?id=' + row.id,'容器编排-'+name)}>{name}</a>
+                return <a onClick={() => PageUtil.open('/dockerCompose/view?id=' + row.id,'容器组-'+name)}>{name}</a>
             }
         },
         {
@@ -48,7 +48,7 @@ export default class extends React.Component {
                 <ButtonList>
 
                     <Button size='small' perm='dockerCompose:save' onClick={() => this.handleEdit(record)}>编辑</Button>
-                    <Popconfirm perm='dockerCompose:delete' title='是否确定删除容器编排'
+                    <Popconfirm perm='dockerCompose:delete' title='是否确定删除容器组'
                                 onConfirm={() => this.handleDelete(record)}>
                         <Button size='small'>删除</Button>
                     </Popconfirm>
@@ -96,7 +96,7 @@ export default class extends React.Component {
 
             />
 
-            <Modal title='容器编排'
+            <Modal title='容器组'
                    open={this.state.formOpen}
                    onOk={() => this.formRef.current.submit()}
                    onCancel={() => this.setState({formOpen: false})}

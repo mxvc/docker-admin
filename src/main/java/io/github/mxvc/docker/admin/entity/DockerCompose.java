@@ -12,7 +12,7 @@ import lombok.experimental.FieldNameConstants;
 
 import java.util.List;
 
-@Remark("容器编排")
+@Remark("容器组")
 @Entity
 @Getter
 @Setter

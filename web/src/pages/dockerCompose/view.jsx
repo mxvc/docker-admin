@@ -268,7 +268,7 @@ export default class extends React.Component {
                 </Modal>
 
 
-                <Modal title='容器编排配置文件'
+                <Modal title='容器组配置文件'
                        open={this.state.configOpen}
                        onOk={this.submitContent}
                        onCancel={() => this.setState({configOpen: false})}

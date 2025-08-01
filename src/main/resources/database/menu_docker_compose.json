@@ -2,7 +2,7 @@
   "SysMenu" : [ {
     "pid" : "biz",
     "id" : "dockerCompose",
-    "name" : "容器编排",
+    "name" : "容器组",
     "perm" : "dockerCompose",
     "path" : "/dockerCompose",
     "seq" : 4,
