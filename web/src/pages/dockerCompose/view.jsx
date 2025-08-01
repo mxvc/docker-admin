@@ -9,13 +9,13 @@ import {
     Form,
     List,
     message,
-    Modal,
+    Modal, Popconfirm,
     Row,
     Spin,
     Splitter,
     Typography
 } from "antd";
-import {Gap, HttpUtil, Page, PageLoading, PageUtil} from "@tmgg/tmgg-base";
+import {FieldSelect, Gap, HttpUtil, Page, PageLoading, PageUtil} from "@tmgg/tmgg-base";
 import {DeleteOutlined, PlusOutlined} from "@ant-design/icons";
 import ContainerTabs from "../../components/container/ContainerTabs";
 import CodeMirrorEditor from "../../components/CodeMirrorEditor";
@@ -44,7 +44,9 @@ export default class extends React.Component {
         deployItem: null,
         deployTagList: [],
         deployTag: null,
-        deployProcessing: false
+        deployProcessing: false,
+
+        moveOpen:false
 
     }
     formRef = React.createRef()
@@ -153,12 +155,22 @@ export default class extends React.Component {
         })
     }
 
+    onClickMoveApp = ()=>{
+        this.setState({moveOpen:true,formValues:{id: this.id}})
+    }
+
+    onMoveAppFinish = (values)=>{
+        HttpUtil.post('dockerCompose/moveApp', values).then(rs => {
+            this.setState({moveOpen: false, formValues: {}})
+            this.loadServices()
+        })
+    }
+
     render() {
         let {info} = this.state;
         if (info == null) {
             return <PageLoading/>
         }
-        let hostId = info.host?.id;
         return (
             <Page padding backgroundGray>
                 <Card>
@@ -176,6 +188,7 @@ export default class extends React.Component {
                         <Col span={12}>
                             <div style={{display: 'flex', justifyContent: 'right', gap: 8}}>
                                 <Button onClick={this.onClickConfig}>配置文件</Button>
+                                <Button onClick={this.onClickMoveApp}>复制应用</Button>
                             </div>
                         </Col>
                     </Row>
@@ -190,11 +203,15 @@ export default class extends React.Component {
                                 <List.Item actions={[
                                     <Button type='primary' size='small'
                                             onClick={() => this.onDeployClick(item)}>部署</Button>,
-                                    <Button size='small'
-                                            icon={<DeleteOutlined/>}
-                                            onClick={() => this.delete(item.id)}></Button>
+
+                                    <Popconfirm title='确定删除容器和配置' onConfirm={() => this.delete(item.id)}>
+                                        <Button size='small'
+                                                icon={<DeleteOutlined/>}
+                                               ></Button>
+                                    </Popconfirm>
+
                                 ]}
-                                           onClick={() => this.onSelect(item)}
+                                   onClick={() => this.onSelect(item)}
                                 >
                                     <List.Item.Meta
                                         title={<div>
@@ -289,6 +306,27 @@ export default class extends React.Component {
                         placeholder='版本'
                     />
 
+                </Modal>
+
+
+                <Modal title='添加容器'
+                       open={this.state.moveOpen}
+                       onOk={() => this.formRef.current.submit()}
+                       onCancel={() => this.setState({moveOpen: false})}
+                       destroyOnHidden
+                       maskClosable={false}
+
+                >
+
+                    <Form ref={this.formRef} labelCol={{flex: '100px'}}
+                          initialValues={this.state.formValues}
+                          onFinish={this.onMoveAppFinish}
+                    >
+                        <Form.Item name='id' noStyle></Form.Item>
+                        <Form.Item name='app' label='应用' required rules={[{required: true}]}>
+                            <FieldSelect url='app/options' ></FieldSelect>
+                        </Form.Item>
+                    </Form>
                 </Modal>
             </Page>
         );

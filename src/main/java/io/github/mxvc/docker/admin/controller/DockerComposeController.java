@@ -90,6 +90,15 @@ public class DockerComposeController  extends BaseController<DockerCompose>{
         return AjaxResult.ok().msg("保存配置文件成功");
     }
 
+    @PostMapping("moveApp")
+    public AjaxResult moveApp(@RequestBody MoveAppParam param) throws IOException {
+        String id = param.getId();
+
+        service.moveApp(id,param.getApp());
+
+        return AjaxResult.ok().msg("移动应用成功");
+    }
+
 
     @Data
     public static class SaveConfigParam {
@@ -97,5 +106,11 @@ public class DockerComposeController  extends BaseController<DockerCompose>{
         String content;
     }
 
+
+    @Data
+    public static class MoveAppParam {
+        String id;
+        String app;
+    }
 }
 

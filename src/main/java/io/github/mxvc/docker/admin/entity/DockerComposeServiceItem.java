@@ -59,7 +59,12 @@ public class DockerComposeServiceItem extends BaseEntity {
     // 镜像，如 ubuntu:latest
     String image;
 
-    String networkMode; // host
+    /**
+     *   host:主机模式（同主机IP）
+     *   bridge:桥接（虚拟IP，NAT）
+     *   none:  无需网络'
+     */
+    String networkMode;
 
     Boolean privileged;
 
@@ -77,6 +82,12 @@ public class DockerComposeServiceItem extends BaseEntity {
 
     String restart;
 
+    /**
+     *
+     *     extra_hosts:
+     *       - "hostname:ip_address"
+     *       - "example.com:1.2.3.4"
+     */
     @Convert(converter = ToListConverter.class)
     List<String> extraHosts;
 
