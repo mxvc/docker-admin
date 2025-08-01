@@ -201,17 +201,15 @@ public class AppController {
 
 
     @RequestMapping("options")
-    public AjaxResult options() {
-        List<Option> list = new ArrayList<>();
-        Sort sort = Sort.by(Sort.Direction.DESC, BaseEntity.FIELD_UPDATE_TIME);
-
-        List<App> all = service.findAll(sort);
-
-        for (App app : all) {
-            list.add(new Option(app.getName(), app.getId()));
+    public AjaxResult options(String searchText) {
+        JpaQuery<App> q = new JpaQuery<>();
+        if(StrUtil.isNotBlank(searchText)){
+            q.like("name",searchText);
         }
+        List<Option> optionList = service.findOptionList(q, App::getName);
 
-        return AjaxResult.ok().data(list);
+
+        return AjaxResult.ok().data(optionList);
     }
 
 
