@@ -15,7 +15,6 @@ import org.springframework.util.Assert;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -42,39 +41,38 @@ public class DockerComposeService extends BaseService<DockerCompose> {
 
         List<DockerComposeServiceItem> dbItems = itemService.findByPid(id);
 
-        // 删除
+
+        // 删除数据库中不存在或配置变化的
         for (DockerComposeServiceItem dbItem : dbItems) {
-
-
             boolean exist = itemsMap.containsKey(dbItem.getName());
             boolean changed = false;
-            if(exist){
+            if (exist) {
                 // 再次判断配置
                 DockerComposeServiceItem item = itemsMap.get(dbItem.getName());
-                changed = dbItem.isConfigEquals(item);
+                changed = !item.getName().equals(dbItem.getName()) || !dbItem.isConfigEquals(item);
             }
-            log.info("检查历史容器 {} 存在{} 配置变化{}",dbItem.getName(), exist, changed);
-            if(!exist || changed){
+            log.info("检查历史容器 {} 存在{} 配置变化{}", dbItem.getName(), exist, changed);
+            if (!exist || changed) {
                 itemService.deleteContainer(dockerCompose, dbItem.getId());
                 itemService.deleteById(dbItem.getId());
             }
         }
 
+        //
+        dbItems = itemService.findByPid(id);
+        Map<String, DockerComposeServiceItem> dbItemsMap = dbItems.stream().collect(Collectors.toMap(DockerComposeServiceItem::getName, t -> t));
 
-
-
-
-        // TODO 先简单粗暴全部删除历史， 有时间在慢慢细化对比，没修改的则不动
-        itemService.deleteContainers(dockerCompose);
-        itemService.deleteByPid(id);
-
-
-        int seq=0;
-        for (DockerComposeServiceItem item : items) {
-            item.setPid(id);
-            item.setSeq(seq++);
-            item.setContainerName(itemService.getContainerName(dockerCompose, item));
-            itemService.saveAndFlush(item);
+        for (int i = 0; i < items.size(); i++) {
+            DockerComposeServiceItem item = items.get(i);
+            if (dbItemsMap.containsKey(item.getName())) {
+                DockerComposeServiceItem dbItem = dbItemsMap.get(item.getName());
+                dbItem.setSeq(i); // 存在则保存下新的顺序
+            } else {
+                item.setPid(id);
+                item.setSeq(i);
+                item.setContainerName(itemService.getContainerName(dockerCompose, item));
+                itemService.saveAndFlush(item);
+            }
         }
 
     }
