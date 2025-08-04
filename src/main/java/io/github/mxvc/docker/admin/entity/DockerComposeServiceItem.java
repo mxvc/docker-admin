@@ -68,6 +68,7 @@ public class DockerComposeServiceItem extends BaseEntity {
 
     Boolean privileged;
 
+    @Lob
     @Convert(converter = ToMapConverter.class)
     Map<String,String> environment ;
 
