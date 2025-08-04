@@ -42,8 +42,10 @@ public class DockerComposeService extends BaseService<DockerCompose> {
         itemService.deleteByPid(id);
 
 
+        int seq=0;
         for (DockerComposeServiceItem item : items) {
             item.setPid(id);
+            item.setSeq(seq++);
             item.setContainerName(itemService.getContainerName(dockerCompose, item));
             itemService.saveAndFlush(item);
         }
