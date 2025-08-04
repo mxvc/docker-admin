@@ -16,4 +16,11 @@ public class DockerComposeServiceItemDao extends BaseDao<DockerComposeServiceIte
 
         return this.findAll(q, Sort.by("seq","name"));
     }
+
+    public DockerComposeServiceItem findByPidAndName(String id,String name) {
+        JpaQuery<DockerComposeServiceItem> q = new JpaQuery<>();
+        q.eq(DockerComposeServiceItem.Fields.pid , id);
+        q.eq(DockerComposeServiceItem.Fields.name , name);
+        return this.findOne(q);
+    }
 }

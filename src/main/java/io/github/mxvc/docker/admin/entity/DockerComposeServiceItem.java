@@ -1,5 +1,9 @@
 package io.github.mxvc.docker.admin.entity;
 
+import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.util.BooleanUtil;
+import cn.hutool.core.util.ObjUtil;
+import cn.hutool.core.util.StrUtil;
 import io.tmgg.jackson.JsonTool;
 import io.tmgg.lang.validator.ValidateStartWithLetter;
 import io.tmgg.web.persistence.BaseEntity;
@@ -10,12 +14,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldNameConstants;
-import org.yaml.snakeyaml.LoaderOptions;
-import org.yaml.snakeyaml.Yaml;
-import org.yaml.snakeyaml.constructor.Constructor;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -94,6 +93,19 @@ public class DockerComposeServiceItem extends BaseEntity {
 
 
 
+    // 判断配置是否变化
+    @Transient
+    public boolean isConfigEquals(DockerComposeServiceItem other){
+        return ObjUtil.equals(this.image, other.image) &&
+               ObjUtil.equals(this.networkMode, other.networkMode) &&
+               ObjUtil.equals(this.privileged, other.privileged) &&
+               ObjUtil.equal(this.environment, other.environment) &&
+               ObjUtil.equals(this.command, other.command) &&
+               ObjUtil.equal(this.ports, other.ports) &&
+               ObjUtil.equal(this.volumes, other.volumes) &&
+               ObjUtil.equal(this.restart, other.restart) &&
+               ObjUtil.equal(this.extraHosts, other.extraHosts);
+    }
 
 
 }

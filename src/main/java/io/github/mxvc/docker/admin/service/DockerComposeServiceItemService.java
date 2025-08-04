@@ -33,6 +33,7 @@ import java.util.stream.Collectors;
 public class DockerComposeServiceItemService extends BaseService<DockerComposeServiceItem> {
 
     public static final String DOCKER_COMPOSE_ITEM_PID = "docker-compose-item-pid";
+    public static final String DOCKER_COMPOSE_ITEM_ID = "docker-compose-item-id";
     @Resource
     DockerComposeServiceItemDao dao;
 
@@ -47,6 +48,10 @@ public class DockerComposeServiceItemService extends BaseService<DockerComposeSe
 
     public List<DockerComposeServiceItem> findByPid(String id) {
         return dao.findByPid(id);
+    }
+
+    public DockerComposeServiceItem  findByPidAndName(String id,String name) {
+        return dao.findByPidAndName(id,name);
     }
 
 
@@ -229,14 +234,37 @@ public class DockerComposeServiceItemService extends BaseService<DockerComposeSe
             }
             cli.removeContainerCmd(container.getId()).exec();
         }
+    }
 
+    public void deleteContainer(DockerCompose dockerCompose,String id) {
+        DockerClient cli = getCli(dockerCompose);
+
+        Map<String, String> filter = new HashMap<>();
+        filter.put(DOCKER_COMPOSE_ITEM_PID, dockerCompose.getId());
+        filter.put(DOCKER_COMPOSE_ITEM_ID, id);
+
+        List<Container> list = cli.listContainersCmd()
+                .withLabelFilter(filter)
+                .withShowAll(true)
+                .exec();
+        Assert.state(list.size() <=1, "可能有错");
+        for (Container container : list) {
+            Object names = container.getNames();
+            log.info("准备删除容器: {}", names);
+            if (container.getState().equals("running")) {
+
+                log.info("停止容器  {}", names);
+                cli.stopContainerCmd(container.getId()).exec();
+            }
+            cli.removeContainerCmd(container.getId()).exec();
+        }
     }
 
 
     public Map<String, String> getDockerComposeFilter(String pid, String id) {
         Map<String, String> labels = new HashMap<>();
         labels.put(DOCKER_COMPOSE_ITEM_PID, pid);
-        labels.put("docker-compose-item-id", id);
+        labels.put(DOCKER_COMPOSE_ITEM_ID, id);
         return labels;
     }
 

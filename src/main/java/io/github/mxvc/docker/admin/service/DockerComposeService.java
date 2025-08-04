@@ -14,6 +14,9 @@ import org.springframework.util.Assert;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -35,6 +38,30 @@ public class DockerComposeService extends BaseService<DockerCompose> {
         DockerCompose dockerCompose = dao.findOne(id);
 
         List<DockerComposeServiceItem> items = DockerComposeConverter.parse(content);
+        Map<String, DockerComposeServiceItem> itemsMap = items.stream().collect(Collectors.toMap(DockerComposeServiceItem::getName, t -> t));
+
+        List<DockerComposeServiceItem> dbItems = itemService.findByPid(id);
+
+        // 删除
+        for (DockerComposeServiceItem dbItem : dbItems) {
+
+
+            boolean exist = itemsMap.containsKey(dbItem.getName());
+            boolean changed = false;
+            if(exist){
+                // 再次判断配置
+                DockerComposeServiceItem item = itemsMap.get(dbItem.getName());
+                changed = dbItem.isConfigEquals(item);
+            }
+            log.info("检查历史容器 {} 存在{} 配置变化{}",dbItem.getName(), exist, changed);
+            if(!exist || changed){
+                itemService.deleteContainer(dockerCompose, dbItem.getId());
+                itemService.deleteById(dbItem.getId());
+            }
+        }
+
+
+
 
 
         // TODO 先简单粗暴全部删除历史， 有时间在慢慢细化对比，没修改的则不动
