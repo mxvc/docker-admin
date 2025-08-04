@@ -18,45 +18,41 @@ import 'codemirror/addon/lint/yaml-lint.js'
 
 class CodeMirrorEditor extends React.Component {
 
-  editor = null;
+    editor = null;
 
-  onRef = (dom)=>{
-    if(dom){
-      this.init(dom)
+    ref = React.createRef();
+
+    componentDidMount() {
+        this.init();
     }
-  }
 
-  init = (textarea) => {
-    this.editor = CodeMirror.fromTextArea(textarea, {
+    init = () => {
+        const value = this.props.value;
+        const dom = this.ref.current
+        this.editor = CodeMirror.fromTextArea(dom, {
+            value: value,
+            mode:  'yaml',
+            tabSize: 2,
+            theme: "darcula",
+        });
+        this.editor.setSize(null, 300);
 
-      mode:   this.props.mode || 'yaml',
-      lineNumbers: true,
-      tabSize: 2,
-      theme: "darcula",
-    });
-    this.editor.setSize(null, 300);
-
-    this.editor.on('change', (cm) => {
-      this.props.onChange(cm.getValue());
-    });
-  };
+        this.editor.on('change', (cm) => {
+            this.props.onChange(cm.getValue());
+        });
+    };
 
 
-
-  componentWillUnmount() {
-    if(this.editor){
-      this.editor.toTextArea();
+    componentWillUnmount() {
+        if (this.editor) {
+            this.editor.toTextArea();
+            this.editor = null;
+        }
     }
-  }
 
-  render() {
-    return (
-      <textarea
-        ref={this.onRef}
-        defaultValue={this.props.value}
-      />
-    );
-  }
+    render() {
+        return (<textarea ref={this.ref} value={this.props.value}/>);
+    }
 }
 
 export default CodeMirrorEditor;
