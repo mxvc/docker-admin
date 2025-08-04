@@ -87,7 +87,7 @@ public class DockerComposeController  extends BaseController<DockerCompose>{
 
         service.saveConfigFile(id,content);
 
-        return AjaxResult.ok().msg("保存配置文件成功");
+        return AjaxResult.ok().msg("保存配置文件成功,需手动点击部署");
     }
 
     @PostMapping("moveApp")

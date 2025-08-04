@@ -1,11 +1,10 @@
 import React from "react";
-import {Terminal} from "xterm";
-import "xterm/css/xterm.css"
+import "@xterm/xterm/css/xterm.css"
 import { AttachAddon } from '@xterm/addon-attach';
 
-import { FitAddon } from 'xterm-addon-fit'
 import {SysUtil} from "@tmgg/tmgg-base";
-import {Alert} from "antd";
+import {Terminal} from "@xterm/xterm";
+import {FitAddon} from "@xterm/addon-fit/src/FitAddon";
 
 export default class extends React.Component {
 
