@@ -81,7 +81,7 @@ public class DockerComposeService extends BaseService<DockerCompose> {
     public void moveApp(String id, String appId) {
         DockerCompose dockerCompose = dao.findOne(id);
         App app = appService.findOne(appId);
-        Assert.state(app.getHost().equals(dockerCompose.getHost()), "注意不一致不能移动");
+        Assert.state(app.getHost().equals(dockerCompose.getHost()), "主机不一致不能移动");
 
         DockerComposeServiceItem item = DockerComposeConverter.convert(app);
         item.setContainerName(itemService.getContainerName(dockerCompose, item));
