@@ -21,7 +21,8 @@ export default class extends React.Component {
             dataIndex: 'label',
             render: (name, row) => {
                 return <a onClick={() => PageUtil.open('/dockerCompose/view?id=' + row.id,'容器组-'+name)}>{name}</a>
-            }
+            },
+            sorter:true,
         },
         {
             title: '名称',
@@ -31,13 +32,14 @@ export default class extends React.Component {
         {
             title: '所属机构',
             dataIndex: ['sysOrg','name'],
-
+            sorter:true,
 
         },
 
         {
             title: '运行主机',
             dataIndex: ['host','name'],
+            sorter:true,
         },
 
 
