@@ -44,12 +44,14 @@ public class AppController {
     @RequestMapping("list")
     public Page<App> list(String orgId, String searchText, @PageableDefault(sort = {"updateTime", "createTime"}, direction = Sort.Direction.DESC) Pageable pageable, HttpSession session) {
         JpaQuery<App> q = new JpaQuery<>();
-        q.searchText(searchText, "name", "remark");
+        q.searchText(searchText, "name", "remark", "host.name");
         if (StrUtil.isNotEmpty(orgId)) {
             List<String> orgIds = sysOrgService.findChildIdListById(orgId);
             orgIds.add(orgId);
             q.in(App.Fields.sysOrg + ".id", orgIds);
         }
+
+
         Page<App> list = service.findAll(q, pageable);
         return list;
     }
