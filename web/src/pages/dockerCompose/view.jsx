@@ -177,6 +177,9 @@ export default class extends React.Component {
                     <Row>
                         <Col span={12}>
                             <Descriptions>
+                                <Descriptions.Item label='中文名称'>
+                                    {info.label}
+                                </Descriptions.Item>
                                 <Descriptions.Item label='名称'>
                                     {info.name}
                                 </Descriptions.Item>
