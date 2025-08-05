@@ -39,6 +39,7 @@ export default class extends React.Component {
         {
             title: '运行主机',
             dataIndex: ['host','name'],
+            sorter:true,
         },
         {
             title: '状态',
