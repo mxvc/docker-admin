@@ -221,7 +221,7 @@ export default class extends React.Component {
                                     <List.Item.Meta
                                         title={<div>
                                             <ActiveDot
-                                            value={this.state.servicesStatus[item.containerName]}/> {item.containerName}
+                                            value={this.state.servicesStatus[item.containerName]}/> {item.name}
                                         </div>}
                                         description={<>
                                             {item.imageTag} &nbsp;
