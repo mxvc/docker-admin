@@ -55,6 +55,7 @@ public class DockerComposeController  extends BaseController<DockerCompose>{
 
     @GetMapping("services")
     public AjaxResult services(String id) throws IOException {
+        Assert.hasText(id,"id不能为空");
         List<DockerComposeServiceItem> list = dockerComposeServiceItemService.findByPid(id);
 
 
@@ -63,6 +64,7 @@ public class DockerComposeController  extends BaseController<DockerCompose>{
 
     @GetMapping("servicesStatus")
     public AjaxResult servicesStatus(String id) throws IOException {
+        Assert.hasText(id,"id不能为空");
         Map<String, Object> map = dockerComposeServiceItemService.servicesStatus(id);
 
 
