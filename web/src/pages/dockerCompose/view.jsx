@@ -281,8 +281,6 @@ export default class extends React.Component {
                        maskClosable={false}
                        width={1024}
                 >
-                        <Typography.Text>docker-compose 格式</Typography.Text>
-
                     {this.state.configContent == null ? <Spin/> :
                         <CodeMirrorEditor value={this.state.configContent}
                                           onChange={v => this.setState({configContent: v})}/>}
