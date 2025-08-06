@@ -35,7 +35,7 @@ class CodeMirrorEditor extends React.Component {
             tabSize: 2,
             theme: "darcula",
         });
-        this.editor.setSize(null, 300);
+        this.editor.setSize(null, 700);
 
         this.editor.on('change', (cm) => {
             this.props.onChange(cm.getValue());
