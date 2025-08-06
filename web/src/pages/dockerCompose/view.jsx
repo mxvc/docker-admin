@@ -279,7 +279,7 @@ export default class extends React.Component {
                        onCancel={() => this.setState({configOpen: false})}
                        destroyOnHidden
                        maskClosable={false}
-                       width={800}
+                       width={1024}
                 >
                         <Typography.Text>docker-compose 格式</Typography.Text>
 
