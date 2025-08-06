@@ -12,10 +12,7 @@ import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class DockerComposeConverter {
 
@@ -64,9 +61,11 @@ public class DockerComposeConverter {
             if (item.getPrivileged() != null) {
                 sb.append(TAB2).append("privileged").append(COL_SPACE).append(item.getPrivileged()).append(LF);
             }
-            if (CollUtil.isNotEmpty(item.getEnvironment())) {
+            Map<String, String> environment = item.getEnvironment();
+            if (CollUtil.isNotEmpty(environment)) {
                 sb.append(TAB2).append("environment").append(COLON).append(LF);
-                for (Map.Entry<String, String> e : item.getEnvironment().entrySet()) {
+                environment = new TreeMap<>(environment); // key按自然顺序
+                for (Map.Entry<String, String> e : environment.entrySet()) {
                     sb.append(TAB3).append(e.getKey()).append(COL_SPACE).append(e.getValue()).append(LF);
                 }
             }
