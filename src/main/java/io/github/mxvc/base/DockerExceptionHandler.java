@@ -8,7 +8,6 @@ import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 @Order(AopSortConstant.GLOBAL_EXP_HANDLER_AOP -1)
 @RestControllerAdvice
@@ -16,7 +15,7 @@ import org.springframework.web.servlet.resource.NoResourceFoundException;
 public class DockerExceptionHandler {
 
     @ExceptionHandler(NotFoundException.class)
-    public AjaxResult notFoundException(NoResourceFoundException e) {
+    public AjaxResult notFoundException(NotFoundException e) {
         return AjaxResult.err().msg("容器服务或资源不存在");
     }
 
