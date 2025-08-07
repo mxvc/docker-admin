@@ -8,6 +8,8 @@ import io.tmgg.lang.obj.AjaxResult;
 import io.tmgg.lang.obj.Option;
 import io.tmgg.modules.system.service.SysOrgService;
 import io.tmgg.web.annotion.HasPermission;
+import io.tmgg.web.perm.SecurityUtils;
+import io.tmgg.web.perm.Subject;
 import io.tmgg.web.persistence.BaseEntity;
 import io.tmgg.web.persistence.specification.JpaQuery;
 import jakarta.servlet.http.HttpSession;
@@ -51,6 +53,11 @@ public class AppController {
             q.in(App.Fields.sysOrg + ".id", orgIds);
         }
 
+        Subject subject = SecurityUtils.getSubject();
+        q.addSubOr(qq->{
+            qq.isNull("sysOrg.id");
+            qq.in("sysOrg.id", subject.getOrgPermissions());
+        });
 
         Page<App> list = service.findAll(q, pageable);
         return list;

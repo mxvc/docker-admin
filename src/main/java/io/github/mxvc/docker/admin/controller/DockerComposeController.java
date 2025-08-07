@@ -2,17 +2,28 @@ package io.github.mxvc.docker.admin.controller;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.thread.ThreadUtil;
+import io.github.mxvc.docker.admin.entity.App;
 import io.github.mxvc.docker.admin.entity.DockerCompose;
 import io.github.mxvc.docker.admin.entity.DockerComposeServiceItem;
+import io.github.mxvc.docker.admin.entity.Project;
 import io.github.mxvc.docker.admin.entity.converter.DockerComposeConverter;
 import io.github.mxvc.docker.admin.service.DockerComposeServiceItemService;
 import io.tmgg.lang.obj.AjaxResult;
 import io.github.mxvc.docker.admin.service.DockerComposeService;
 import io.tmgg.web.annotion.HasPermission;
+import io.tmgg.web.argument.RequestBodyKeys;
+import io.tmgg.web.perm.SecurityUtils;
+import io.tmgg.web.perm.Subject;
 import io.tmgg.web.persistence.BaseController;
 
 
+import io.tmgg.web.persistence.specification.JpaQuery;
 import lombok.Data;
+import org.apache.poi.ss.formula.functions.T;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,7 +36,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("dockerCompose")
-public class DockerComposeController  extends BaseController<DockerCompose>{
+public class DockerComposeController {
 
     @Resource
     DockerComposeService service;
@@ -33,7 +44,34 @@ public class DockerComposeController  extends BaseController<DockerCompose>{
     @Resource
     DockerComposeServiceItemService dockerComposeServiceItemService;
 
+    @HasPermission
+    @RequestMapping("page")
+    public AjaxResult page(Map<String, Object> param, String searchText, @PageableDefault(direction = Sort.Direction.DESC, sort = "updateTime") Pageable pageable) throws Exception {
+        JpaQuery<DockerCompose> q = new JpaQuery<>();
 
+        q.searchText(searchText, service.getSearchableFields());
+        q.searchMap(param,service.getFields());
+
+        Subject subject = SecurityUtils.getSubject();
+        q.addSubOr(qq->{
+            qq.isNull("sysOrg.id");
+            qq.in("sysOrg.id", subject.getOrgPermissions());
+        });
+
+
+
+        Page<DockerCompose> page = service.findAll(q, pageable);
+
+
+        return service.autoRender(page);
+    }
+
+    @HasPermission
+    @PostMapping("save")
+    public AjaxResult save(@RequestBody DockerCompose input, RequestBodyKeys updateFields) throws Exception {
+        service.saveOrUpdate(input, updateFields);
+        return AjaxResult.ok().msg("保存成功");
+    }
 
     @GetMapping("get")
     public AjaxResult get(String id){
@@ -42,7 +80,6 @@ public class DockerComposeController  extends BaseController<DockerCompose>{
         return AjaxResult.ok().data(one);
     }
 
-    @Override
     @HasPermission
     @RequestMapping({"delete"})
     public AjaxResult delete(String id) {
