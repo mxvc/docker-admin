@@ -71,11 +71,8 @@ public class DockerComposeConverter {
             }
             String command = item.getCommand();
             if (StrUtil.isNotEmpty(command)) {
-                sb.append(TAB2).append("command").append(COLON).append(LF);
-                List<String> arr = StrUtil.splitTrim(command, " ");
-                for (String a : arr) {
-                    sb.append(TAB3).append(a).append(LF);
-                }
+                sb.append(TAB2).append("command").append(COL_SPACE).append(command).append(LF);
+
             }
             List<String> ports = item.getPorts();
             if (CollUtil.isNotEmpty(ports)) {

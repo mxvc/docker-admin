@@ -15,14 +15,14 @@ importers:
         specifier: ^5.0.0
         version: 5.1.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@tmgg/tmgg-base':
-        specifier: 1.1.20
-        version: 1.1.20(@ant-design/icons@5.6.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@tinymce/tinymce-react@5.1.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@tmgg/tmgg-commons-lang@1.1.20)(antd-img-crop@4.25.0(antd@5.26.7(moment@2.30.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(antd@5.26.7(moment@2.30.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(axios@1.11.0)(dayjs@1.11.13)(echarts@5.6.0)(qs@6.14.0)(react-amap@1.2.8)
+        specifier: 1.1.26
+        version: 1.1.26(@ant-design/icons@5.6.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@tinymce/tinymce-react@5.1.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@tmgg/tmgg-commons-lang@1.1.26)(antd-img-crop@4.25.0(antd@5.26.7(moment@2.30.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(antd@5.26.7(moment@2.30.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(axios@1.11.0)(dayjs@1.11.13)(echarts@5.6.0)(qs@6.14.0)(react-amap@1.2.8)
       '@tmgg/tmgg-commons-lang':
-        specifier: 1.1.20
-        version: 1.1.20
+        specifier: 1.1.26
+        version: 1.1.26
       '@tmgg/tmgg-system':
-        specifier: 1.1.20
-        version: 1.1.20(d7lzcufhoexc66oar3lnodirki)
+        specifier: 1.1.26
+        version: 1.1.26(hxh6g3gbxk2ne3wawcytsmunpa)
       '@xterm/addon-attach':
         specifier: ^0.11.0
         version: 0.11.0(@xterm/xterm@5.5.0)
@@ -1293,12 +1293,12 @@ packages:
       react: ^18.0.0 || ^17.0.1 || ^16.7.0
       react-dom: ^18.0.0 || ^17.0.1 || ^16.7.0
 
-  '@tmgg/tmgg-base@1.1.20':
-    resolution: {integrity: sha512-H50LRZJmYcEvxbr8VFTr+xXxTKWhdwhe4ys6LtIYUKYWCWLtnZd1kvbCqEtX4Dmtcfm5aLN6LRop2CTU0MA3+w==}
+  '@tmgg/tmgg-base@1.1.26':
+    resolution: {integrity: sha512-B/Y/Li+Db2bTTdNl4ruyH50U0WRsI6ssaCLYDP00DSWyedfXew3PXf2IVQ7wMfPDMTncnCgEgYQwrWG7zlfLYA==}
     peerDependencies:
       '@ant-design/icons': ^5.4.0
       '@tinymce/tinymce-react': ^5.0.0
-      '@tmgg/tmgg-commons-lang': 1.1.20
+      '@tmgg/tmgg-commons-lang': 1.1.26
       antd: ^5.20.3
       antd-img-crop: ^4.23.0
       axios: ^1.8.3
@@ -1307,20 +1307,22 @@ packages:
       qs: ^6.14.0
       react-amap: ^1.2.8
 
-  '@tmgg/tmgg-commons-lang@1.1.20':
-    resolution: {integrity: sha512-nsm0Y0By2jvFYTM4tA4pQcnJ/RtEdw2dThst3fNzUreELr4Ux64C7P29UEjRU9idbQjgIrzuxc3gzgn4/6XxxQ==}
+  '@tmgg/tmgg-commons-lang@1.1.26':
+    resolution: {integrity: sha512-UNANzp8DKj0cguoXvmrPJv/6m6U5aeN41TLGbf4zVQoov2hhmnp2hJ5QJU9MlaA72DcVuC4HIpdT7qF6NkJ1+A==}
 
-  '@tmgg/tmgg-system@1.1.20':
-    resolution: {integrity: sha512-d3G/KKP56HPetauY6eR3alAdAWzMTohNBrXDESYaEQy8VqCCvKTzCC+u+L3v1wV5Appl8ksFyMb4q5nnbYnTaw==}
+  '@tmgg/tmgg-system@1.1.26':
+    resolution: {integrity: sha512-D9J537v1X0o53S8YIgwewrCo7RG52A1vWPkcqbtK5sMLbiMuyeEHNse8LtQn7SpPF0u8E6m58AqoN/a3ZdYa8w==}
     peerDependencies:
       '@ant-design/icons': ^5.4.0
       '@tinymce/tinymce-react': ^5.0.0
-      '@tmgg/tmgg-base': 1.1.20
-      '@tmgg/tmgg-commons-lang': 1.1.20
+      '@tmgg/tmgg-base': 1.1.26
+      '@tmgg/tmgg-commons-lang': 1.1.26
+      '@umijs/types': ^3.5.43
       antd: ^5.26.1
       antd-img-crop: ^4.23.0
       dayjs: ^1.11.13
       echarts: ^5.6.0
+      jsencrypt: ^3.5.4
       qs: ^6.14.0
       react: ^18.2.0
       react-amap: ^1.2.8
@@ -3720,6 +3722,9 @@ packages:
   js-yaml@4.1.0:
     resolution: {integrity: sha512-wpxZs9NoxZaJESJGIZTyDEaYpl0FKSA+FB9aJiyemKhMwkxQg63h4T1KJgUGHpTqPDNRcmmYLugrRjJlBtWvRA==}
     hasBin: true
+
+  jsencrypt@3.5.4:
+    resolution: {integrity: sha512-kNjfYEMNASxrDGsmcSQh/rUTmcoRfSUkxnAz+MMywM8jtGu+fFEZ3nJjHM58zscVnwR0fYmG9sGkTDjqUdpiwA==}
 
   jsesc@2.5.2:
     resolution: {integrity: sha512-OYu7XEzjkCQ3C5Ps3QIZsQfNpqoJyZZA99wd9aWd05NCtC5pWOkShK2mkL6HXQR6/Cy2lbNdPlZBpuQHXE63gA==}
@@ -7458,11 +7463,11 @@ snapshots:
       react-dom: 18.3.1(react@18.3.1)
       tinymce: 7.9.1
 
-  '@tmgg/tmgg-base@1.1.20(@ant-design/icons@5.6.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@tinymce/tinymce-react@5.1.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@tmgg/tmgg-commons-lang@1.1.20)(antd-img-crop@4.25.0(antd@5.26.7(moment@2.30.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(antd@5.26.7(moment@2.30.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(axios@1.11.0)(dayjs@1.11.13)(echarts@5.6.0)(qs@6.14.0)(react-amap@1.2.8)':
+  '@tmgg/tmgg-base@1.1.26(@ant-design/icons@5.6.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@tinymce/tinymce-react@5.1.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@tmgg/tmgg-commons-lang@1.1.26)(antd-img-crop@4.25.0(antd@5.26.7(moment@2.30.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(antd@5.26.7(moment@2.30.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(axios@1.11.0)(dayjs@1.11.13)(echarts@5.6.0)(qs@6.14.0)(react-amap@1.2.8)':
     dependencies:
       '@ant-design/icons': 5.6.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@tinymce/tinymce-react': 5.1.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@tmgg/tmgg-commons-lang': 1.1.20
+      '@tmgg/tmgg-commons-lang': 1.1.26
       antd: 5.26.7(moment@2.30.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       antd-img-crop: 4.25.0(antd@5.26.7(moment@2.30.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       axios: 1.11.0
@@ -7471,29 +7476,28 @@ snapshots:
       qs: 6.14.0
       react-amap: 1.2.8
 
-  '@tmgg/tmgg-commons-lang@1.1.20':
+  '@tmgg/tmgg-commons-lang@1.1.26':
     dependencies:
       react: 18.3.1
 
-  '@tmgg/tmgg-system@1.1.20(d7lzcufhoexc66oar3lnodirki)':
+  '@tmgg/tmgg-system@1.1.26(hxh6g3gbxk2ne3wawcytsmunpa)':
     dependencies:
       '@ant-design/icons': 5.6.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@tinymce/tinymce-react': 5.1.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@tmgg/tmgg-base': 1.1.20(@ant-design/icons@5.6.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@tinymce/tinymce-react@5.1.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@tmgg/tmgg-commons-lang@1.1.20)(antd-img-crop@4.25.0(antd@5.26.7(moment@2.30.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(antd@5.26.7(moment@2.30.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(axios@1.11.0)(dayjs@1.11.13)(echarts@5.6.0)(qs@6.14.0)(react-amap@1.2.8)
-      '@tmgg/tmgg-commons-lang': 1.1.20
+      '@tmgg/tmgg-base': 1.1.26(@ant-design/icons@5.6.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@tinymce/tinymce-react@5.1.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@tmgg/tmgg-commons-lang@1.1.26)(antd-img-crop@4.25.0(antd@5.26.7(moment@2.30.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(antd@5.26.7(moment@2.30.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(axios@1.11.0)(dayjs@1.11.13)(echarts@5.6.0)(qs@6.14.0)(react-amap@1.2.8)
+      '@tmgg/tmgg-commons-lang': 1.1.26
       '@umijs/types': 3.5.43(react-dom@18.3.1(react@18.3.1))(react-router@6.3.0(react@18.3.1))(react@18.3.1)
       antd: 5.26.7(moment@2.30.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       antd-img-crop: 4.25.0(antd@5.26.7(moment@2.30.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       dayjs: 1.11.13
       echarts: 5.6.0
+      jsencrypt: 3.5.4
       qs: 6.14.0
       react: 18.3.1
       react-amap: 1.2.8
       react-dom: 18.3.1(react@18.3.1)
       react-lazylog: 4.5.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       umi: 4.4.12(@babel/core@7.28.0)(@types/node@24.1.0)(@types/react@18.3.23)(eslint@8.57.1)(lightningcss@1.22.1)(prettier@2.2.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(rollup@3.29.5)(stylelint@14.16.1)(terser@5.43.1)(type-fest@0.20.2)(typescript@4.9.5)(webpack@5.101.0)
-    transitivePeerDependencies:
-      - react-router
 
   '@trysound/sax@0.2.0': {}
 
@@ -7613,7 +7617,7 @@ snapshots:
     dependencies:
       '@types/history': 5.0.0
       '@types/react': 18.3.23
-      '@types/react-router': 5.1.12
+      '@types/react-router': 5.1.20
 
   '@types/react-router-redux@5.0.27':
     dependencies:
@@ -10737,6 +10741,8 @@ snapshots:
   js-yaml@4.1.0:
     dependencies:
       argparse: 2.0.1
+
+  jsencrypt@3.5.4: {}
 
   jsesc@2.5.2: {}
 

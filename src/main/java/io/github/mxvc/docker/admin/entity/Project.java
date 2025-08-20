@@ -67,6 +67,8 @@ public class Project extends BaseEntity {
     String remark;
 
 
+    @Remark("自定义的dockerfile")
+    String dockerfileContent;
 
     @Override
     public void prePersist() {
