@@ -10,11 +10,10 @@ RUN npm run build
 
 
 FROM registry.cn-hangzhou.aliyuncs.com/mxvc/tmgg-base-java AS java
-# 缓存， -T 1C 表示 Maven 将在每个可用内核上使用一个线程。
 ADD pom.xml ./
-RUN mvn dependency:go-offline -q -B -T 1C --fail-never
+RUN mvn dependency:go-offline --fail-never
 ADD . .
-RUN mvn clean package -DskipTests -q -B -T 1C &&    mv target/*.jar /app.jar && rm -rf *
+RUN mvn package -DskipTests  &&  mv target/*.jar /app.jar && rm -rf *
 
 
 FROM registry.cn-hangzhou.aliyuncs.com/mxvc/tmgg-base-jdk
