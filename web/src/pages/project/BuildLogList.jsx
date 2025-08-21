@@ -200,7 +200,7 @@ export default class extends React.Component {
     const {project} = this.props;
     const {showTrigger} = this.state
 
-    let todayVersion = 'v' + dayjs().format('YYYYMMDD');
+    let todayVersion = 'v' + dayjs().format('YYYYMMDDHH');
     return (<>
 
       <ProTable
