@@ -38,6 +38,7 @@ export default class extends React.Component {
 
         configOpen: false,
         configContent: null,
+        configPosting:false,
 
 
         deployOpen: false,
@@ -149,9 +150,12 @@ export default class extends React.Component {
         })
     }
     submitContent = () => {
+        this.setState({configPosting:true})
         HttpUtil.post('dockerCompose/saveConfigFile', {id: this.id, content: this.state.configContent}).then(rs => {
             this.setState({configOpen: false, configContent: null})
             this.loadServices()
+        }).finally(()=>{
+            this.setState({configPosting:false})
         })
     }
 
@@ -280,6 +284,9 @@ export default class extends React.Component {
                        destroyOnHidden
                        maskClosable={false}
                        width={1024}
+                       okButtonProps={{
+                           loading:this.state.configPosting
+                       }}
                 >
                     {this.state.configContent == null ? <Spin/> :
                         <CodeMirrorEditor value={this.state.configContent}
