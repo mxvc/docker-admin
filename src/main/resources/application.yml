@@ -6,7 +6,3 @@ spring:
     hikari:
       minimum-idle: 20
       maximum-pool-size: 100
-
-logging:
-  file:
-    path: ./logs

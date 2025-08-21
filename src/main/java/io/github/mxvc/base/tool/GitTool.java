@@ -35,7 +35,7 @@ public class GitTool {
         String dirName = url.substring(url.lastIndexOf("/") + 1);
         dirName = dirName.replace(".git", "");
 
-        File workDir = new File("/tmp/" + dirName + "/" + DateUtil.date().toString("yyyyMMddHHmmss"));
+        File workDir = new File("/data/gitcode/" + dirName + "/" + DateUtil.date().toString("yyyyMMddHHmmss"));
 
         long start = System.currentTimeMillis();
 
