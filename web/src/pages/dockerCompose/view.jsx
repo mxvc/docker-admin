@@ -195,7 +195,7 @@ export default class extends React.Component {
                         <Col span={12}>
                             <div style={{display: 'flex', justifyContent: 'right', gap: 8}}>
                                 <Button onClick={this.onClickConfig}>全局配置</Button>
-                                <Button onClick={this.onClickMoveApp}>复制应用</Button>
+                                <Button onClick={this.onClickMoveApp}>转换为分组</Button>
                             </div>
                         </Col>
                     </Row>
@@ -319,7 +319,7 @@ export default class extends React.Component {
                 </Modal>
 
 
-                <Modal title='添加容器'
+                <Modal title='转换为分组'
                        open={this.state.moveOpen}
                        onOk={() => this.formRef.current.submit()}
                        onCancel={() => this.setState({moveOpen: false})}
@@ -333,9 +333,7 @@ export default class extends React.Component {
                           onFinish={this.onMoveAppFinish}
                     >
                         <Form.Item name='id' noStyle></Form.Item>
-                        <Form.Item name='app' label='应用' required rules={[{required: true}]}>
-                            <FieldSelect url='app/options' ></FieldSelect>
-                        </Form.Item>
+
                     </Form>
                 </Modal>
             </Page>

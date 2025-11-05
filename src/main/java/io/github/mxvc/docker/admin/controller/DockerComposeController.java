@@ -134,7 +134,7 @@ public class DockerComposeController {
     public AjaxResult moveApp(@RequestBody MoveAppParam param) throws IOException {
         String id = param.getId();
 
-        service.moveApp(id,param.getApp());
+        service.moveApp(id);
 
         return AjaxResult.ok().msg("移动应用成功");
     }

@@ -1,7 +1,10 @@
 package io.github.mxvc.docker.admin.service;
 
+import cn.hutool.core.date.DateUtil;
+import io.github.mxvc.docker.admin.dao.AppGroupDao;
 import io.github.mxvc.docker.admin.dao.DockerComposeDao;
 import io.github.mxvc.docker.admin.entity.App;
+import io.github.mxvc.docker.admin.entity.AppGroup;
 import io.github.mxvc.docker.admin.entity.DockerCompose;
 import io.github.mxvc.docker.admin.entity.DockerComposeServiceItem;
 import io.github.mxvc.docker.admin.entity.converter.DockerComposeConverter;
@@ -77,20 +80,27 @@ public class DockerComposeService extends BaseService<DockerCompose> {
 
     }
 
+    @Resource
+    AppGroupDao groupDao;
+
     @Transactional
-    public void moveApp(String id, String appId) {
+    public void moveApp(String id) {
         DockerCompose dockerCompose = dao.findOne(id);
-        App app = appService.findOne(appId);
-        Assert.state(app.getHost().equals(dockerCompose.getHost()), "主机不一致不能移动");
 
-        DockerComposeServiceItem item = DockerComposeConverter.convert(app);
-        item.setContainerName(itemService.getContainerName(dockerCompose, item));
-        item.setPid(id);
+        AppGroup g = new AppGroup();
+        g.setName(dockerCompose.getLabel());
+        g.setSeq(1);
+        g = groupDao.save(g);
 
-        itemService.save(item);
+        List<DockerComposeServiceItem> items = itemService.findByPid(id);
 
-
-        appService.deleteApp(appId);
+        for (DockerComposeServiceItem item : items) {
+            App app = DockerComposeConverter.convert(item);
+            app.setAppGroup(g);
+            app.setSysOrg(dockerCompose.getSysOrg());
+            app.setHost(dockerCompose.getHost());
+            appService.save(app);
+        }
     }
 }
 

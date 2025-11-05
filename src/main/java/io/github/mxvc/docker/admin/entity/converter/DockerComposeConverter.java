@@ -2,16 +2,19 @@ package io.github.mxvc.docker.admin.entity.converter;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.setting.yaml.YamlUtil;
 import io.github.mxvc.base.tool.YamlTool;
 import io.github.mxvc.docker.admin.entity.App;
 import io.github.mxvc.docker.admin.entity.DockerComposeServiceItem;
 import io.tmgg.jackson.JsonTool;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.springframework.util.Assert;
 import org.yaml.snakeyaml.LoaderOptions;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
 
 import java.io.IOException;
+import java.io.StringWriter;
 import java.util.*;
 
 public class DockerComposeConverter {
@@ -95,58 +98,90 @@ public class DockerComposeConverter {
         return sb.toString();
     }
 
-    public static DockerComposeServiceItem convert(App app) {
-        StringBuilder sb = new StringBuilder();
-        DockerComposeServiceItem item = new DockerComposeServiceItem();
-        item.setName(app.getName());
-        item.setImage(app.getImageUrl() + ":" + app.getImageTag());
-        App.AppConfig config = app.getConfig();
 
+    public static App convert(DockerComposeServiceItem item) {
+                Assert.notNull(item,"item不能为空");
 
-        if (config.isPrivileged()) {
-            item.setPrivileged(true);
-        }
-        String environmentYAML = config.getEnvironmentYAML();
-        if (StrUtil.isNotBlank(environmentYAML)) {
-            Map<String, Object> dict = YamlTool.yamlToFlattenedMap(environmentYAML);
-            Map<String, String> env = new HashMap<>();
-            for (Map.Entry<String, Object> e : dict.entrySet()) {
-                env.put(e.getKey(), (String) e.getValue());
+            App app = new App();
+            app.setName(item.getName());
+
+            // 解析镜像名称和标签，例如 "nginx:latest" -> imageUrl = "nginx", imageTag = "latest"
+            String image = item.getImage();
+            if (StrUtil.isNotBlank(image)) {
+                String[] parts = image.split(":", 2);
+                if (parts.length >= 1) {
+                    app.setImageUrl(parts[0]);
+                }
+                if (parts.length == 2) {
+                    app.setImageTag(parts[1]);
+                }
             }
-            item.setEnvironment(env);
-        }
 
+            // 构建 AppConfig
+            App.AppConfig config = new App.AppConfig();
+            app.setConfig(config);
 
-        if (StrUtil.isNotEmpty(config.getCmd())) {
-            item.setCommand(config.getCmd());
-
-        }
-        List<App.PortBinding> ports = config.getPorts();
-        if (CollUtil.isNotEmpty(ports)) {
-            item.setPorts(new ArrayList<>());
-            for (App.PortBinding port : ports) {
-                item.getPorts().add(port.getPublicPort() + ":" + port.getPrivatePort());
+            // Privileged
+            if (item.getPrivileged() != null && item.getPrivileged()) {
+                config.setPrivileged(true);
             }
-        }
 
-        List<App.BindConfig> binds = config.getBinds();
-        if (CollUtil.isNotEmpty(binds)) {
-            item.setVolumes(new ArrayList<>());
-            for (App.BindConfig bind : binds) {
-                item.getVolumes().add(bind.getPublicVolume() + ":" + bind.getPrivateVolume());
+            // Environment (假设是 Map<String, String>，我们要转回 YAML 字符串)
+            Map<String, String> environment = item.getEnvironment();
+            if (environment != null && !environment.isEmpty()) {
+                // 简单实现：直接转为 YAML。如果希望格式更可控，可使用 YamlUtil 或其它库
+                // 注意：这里简单使用 Map → YAML，你也可以优化格式
+                StringWriter writer = new StringWriter();
+                YamlUtil.dump(environment, writer);
+                config.setEnvironmentYAML(writer.toString());
             }
+
+            // Command
+            if (StrUtil.isNotBlank(item.getCommand())) {
+                config.setCmd(item.getCommand());
+            }
+
+            // Ports
+            List<String> ports = item.getPorts();
+            if (CollUtil.isNotEmpty(ports)) {
+                List<App.PortBinding> portBindings = new ArrayList<>();
+                for (String portMapping : ports) {
+                    String[] parts = portMapping.split(":", 2);
+                    if (parts.length == 2) {
+                            int publicPort = Integer.parseInt(parts[0]);
+                            int privatePort = Integer.parseInt(parts[1]);
+                            App.PortBinding pb = new App.PortBinding();
+                            pb.setPublicPort(publicPort);
+                            pb.setPrivatePort(privatePort);
+                            portBindings.add(pb);
+
+                    }
+                }
+                config.setPorts(portBindings);
+            }
+
+            // Volumes => Binds
+            List<String> volumes = item.getVolumes();
+            if (CollUtil.isNotEmpty(volumes)) {
+                List<App.BindConfig> bindConfigs = new ArrayList<>();
+                for (String volumeMapping : volumes) {
+                    String[] parts = volumeMapping.split(":", 2);
+                    if (parts.length == 2) {
+                        App.BindConfig bc = new App.BindConfig();
+                        bc.setPublicVolume(parts[0]);
+                        bc.setPrivateVolume(parts[1]);
+                        bindConfigs.add(bc);
+                    }
+                }
+                config.setBinds(bindConfigs);
+            }
+
+            // NetworkMode
+            config.setNetworkMode(item.getNetworkMode());
+
+
+            return app;
         }
-
-
-        item.setNetworkMode(config.getNetworkMode());
-
-        if (config.getExtraHosts() != null) {
-            Assert.state(false, "开发中。。。");
-        }
-
-        return item;
-
-    }
 
     public static void main(String[] args) throws IOException {
         String str = """
@@ -180,10 +215,13 @@ public class DockerComposeConverter {
 
         List<DockerComposeServiceItem> items = parse(str);
 
-        String rs = toConfigFile(items);
-        System.out.println(rs);
+        for (DockerComposeServiceItem item : items) {
+            System.out.println("----------------------------------------------");
+
+            App app = convert(item);
+            System.out.println(ReflectionToStringBuilder.toString(app));
+        }
 
 
-        System.out.println(str.equals(rs));
     }
 }
