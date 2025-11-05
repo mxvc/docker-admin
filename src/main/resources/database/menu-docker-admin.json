@@ -32,6 +32,7 @@
       "pid": "biz",
       "id": "settings",
       "name": "设置",
+      "perm": "settings",
       "icon": "SettingOutlined",
       "seq": 10
     },
