@@ -6,7 +6,5 @@ spring:
     hikari:
       minimum-idle: 20
       maximum-pool-size: 100
-  flyway:
-    baseline-version: 2
   application:
     name: docker-admin
