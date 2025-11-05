@@ -2,11 +2,11 @@ package io.github.mxvc.docker.admin.entity;
 
 import io.github.mxvc.docker.admin.entity.converter.AppConfigConverter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import io.tmgg.data.DBConstants;
 import io.tmgg.lang.ann.Remark;
-import io.tmgg.lang.validator.ValidateStartWithLetter;
 import io.tmgg.modules.system.entity.SysOrg;
 import io.tmgg.data.domain.BaseEntity;
-import io.tmgg.web.persistence.DBConstants;
+import io.tmgg.validator.ValidateStartWithLetter;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;

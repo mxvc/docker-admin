@@ -1,7 +1,7 @@
 package io.github.mxvc.docker.admin.entity;
 
 import io.tmgg.data.domain.BaseEntity;
-import io.tmgg.web.persistence.DBConstants;
+import io.tmgg.data.DBConstants;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;

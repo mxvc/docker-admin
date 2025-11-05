@@ -1,7 +1,7 @@
 package io.github.mxvc.docker.admin.entity;
 
 import io.tmgg.lang.ann.Remark;
-import io.tmgg.lang.validator.ValidateStartWithLetter;
+import io.tmgg.validator.ValidateStartWithLetter;
 import io.tmgg.modules.system.entity.SysOrg;
 import io.tmgg.data.domain.BaseEntity;
 import jakarta.persistence.Table;
