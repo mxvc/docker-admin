@@ -85,7 +85,7 @@ public class ProjectController  {
         }
         param.setGitUrl(param.getGitUrl().trim());
         param.setName(param.getName().trim());
-        Project result = this.service.saveOrUpdate(param,updateFields);
+        Project result = this.service.saveOrUpdateByClient(param,updateFields);
         return AjaxResult.ok().data(result.getId()).msg("保存成功");
     }
 

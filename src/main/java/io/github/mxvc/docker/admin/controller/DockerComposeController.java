@@ -50,7 +50,7 @@ public class DockerComposeController {
         JpaQuery<DockerCompose> q = new JpaQuery<>();
 
         q.searchText(searchText, service.getSearchableFields());
-        q.searchMap(param,service.getFields());
+
 
         Subject subject = SecurityUtils.getSubject();
         q.addSubOr(qq->{
@@ -63,13 +63,13 @@ public class DockerComposeController {
         Page<DockerCompose> page = service.findAll(q, pageable);
 
 
-        return service.autoRender(page);
+        return AjaxResult.ok().data(page);
     }
 
     @HasPermission
     @PostMapping("save")
     public AjaxResult save(@RequestBody DockerCompose input, RequestBodyKeys updateFields) throws Exception {
-        service.saveOrUpdate(input, updateFields);
+        service.saveOrUpdateByClient(input, updateFields);
         return AjaxResult.ok().msg("保存成功");
     }
 

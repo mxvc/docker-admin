@@ -8,3 +8,5 @@ spring:
       maximum-pool-size: 100
   flyway:
     baseline-version: 1
+  application:
+    name: docker-admin

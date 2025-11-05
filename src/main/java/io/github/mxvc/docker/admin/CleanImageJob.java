@@ -1,25 +1,22 @@
 package io.github.mxvc.docker.admin;
 
-import io.github.mxvc.docker.admin.entity.Host;
-import io.github.mxvc.docker.admin.service.HostService;
-import io.github.mxvc.docker.sdk.engine.DockerSdkManager;
 import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.model.PruneResponse;
 import com.github.dockerjava.api.model.PruneType;
-import io.tmgg.modules.job.JobTool;
-import org.quartz.Job;
-import org.quartz.JobExecutionContext;
-import org.quartz.JobExecutionException;
+import io.github.mxvc.docker.admin.entity.Host;
+import io.github.mxvc.docker.admin.service.HostService;
+import io.github.mxvc.docker.sdk.engine.DockerSdkManager;
+import io.tmgg.modules.job.BaseJob;
+import jakarta.annotation.Resource;
+import org.quartz.JobDataMap;
 import org.slf4j.Logger;
 import org.springframework.stereotype.Component;
 
-import jakarta.annotation.Resource;
 import java.util.List;
 
 @Component
-public class CleanImageJob implements Job {
+public class CleanImageJob extends BaseJob {
 
-    private static final Logger log = JobTool.getLogger();
 
     @Resource
     HostService hostService;
@@ -27,9 +24,8 @@ public class CleanImageJob implements Job {
     @Resource
     DockerSdkManager sdkManager;
 
-
     @Override
-    public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
+    public String execute(JobDataMap data, Logger log) throws Exception {
         log.info("开始清理资源");
 
         List<Host> list = hostService.findAll();
@@ -56,6 +52,7 @@ public class CleanImageJob implements Job {
             }
 
         }
+        return "OK";
     }
 
 

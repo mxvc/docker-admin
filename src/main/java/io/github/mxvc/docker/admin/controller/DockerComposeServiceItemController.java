@@ -38,7 +38,7 @@ public class DockerComposeServiceItemController {
         item.setName(name);
         item.setContainerName(service.getContainerName(dockerCompose, item));
 
-        this.service.saveOrUpdate(item, updateFields);
+        this.service.saveOrUpdateByClient(item, updateFields);
         return AjaxResult.ok().msg("保存成功");
     }
 
