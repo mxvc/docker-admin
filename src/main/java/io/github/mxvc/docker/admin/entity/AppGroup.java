@@ -20,6 +20,8 @@ public class AppGroup extends BaseEntity {
     @Remark("名称")
     private String name;
 
+    @Remark("编码")
+    private String code;
 
     @Remark("排序")
     private Integer seq;

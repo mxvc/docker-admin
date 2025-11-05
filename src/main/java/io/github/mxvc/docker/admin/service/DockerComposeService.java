@@ -90,6 +90,7 @@ public class DockerComposeService extends BaseService<DockerCompose> {
         AppGroup g = new AppGroup();
         g.setName(dockerCompose.getLabel());
         g.setSeq(1);
+        g.setCode(dockerCompose.getName());
         g = groupDao.save(g);
 
         List<DockerComposeServiceItem> items = itemService.findByPid(id);
