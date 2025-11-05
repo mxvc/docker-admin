@@ -16,7 +16,7 @@ export default class extends React.Component {
   tableRef = React.createRef()
 
   columns = [
-    
+
     {
       title: '名称',
       dataIndex: 'name',
@@ -59,7 +59,7 @@ export default class extends React.Component {
       render: (_, record) => (
           <ButtonList>
             <Button size='small' perm='appGroup:save' onClick={() => this.handleEdit(record)}>编辑</Button>
-            <Popconfirm perm='appGroup:delete' title='是否确定删除应用分租'  onConfirm={() => this.handleDelete(record)}>
+            <Popconfirm perm='appGroup:delete' title='是否确定删除应用分组'  onConfirm={() => this.handleDelete(record)}>
               <Button size='small'>删除</Button>
             </Popconfirm>
           </ButtonList>
@@ -109,15 +109,10 @@ export default class extends React.Component {
                         <Form.Item label='名称' name='name'>
                                <Input/>
                         </Form.Item>
-                        <Form.Item label='排序' name='seq'>
-                               <InputNumber />
-                        </Form.Item>
-                        <Form.Item label='lockVersion' name='lockVersion'>
-                               <InputNumber />
-                        </Form.Item>
+
       </ProTable>
 
-  <Modal title='应用分租'
+  <Modal title='应用分组'
     open={this.state.formOpen}
     onOk={() => this.formRef.current.submit()}
     onCancel={() => this.setState({formOpen: false})}

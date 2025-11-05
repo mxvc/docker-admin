@@ -8,7 +8,7 @@ import lombok.Setter;
 import lombok.experimental.FieldNameConstants;
 
 
-@Remark("应用分租")
+@Remark("应用分组")
 @Entity
 @Getter
 @Setter
