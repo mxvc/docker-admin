@@ -35,6 +35,7 @@ public class App extends BaseEntity {
     @ManyToOne
     SysOrg sysOrg;
 
+    @NotNull
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @ManyToOne(fetch = FetchType.LAZY)
     AppGroup appGroup;

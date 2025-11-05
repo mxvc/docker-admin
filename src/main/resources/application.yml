@@ -7,4 +7,5 @@ spring:
       maximum-pool-size: 100
   application:
     name: docker-admin
-
+  flyway:
+    out-of-order: true
