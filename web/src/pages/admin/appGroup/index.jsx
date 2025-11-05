@@ -1,7 +1,7 @@
 import {PlusOutlined} from '@ant-design/icons'
-import {Button, Card,InputNumber, Popconfirm,Modal,Form,Input,message} from 'antd'
+import {Button, InputNumber, Popconfirm,Modal,Form,Input} from 'antd'
 import React from 'react'
-import {ButtonList,dictValueTag, ViewBoolean,FieldDateRange,FieldDictSelect,FieldRadioBoolean, FieldDatePickerString, FieldDateTimePickerString, HttpUtil, Page,ProTable} from "@tmgg/tmgg-base";
+import {ButtonList,HttpUtil, Page,ProTable} from "@tmgg/tmgg-base";
 
 
 
