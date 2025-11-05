@@ -35,23 +35,6 @@ export default class extends React.Component {
 
     },
 
-    {
-      title: 'lockVersion',
-      dataIndex: 'lockVersion',
-
-
-
-
-    },
-
-    {
-      title: '_tempId',
-      dataIndex: '_tempId',
-
-
-
-
-    },
 
     {
       title: '操作',
@@ -133,12 +116,7 @@ export default class extends React.Component {
               <Form.Item label='排序' name='seq' rules={[{required: true}]}>
                     <InputNumber />
               </Form.Item>
-              <Form.Item label='lockVersion' name='lockVersion' rules={[{required: true}]}>
-                    <InputNumber />
-              </Form.Item>
-              <Form.Item label='_tempId' name='_tempId' rules={[{required: true}]}>
-                    <Input/>
-              </Form.Item>
+
 
     </Form>
   </Modal>
