@@ -22,12 +22,11 @@ public class AppGroupController  {
 
     @HasPermission
     @RequestMapping("page")
-    public AjaxResult page(AppGroup appGroup, String searchText, @PageableDefault(direction = Sort.Direction.DESC, sort = "updateTime") Pageable pageable) throws Exception {
+    public AjaxResult page( String searchText, @PageableDefault(direction = Sort.Direction.DESC, sort = "updateTime") Pageable pageable) throws Exception {
         JpaQuery<AppGroup> q = new JpaQuery<>();
-        q.searchText(searchText, service.getSearchableFields());
-        q.searchParams(appGroup, service.getDomainClass());
+        q.like(AppGroup.Fields.name, searchText);
 
-        Page<AppGroup> page = service.findAllByClient(q, pageable);
+        Page<AppGroup> page = service.findAllByRequest(q, pageable);
 
         return AjaxResult.ok().data(page);
    }
@@ -36,7 +35,7 @@ public class AppGroupController  {
     @HasPermission
     @PostMapping("save")
     public AjaxResult save(@RequestBody AppGroup input, RequestBodyKeys updateFields) throws Exception {
-        service.saveOrUpdateByClient(input, updateFields);
+        service.saveOrUpdateByRequest(input, updateFields);
         return AjaxResult.ok().msg("保存成功");
     }
 
@@ -44,7 +43,7 @@ public class AppGroupController  {
     @HasPermission
     @RequestMapping("delete")
     public AjaxResult delete(String id) {
-        service.deleteByClient(id);
+        service.deleteByRequest(id);
         return AjaxResult.ok().msg("删除成功");
     }
 

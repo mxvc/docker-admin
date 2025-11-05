@@ -89,9 +89,7 @@ export default class extends React.Component {
           columns={this.columns}
 
       >
-                        <Form.Item label='名称' name='name'>
-                               <Input/>
-                        </Form.Item>
+
 
       </ProTable>
 

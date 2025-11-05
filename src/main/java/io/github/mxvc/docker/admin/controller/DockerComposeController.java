@@ -69,7 +69,7 @@ public class DockerComposeController {
     @HasPermission
     @PostMapping("save")
     public AjaxResult save(@RequestBody DockerCompose input, RequestBodyKeys updateFields) throws Exception {
-        service.saveOrUpdateByClient(input, updateFields);
+        service.saveOrUpdateByRequest(input, updateFields);
         return AjaxResult.ok().msg("保存成功");
     }
 
