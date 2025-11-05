@@ -1,15 +1,6 @@
 {
   "SysMenu": [
     {
-      "pid":"biz",
-      "id": "image",
-      "name": "镜像",
-      "perm": "image",
-      "path": "/image",
-      "icon": "DockerOutlined",
-      "seq": 1
-    },
-    {
       "pid": "biz",
       "id": "project",
       "name": "项目",

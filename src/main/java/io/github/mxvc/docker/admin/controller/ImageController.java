@@ -28,29 +28,7 @@ public class ImageController {
 
 
 
-    @RequestMapping("page")
-    public AjaxResult page(  String registryId,
-    String searchText, @PageableDefault(direction = Sort.Direction.DESC, sort = {"updateTime"}) Pageable pageable) throws Exception {
-        Registry registry = StrUtil.isNotEmpty(registryId) ? registryService.findOne(registryId) : registryService.checkAndFindDefault();
 
-
-        RegistrySdk sdk = registryService.findSdkByUrl(registry.getUrl());
-
-        Page<ImageVo> page = sdk.imageList(registry, pageable, searchText);
-
-        return AjaxResult.ok().data(page);
-    }
-
-
-    @GetMapping("tagPage")
-    public AjaxResult tagPage(String url, String searchText, Pageable pageable) throws Exception {
-        RegistrySdk sdk = registryService.findSdkByUrl(url);
-        Registry registry = registryService.findByUrl(url);
-
-        Page<TagVo> page = sdk.tagList(registry, url, searchText, pageable);
-
-        return AjaxResult.ok().data(page);
-    }
 
     @GetMapping("options")
     public AjaxResult options(String registryId, String searchText,
