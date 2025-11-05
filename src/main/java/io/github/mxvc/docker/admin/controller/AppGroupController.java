@@ -13,6 +13,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("appGroup")
 public class AppGroupController  {
@@ -30,6 +32,15 @@ public class AppGroupController  {
 
         return AjaxResult.ok().data(page);
    }
+
+    @RequestMapping("list")
+    public AjaxResult list() throws Exception {
+        JpaQuery<AppGroup> q = new JpaQuery<>();
+
+        List<AppGroup> list = service.findAll(q, Sort.by("seq"));
+
+        return AjaxResult.ok().data(list);
+    }
 
 
     @HasPermission

@@ -1,8 +1,9 @@
-import {AutoComplete, Button, Form, Input, Modal, Splitter} from 'antd';
+import {AutoComplete, Avatar, Button, Card, Form, Input, List, Modal, Splitter, Tree} from 'antd';
 import React from 'react';
 import ContainerStatus from "../../components/ContainerStatus";
 import {notPermitted} from "../../utils/SysConfig";
 import {FieldOrgTreeSelect, FieldSelect, HttpUtil, OrgTree, PageUtil, ProTable} from "@tmgg/tmgg-base";
+import FieldRemoteTree from "@tmgg/tmgg-base/src/components/FieldRemoteTree";
 
 let api = 'app/';
 
@@ -71,10 +72,16 @@ export default class extends React.Component {
         imageList: [],
         imageTagList: [],
 
-        selectedOrgId:null
+        groupList:[],
+        selectedOrgId:null,
 
     }
 
+    componentDidMount() {
+        HttpUtil.get("appGroup/list").then(rs=>{
+            this.setState({groupList:rs})
+        })
+    }
 
     reload = () => {
         this.tableRef.current.reload()
@@ -115,14 +122,21 @@ export default class extends React.Component {
     render() {
         return (
             <> <Splitter>
-                <Splitter.Panel size={250}>
-                    <OrgTree onChange={(v) => {
-                        this.setState({selectedOrgId:v},()=>{
-                            this.tableRef.current.reload()
-                        })
+                <Splitter.Panel size={250} >
 
-                    }}/>
+                    <div style={{padding:12}}>
 
+                    <List dataSource={this.state.groupList} renderItem={(item, index) => (
+                        <List.Item>
+                            <List.Item.Meta
+                                avatar={<Avatar  >{item.name.substr(0,1)}</Avatar>}
+                                title={item.name}
+                                description={<div>共x个应用，a个停止</div>}
+                            />
+                        </List.Item>
+                    )}>
+
+                    </List></div>
                 </Splitter.Panel>
                 <Splitter.Panel style={{paddingLeft:16}}>
                 <ProTable
