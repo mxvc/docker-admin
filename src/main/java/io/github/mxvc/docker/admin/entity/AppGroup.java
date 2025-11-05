@@ -3,6 +3,7 @@ package io.github.mxvc.docker.admin.entity;
 import io.tmgg.data.domain.BaseEntity;
 import io.tmgg.lang.ann.Remark;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldNameConstants;
@@ -13,6 +14,7 @@ import lombok.experimental.FieldNameConstants;
 @Getter
 @Setter
 @FieldNameConstants
+@Table(name = "t_app_group")
 public class AppGroup extends BaseEntity {
 
     @Remark("名称")

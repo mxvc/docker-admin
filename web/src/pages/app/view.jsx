@@ -20,7 +20,7 @@ import {history} from "umi";
 
 import ContainerLog from "../../components/container/ContainerLog";
 import ContainerFile from "../../components/container/ContainerFile";
-import {FieldOrgTreeSelect, HasPerm, HttpUtil, PageUtil} from "@tmgg/tmgg-base";
+import {FieldOrgTreeSelect, FieldSelect, HasPerm, HttpUtil, PageUtil} from "@tmgg/tmgg-base";
 import LogView from "../../components/LogView";
 import PublishForm from "./PublishForm";
 import {SyncOutlined} from "@ant-design/icons";
@@ -235,6 +235,9 @@ export default class extends React.Component {
 
                     <Form.Item label='所属组织' name={['sysOrg', 'id']} >
                         <FieldOrgTreeSelect/>
+                    </Form.Item>
+                    <Form.Item label='所属分组' name={['appGroup', 'id']} >
+                        <FieldSelect url='/appGroup/options'/>
                     </Form.Item>
                 </Form>
             </Modal>

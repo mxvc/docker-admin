@@ -1,5 +1,7 @@
 package io.github.mxvc.docker.admin.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.github.mxvc.docker.admin.entity.converter.AppConfigConverter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.tmgg.data.DBConstants;
@@ -33,6 +35,9 @@ public class App extends BaseEntity {
     @ManyToOne
     SysOrg sysOrg;
 
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @ManyToOne(fetch = FetchType.LAZY)
+    AppGroup appGroup;
 
     @NotNull
     @ManyToOne

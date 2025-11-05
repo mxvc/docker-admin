@@ -38,20 +38,12 @@ public class AppController {
     private AppService service;
 
 
-    @Resource
-    private SysOrgService sysOrgService;
-
-
     @HasPermission("app:list")
     @RequestMapping("list")
-    public Page<App> list(String orgId, String searchText, @PageableDefault(sort = {"updateTime", "createTime"}, direction = Sort.Direction.DESC) Pageable pageable, HttpSession session) {
+    public Page<App> list(String groupId, String searchText, @PageableDefault(sort = {"updateTime", "createTime"}, direction = Sort.Direction.DESC) Pageable pageable, HttpSession session) {
         JpaQuery<App> q = new JpaQuery<>();
         q.searchText(searchText, "name", "remark", "host.name");
-        if (StrUtil.isNotEmpty(orgId)) {
-            List<String> orgIds = sysOrgService.findChildIdListById(orgId);
-            orgIds.add(orgId);
-            q.in(App.Fields.sysOrg + ".id", orgIds);
-        }
+        q.eq(App.Fields.appGroup +".id", groupId);
 
         Subject subject = SecurityUtils.getSubject();
         q.addSubOr(qq->{
