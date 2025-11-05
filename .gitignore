@@ -40,3 +40,4 @@ build/
 /web/dist/
 /web/src/.umi-production/
 /logs/
+/web/pnpm-lock.yaml

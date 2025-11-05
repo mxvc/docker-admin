@@ -8,7 +8,7 @@ import cn.hutool.core.util.StrUtil;
 import io.tmgg.jackson.JsonTool;
 import io.tmgg.lang.MapTool;
 import io.tmgg.lang.validator.ValidateStartWithLetter;
-import io.tmgg.web.persistence.BaseEntity;
+import io.tmgg.data.domain.BaseEntity;
 import io.tmgg.web.persistence.converter.ToListConverter;
 import io.tmgg.web.persistence.converter.ToMapConverter;
 import jakarta.persistence.*;

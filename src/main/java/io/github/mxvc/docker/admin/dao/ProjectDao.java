@@ -3,8 +3,8 @@ package io.github.mxvc.docker.admin.dao;
 import io.github.mxvc.docker.admin.entity.Project;
 
 
-import io.tmgg.web.persistence.BaseDao;
-import io.tmgg.web.persistence.specification.JpaQuery;
+import io.tmgg.data.repository.BaseDao;
+import io.tmgg.data.query.JpaQuery;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;

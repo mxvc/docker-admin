@@ -2,7 +2,7 @@ package io.github.mxvc.base;
 
 
 import com.github.dockerjava.api.exception.NotFoundException;
-import io.tmgg.lang.obj.AjaxResult;
+import io.tmgg.dto.AjaxResult;
 import io.tmgg.web.consts.AopSortConstant;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;

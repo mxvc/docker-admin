@@ -1,7 +1,7 @@
 package io.github.mxvc.docker.admin.dao;
 
 import io.github.mxvc.docker.admin.entity.DockerCompose;
-import io.tmgg.web.persistence.BaseDao;
+import io.tmgg.data.repository.BaseDao;
 import org.springframework.stereotype.Repository;
 
 @Repository

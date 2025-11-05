@@ -5,8 +5,8 @@ import io.github.mxvc.docker.admin.entity.BuildLog;
 import io.github.mxvc.docker.admin.service.BuildLogService;
 
 
-import io.tmgg.web.persistence.BaseEntity;
-import io.tmgg.web.persistence.specification.JpaQuery;
+import io.tmgg.data.domain.BaseEntity;
+import io.tmgg.data.query.JpaQuery;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

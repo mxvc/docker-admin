@@ -3,7 +3,7 @@ package io.github.mxvc.docker.admin.service;
 import io.github.mxvc.docker.admin.entity.GitCredential;
 import io.github.mxvc.docker.admin.dao.GitCredentialDao;
 
-import io.tmgg.web.persistence.BaseService;
+import io.tmgg.data.service.BaseService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 

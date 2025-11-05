@@ -3,7 +3,7 @@ package io.github.mxvc.docker.admin.service;
 import io.github.mxvc.docker.admin.dao.BuildLogDao;
 import io.github.mxvc.docker.admin.entity.BuildLog;
 
-import io.tmgg.web.persistence.BaseService;
+import io.tmgg.data.service.BaseService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

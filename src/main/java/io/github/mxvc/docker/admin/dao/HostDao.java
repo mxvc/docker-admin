@@ -4,8 +4,8 @@ package io.github.mxvc.docker.admin.dao;
 import io.github.mxvc.docker.admin.entity.Host;
 
 
-import io.tmgg.web.persistence.BaseDao;
-import io.tmgg.web.persistence.specification.JpaQuery;
+import io.tmgg.data.repository.BaseDao;
+import io.tmgg.data.query.JpaQuery;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 

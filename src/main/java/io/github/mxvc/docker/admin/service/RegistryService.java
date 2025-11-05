@@ -6,7 +6,7 @@ import io.github.mxvc.docker.sdk.registry.RegistrySdk;
 import io.github.mxvc.docker.sdk.registry.tencent.AliyunSdk;
 import io.github.mxvc.docker.sdk.registry.tencent.TencentSdk;
 
-import io.tmgg.web.persistence.BaseService;
+import io.tmgg.data.service.BaseService;
 import org.springframework.stereotype.Service;
 
 import jakarta.annotation.Resource;

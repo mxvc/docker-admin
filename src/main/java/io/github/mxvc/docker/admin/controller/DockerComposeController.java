@@ -8,7 +8,7 @@ import io.github.mxvc.docker.admin.entity.DockerComposeServiceItem;
 import io.github.mxvc.docker.admin.entity.Project;
 import io.github.mxvc.docker.admin.entity.converter.DockerComposeConverter;
 import io.github.mxvc.docker.admin.service.DockerComposeServiceItemService;
-import io.tmgg.lang.obj.AjaxResult;
+import io.tmgg.dto.AjaxResult;
 import io.github.mxvc.docker.admin.service.DockerComposeService;
 import io.tmgg.web.annotion.HasPermission;
 import io.tmgg.web.argument.RequestBodyKeys;
@@ -17,7 +17,7 @@ import io.tmgg.web.perm.Subject;
 import io.tmgg.web.persistence.BaseController;
 
 
-import io.tmgg.web.persistence.specification.JpaQuery;
+import io.tmgg.data.query.JpaQuery;
 import lombok.Data;
 import org.apache.poi.ss.formula.functions.T;
 import org.springframework.data.domain.Page;

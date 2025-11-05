@@ -14,7 +14,7 @@ import io.github.mxvc.docker.admin.entity.Registry;
 import io.github.mxvc.docker.sdk.engine.DefaultCallback;
 import io.github.mxvc.docker.sdk.engine.DockerSdkManager;
 import io.tmgg.lang.SpringTool;
-import io.tmgg.web.persistence.BaseService;
+import io.tmgg.data.service.BaseService;
 import jakarta.annotation.Resource;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;

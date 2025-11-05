@@ -16,7 +16,7 @@ import com.github.dockerjava.api.command.CreateContainerCmd;
 import com.github.dockerjava.api.command.CreateContainerResponse;
 import com.github.dockerjava.api.model.*;
 import io.tmgg.web.CodeException;
-import io.tmgg.web.persistence.BaseService;
+import io.tmgg.data.service.BaseService;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;

@@ -18,7 +18,7 @@ import com.github.dockerjava.api.command.BuildImageCmd;
 import com.github.dockerjava.api.command.PushImageCmd;
 import com.github.dockerjava.api.model.BuildResponseItem;
 
-import io.tmgg.web.persistence.BaseService;
+import io.tmgg.data.service.BaseService;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.eclipse.jgit.api.errors.GitAPIException;

@@ -8,15 +8,15 @@ import io.github.mxvc.docker.admin.service.ProjectService;
 
 
 
-import io.tmgg.lang.obj.AjaxResult;
-import io.tmgg.lang.obj.Option;
+import io.tmgg.dto.AjaxResult;
+import io.tmgg.dto.Option;
 import io.tmgg.modules.system.service.SysOrgService;
 import io.tmgg.web.annotion.HasPermission;
 import io.tmgg.web.argument.RequestBodyKeys;
 import io.tmgg.web.perm.SecurityUtils;
 import io.tmgg.web.perm.Subject;
-import io.tmgg.web.persistence.BaseEntity;
-import io.tmgg.web.persistence.specification.JpaQuery;
+import io.tmgg.data.domain.BaseEntity;
+import io.tmgg.data.query.JpaQuery;
 import jakarta.annotation.Resource;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.springframework.data.domain.Page;

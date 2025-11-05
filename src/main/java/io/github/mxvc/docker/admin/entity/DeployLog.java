@@ -1,6 +1,6 @@
 package io.github.mxvc.docker.admin.entity;
 
-import io.tmgg.web.persistence.BaseEntity;
+import io.tmgg.data.domain.BaseEntity;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;

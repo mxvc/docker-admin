@@ -5,7 +5,7 @@ import io.github.mxvc.docker.admin.entity.App;
 import io.github.mxvc.docker.admin.entity.DockerCompose;
 import io.github.mxvc.docker.admin.entity.DockerComposeServiceItem;
 import io.github.mxvc.docker.admin.entity.converter.DockerComposeConverter;
-import io.tmgg.web.persistence.BaseService;
+import io.tmgg.data.service.BaseService;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

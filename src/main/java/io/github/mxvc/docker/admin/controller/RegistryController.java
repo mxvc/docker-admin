@@ -1,7 +1,7 @@
 package io.github.mxvc.docker.admin.controller;
 
-import io.tmgg.lang.obj.AjaxResult;
-import io.tmgg.lang.obj.Option;
+import io.tmgg.dto.AjaxResult;
+import io.tmgg.dto.Option;
 import io.github.mxvc.docker.admin.entity.Registry;
 import io.github.mxvc.docker.admin.service.RegistryService;
 

@@ -5,7 +5,7 @@ import io.github.mxvc.docker.admin.entity.DockerCompose;
 import io.github.mxvc.docker.admin.entity.DockerComposeServiceItem;
 import io.github.mxvc.docker.admin.service.DockerComposeService;
 import io.github.mxvc.docker.admin.service.DockerComposeServiceItemService;
-import io.tmgg.lang.obj.AjaxResult;
+import io.tmgg.dto.AjaxResult;
 import io.tmgg.web.annotion.HasPermission;
 import io.tmgg.web.argument.RequestBodyKeys;
 import jakarta.annotation.Resource;
