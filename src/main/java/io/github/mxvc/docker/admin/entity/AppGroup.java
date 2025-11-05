@@ -2,6 +2,7 @@ package io.github.mxvc.docker.admin.entity;
 
 import io.tmgg.data.domain.BaseEntity;
 import io.tmgg.lang.ann.Remark;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.Getter;
@@ -20,6 +21,7 @@ public class AppGroup extends BaseEntity {
     @Remark("名称")
     private String name;
 
+    @Column(unique = true)
     @Remark("编码")
     private String code;
 
