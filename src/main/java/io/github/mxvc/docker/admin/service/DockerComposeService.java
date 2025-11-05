@@ -97,6 +97,7 @@ public class DockerComposeService extends BaseService<DockerCompose> {
 
         for (DockerComposeServiceItem item : items) {
             App app = DockerComposeConverter.convert(item);
+            app.setName(g.getCode()+"__" + app.getName());
             app.setAppGroup(g);
             app.setSysOrg(dockerCompose.getSysOrg());
             app.setHost(dockerCompose.getHost());
