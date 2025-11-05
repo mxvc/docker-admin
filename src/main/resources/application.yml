@@ -8,6 +8,5 @@ spring:
       maximum-pool-size: 100
   flyway:
     baseline-version: 1
-    validate-on-migrate: false
   application:
     name: docker-admin
