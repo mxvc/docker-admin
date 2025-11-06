@@ -123,10 +123,9 @@ export default class extends React.Component {
     render() {
         return (
             <> <Splitter>
-                <Splitter.Panel size={250}>
+                <Splitter.Panel size={200}>
 
                     <div style={{padding: 12}}>
-
                         <Menu items={this.state.groupData} onSelect={({key}) => {
                             this.setState({selectedKey: key}, this.reload);
                         }} />
