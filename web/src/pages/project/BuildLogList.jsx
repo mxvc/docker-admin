@@ -109,7 +109,7 @@ export default class extends React.Component {
       render: (_, row) => {
         const logUrl = "admin/sys/log/" + row.id;
         return <Space>
-          <Button size='small' href={logUrl}>日志</Button>
+          <Button size='small' href={logUrl} target='_blank'>日志</Button>
           <Button size='small' onClick={() => this.stop(row)}>停止</Button>
           <Button size='small' onClick={() => this.retry(row)}>重试</Button>
         </Space>
