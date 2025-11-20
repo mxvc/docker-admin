@@ -23,6 +23,10 @@ export class LogSse extends React.Component {
         }
     }
 
+    componentWillUnmount() {
+        this.sse.close()
+    }
+
     append = msg => {
         this.state.list.push(msg)
         this.setState({
