@@ -167,7 +167,6 @@ export default class extends React.Component {
             return <Spin/>
         }
         const {state} = container;
-        const deploying = state === 'deploying'
 
 
         return (<>
@@ -196,6 +195,10 @@ export default class extends React.Component {
                     <Item label='组织机构'>  {app.sysOrg?.name} </Item>
 
                 </Descriptions>
+
+                <Space>
+                    <Button size='small' target='_blank' href={'/admin/sys/log/' + app.id}>部署日志</Button>
+                </Space>
 
             </Card>
 
@@ -251,18 +254,11 @@ export default class extends React.Component {
         const {app} = this.state
 
         const notFound = container.state === 'notFound'
-        const deploying = container.state === 'deploying'
 
         let containerId = container.id
         let hostId = app.host.id
 
         const items = [
-            {
-                key: 'deployLog',
-                label: '部署日志',
-                icon: deploying ? <SyncOutlined spin /> : null,
-                children: <LogView url={app.logUrl}/>
-            },
             {
                 key: 'log',
                 label: 'Console',
