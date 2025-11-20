@@ -1,3 +1,4 @@
+cd ..
 set  "tag_name=v2.0.4"
 
 
