@@ -29,10 +29,6 @@ function getIcon(key, index) {
 
 export default class extends React.Component {
 
-
-
-
-
   state = {
     curRow: {},
 
@@ -76,10 +72,7 @@ export default class extends React.Component {
     },
     {
       title: '代码日志',
-      dataIndex: 'codeMessage',
-      render(v) {
-        return StrUtil.ellipsis(v, 20)
-      }
+      dataIndex: 'codeMessage'
     },
     {
       title: '构建主机',
@@ -184,7 +177,7 @@ export default class extends React.Component {
     })
   }
   cleanError = () => {
-    HttpUtil.get("admin/project/cleanErrorLog", {id: this.projectId}).then(rs => {
+    HttpUtil.get("admin/project/cleanErrorLog", {id: this.props.project.id}).then(rs => {
       this.actionRef.current.reload()
     })
   }
