@@ -2,6 +2,7 @@ package io.github.jiangood.docker.admin.controller;
 
 import cn.hutool.core.util.StrUtil;
 import com.github.dockerjava.api.DockerClient;
+import com.github.dockerjava.api.async.ResultCallback;
 import com.github.dockerjava.api.model.Container;
 import com.github.dockerjava.api.model.Frame;
 import com.github.dockerjava.core.command.LogContainerResultCallback;
@@ -247,14 +248,16 @@ public class AppController {
                 .withStdErr(true)
                 .withFollowStream(true)
                 .withTail(500)
-                .exec(new LogContainerResultCallback() {
+                .exec(new ResultCallback.Adapter<>(){
                     @Override
                     public void onNext(Frame item) {
                         String msg = new String(item.getPayload(), StandardCharsets.ISO_8859_1);
                         out.write(msg);
                         out.flush();
+                        super.onNext(item);
                     }
-                }).awaitCompletion();
+                })
+                .awaitCompletion();
 
         System.out.println("日志结束");
     }
