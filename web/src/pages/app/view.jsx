@@ -8,7 +8,7 @@ import {
     Input,
     message,
     Modal,
-    Row, Skeleton,
+    Row,
     Space,
     Spin,
     Tabs,
@@ -19,7 +19,7 @@ import ConfigForm from "./ConfigForm";
 import {history} from "umi";
 
 import ContainerFile from "../../components/container/ContainerFile";
-import {FieldOrgTreeSelect, FieldSelect, HasPerm, HttpUtil, PageUtil} from "@jiangood/springboot-admin-starter";
+import {FieldOrgTreeSelect, FieldSelect, HasPerm, HttpUtil, PageUtil,Gap} from "@jiangood/springboot-admin-starter";
 import PublishForm from "./PublishForm";
 
 const Item = Descriptions.Item
@@ -193,6 +193,7 @@ export default class extends React.Component {
 
                 </Descriptions>
 
+                <Gap></Gap>
                 <Space>
                     <Button size='small' target='_blank' href={'/admin/sys/log/' + app.id}>部署日志</Button>
                     <Button size='small' target='_blank' href={'/admin/app/log/' + app.id}>运行日志</Button>
