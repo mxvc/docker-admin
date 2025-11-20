@@ -198,6 +198,7 @@ export default class extends React.Component {
 
                 <Space>
                     <Button size='small' target='_blank' href={'/admin/sys/log/' + app.id}>部署日志</Button>
+                    <Button size='small' target='_blank' href={'/admin/app/log/' + app.id}>运行日志</Button>
                 </Space>
 
             </Card>

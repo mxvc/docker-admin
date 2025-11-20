@@ -10,6 +10,7 @@ import com.github.dockerjava.api.command.InspectContainerResponse;
 import com.github.dockerjava.api.command.ListContainersCmd;
 import io.admin.common.utils.ResponseUtils;
 import io.github.jiangood.docker.admin.entity.Host;
+import io.github.jiangood.docker.admin.service.AppService;
 import io.github.jiangood.docker.admin.service.HostService;
 import io.github.jiangood.docker.sdk.engine.DockerSdkManager;
 import com.github.dockerjava.api.DockerClient;
@@ -41,37 +42,18 @@ import java.util.*;
 public class ContainerController {
 
     @Resource
-    HostService hostService;
+    private  HostService hostService;
 
     @Resource
     private DockerSdkManager sdk;
 
 
+    @Resource
+    private AppService appService;
 
 
-    @RequestMapping("log/{hostId}/{containerId}")
-    public void logByHost(@PathVariable String hostId, @PathVariable String containerId, HttpServletResponse response) throws Exception {
-        Host host = hostService.findOneByRequest(hostId);
-        DockerClient client = sdk.getClient(host);
 
 
-        PrintWriter out = response.getWriter();
-        client.logContainerCmd(containerId)
-                .withStdOut(true)
-                .withStdErr(true)
-                .withFollowStream(true)
-                .withTail(500)
-                .exec(new LogContainerResultCallback() {
-                    @Override
-                    public void onNext(Frame item) {
-                        String msg = new String(item.getPayload(), StandardCharsets.ISO_8859_1);
-                        out.write(msg);
-                        out.flush();
-                    }
-                }).awaitCompletion();
-
-        System.out.println("日志结束");
-    }
 
     @RequestMapping("downloadLog")
     public void downloadLog(String hostId, String containerId, HttpServletResponse response) throws Exception {
@@ -110,40 +92,7 @@ public class ContainerController {
 
 
 
-    @RequestMapping("remove")
-    public AjaxResult removeContainer(String hostId, String containerId) throws IOException {
-        Host host = hostService.findOne(hostId);
-        DockerClient client = sdk.getClient(host);
 
-        client.removeContainerCmd(containerId)
-                .exec();
-
-        client.close();
-        return AjaxResult.ok().msg("删除容器成功");
-
-    }
-
-    @RequestMapping("stop")
-    public AjaxResult stop(String hostId, String containerId) throws IOException {
-        Host host = hostService.findOne(hostId);
-        DockerClient client = sdk.getClient(host);
-        client.stopContainerCmd(containerId)
-                .exec();
-        client.close();
-        return AjaxResult.ok().msg("停止容器成功");
-    }
-
-    @RequestMapping("start")
-    public AjaxResult start(String hostId, String containerId) throws IOException {
-        Host host = hostService.findOne(hostId);
-
-        DockerClient client = sdk.getClient(host);
-
-        client.startContainerCmd(containerId)
-                .exec();
-        client.close();
-        return AjaxResult.ok().msg("启动容器成功");
-    }
 
     @RequestMapping("status")
     public AjaxResult status(String hostId, String appName /*即将弃用*/, String containerId, String cont) {

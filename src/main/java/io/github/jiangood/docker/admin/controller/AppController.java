@@ -1,6 +1,10 @@
 package io.github.jiangood.docker.admin.controller;
 
 import cn.hutool.core.util.StrUtil;
+import com.github.dockerjava.api.DockerClient;
+import com.github.dockerjava.api.model.Container;
+import com.github.dockerjava.api.model.Frame;
+import com.github.dockerjava.core.command.LogContainerResultCallback;
 import io.admin.common.dto.AjaxResult;
 import io.admin.common.dto.antd.Option;
 import io.admin.framework.config.argument.RequestBodyKeys;
@@ -8,10 +12,13 @@ import io.admin.framework.config.security.HasPermission;
 import io.admin.framework.data.query.JpaQuery;
 import io.admin.modules.common.LoginUtils;
 import io.github.jiangood.docker.admin.entity.App;
+import io.github.jiangood.docker.admin.entity.Host;
 import io.github.jiangood.docker.admin.service.AppService;
 import io.github.jiangood.docker.admin.dto.ContainerVo;
 import io.github.jiangood.docker.config.Config;
+import io.github.jiangood.docker.sdk.engine.DockerSdkManager;
 import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
@@ -27,7 +34,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 
@@ -44,7 +53,8 @@ public class AppController {
     @Resource
     private Config config;
 
-
+    @Resource
+    private DockerSdkManager sdk;
     @HasPermission("app:list")
     @RequestMapping("list")
     public Page<App> list(String groupId, String searchText, @PageableDefault(sort = {"updateTime", "createTime"}, direction = Sort.Direction.DESC) Pageable pageable, HttpSession session) {
@@ -220,6 +230,34 @@ public class AppController {
         return AjaxResult.ok().data(options);
     }
 
+    // 查看日志流
+    @RequestMapping("log/{id}")
+    public void log(@PathVariable String id, HttpServletResponse response) throws Exception {
+        App app = service.findOne(id);
+        Host host = app.getHost();
+        DockerClient client = sdk.getClient(host);
+        Container container = service.getContainer(app);
+
+
+        PrintWriter out = response.getWriter();
+        out.println("=== 容器日志 ===");
+
+        client.logContainerCmd(container.getId())
+                .withStdOut(true)
+                .withStdErr(true)
+                .withFollowStream(true)
+                .withTail(500)
+                .exec(new LogContainerResultCallback() {
+                    @Override
+                    public void onNext(Frame item) {
+                        String msg = new String(item.getPayload(), StandardCharsets.ISO_8859_1);
+                        out.write(msg);
+                        out.flush();
+                    }
+                }).awaitCompletion();
+
+        System.out.println("日志结束");
+    }
 
     @Data
     public static class MoveParam {
