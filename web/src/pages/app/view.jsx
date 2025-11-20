@@ -261,10 +261,9 @@ export default class extends React.Component {
 
         const items = [
             {
-                key: 'log',
-                label: 'Console',
-                disabled:notFound,
-                children: containerLoading ? <Skeleton /> : <ContainerLog hostId={hostId} containerId={containerId}/>
+                key: 'config',
+                label: '容器',
+                children: <HasPerm code='app:config'> <ConfigForm app={app} onChange={this.reload}/></HasPerm>
             },
             {
                 key: 'file',
@@ -272,11 +271,6 @@ export default class extends React.Component {
                 disabled:notFound,
                 children: <ContainerFile hostId={hostId} containerId={containerId}/>
 
-            },
-            {
-                key: 'config',
-                label: '容器设置',
-                children: <HasPerm code='app:config'> <ConfigForm app={app} onChange={this.reload}/></HasPerm>
             },
             {
                 key: 'publish',
