@@ -1,0 +1,82 @@
+package io.github.jiangood.docker.admin.controller;
+
+import cn.hutool.core.lang.Dict;
+import io.admin.framework.config.argument.RequestBodyKeys;
+import io.admin.framework.data.domain.BaseEntity;
+import io.admin.framework.data.query.JpaQuery;
+import io.admin.common.dto.AjaxResult;
+import io.github.jiangood.docker.admin.entity.AppGroup;
+import io.github.jiangood.docker.admin.service.AppGroupService;
+import io.admin.common.dto.antd.Option;
+import jakarta.annotation.Resource;
+import io.admin.framework.config.security.HasPermission;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("admin/appGroup")
+public class AppGroupController  {
+
+    @Resource
+    private AppGroupService service;
+
+    @HasPermission("group:view")
+    @RequestMapping("page")
+    public AjaxResult page( String searchText, @PageableDefault(direction = Sort.Direction.DESC, sort = "updateTime") Pageable pageable) throws Exception {
+        JpaQuery<AppGroup> q = new JpaQuery<>();
+        q.like(AppGroup.Fields.name, searchText);
+
+        Page<AppGroup> page = service.findAllByRequest(q, pageable);
+
+        return AjaxResult.ok().data(page);
+   }
+
+    @RequestMapping("options")
+    public AjaxResult options() throws Exception {
+        JpaQuery<AppGroup> q = new JpaQuery<>();
+
+        List<AppGroup> list = service.findAll(q, Sort.by("seq"));
+
+
+        List<Option> options = Option.convertList(list, BaseEntity::getId, AppGroup::getName);
+
+
+        return AjaxResult.ok().data(options);
+    }
+    @RequestMapping("menus")
+    public AjaxResult menus() throws Exception {
+        JpaQuery<AppGroup> q = new JpaQuery<>();
+
+        List<AppGroup> list = service.findAll(q, Sort.by("seq"));
+
+
+        List<Dict> menus= list.stream().map(t -> Dict.of("key", t.getId(), "label", t.getName())).toList();
+
+
+        return AjaxResult.ok().data(menus);
+    }
+
+
+
+    @HasPermission("group:save")
+    @PostMapping("save")
+    public AjaxResult save(@RequestBody AppGroup input, RequestBodyKeys updateFields) throws Exception {
+        service.saveOrUpdateByRequest(input, updateFields);
+        return AjaxResult.ok().msg("保存成功");
+    }
+
+
+    @HasPermission("group:delete")
+    @RequestMapping("delete")
+    public AjaxResult delete(String id) {
+        service.deleteByRequest(id);
+        return AjaxResult.ok().msg("删除成功");
+    }
+
+}
+
