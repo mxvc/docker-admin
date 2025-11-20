@@ -252,7 +252,8 @@ public class AppController {
         logExecutor.execute(() -> {
             try {
                 // 发送初始信息
-                emitter.send(SseEmitter.event().name("message").data("开始查看日志 (Streaming via SSE)"));
+                emitter.send(SseEmitter.event().name("message").data("服务端日志线程 READY (Streaming via SSE)"));
+                emitter.send(SseEmitter.event().name("message").data("===================================================================================="));
 
 
                 // 执行 Docker 命令

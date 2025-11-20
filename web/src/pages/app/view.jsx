@@ -21,6 +21,7 @@ import {history} from "umi";
 import ContainerFile from "../../components/container/ContainerFile";
 import {FieldOrgTreeSelect, FieldSelect, HasPerm, HttpUtil, PageUtil,Gap} from "@jiangood/springboot-admin-starter";
 import PublishForm from "./PublishForm";
+import {LogSse} from "@/components/LogSse";
 
 const Item = Descriptions.Item
 
@@ -258,6 +259,11 @@ export default class extends React.Component {
         let hostId = app.host.id
 
         const items = [
+            {
+                key: 'containerLog',
+                label: '容器日志',
+                children: <LogSse url={'/admin/app/log/' + app.id} />
+            },
             {
                 key: 'config',
                 label: '容器',
