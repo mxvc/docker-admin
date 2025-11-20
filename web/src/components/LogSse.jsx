@@ -1,4 +1,5 @@
 import React from "react";
+import {Button} from "antd";
 
 export class LogSse extends React.Component {
 
@@ -14,11 +15,9 @@ export class LogSse extends React.Component {
         }
 
         this.sse.onmessage = (event) => {
-            console.log( event.data)
             this.append(event.data);
         }
         this.sse.onerror = (event) => {
-            console.log('error', event)
             this.append('error')
         }
     }
@@ -35,6 +34,8 @@ export class LogSse extends React.Component {
     };
 
     render() {
+
+
         return <div style={{ padding: '20px', maxHeight:500,  overflowY: 'scroll' }}>
                 {this.state.list.map((item,index)=>{
                     return <div key={index} style={{whiteSpace:'nowrap' }}>{item}</div>

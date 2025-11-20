@@ -267,7 +267,7 @@ export default class extends React.Component {
             {
                 key: 'config',
                 label: '容器',
-                children: <HasPerm code='app:config'> <ConfigForm app={app} onChange={this.reload}/></HasPerm>
+                children:  <ConfigForm app={app} onChange={this.reload}/>
             },
             {
                 key: 'file',
@@ -279,12 +279,12 @@ export default class extends React.Component {
             {
                 key: 'publish',
                 label: '发布',
-                children: <HasPerm code='app:deploy'> <PublishForm appId={app.id} onChange={this.reload}/></HasPerm>
+                children:  <PublishForm appId={app.id} onChange={this.reload}/>
             },
             {
                 key: 'setting',
                 label: "设置",
-                children: <HasPerm code='app:config'>
+                children: <>
                     <Row wrap={false}>
                         <Col flex="100px">名称</Col>
                         <Col flex="auto">
@@ -319,12 +319,12 @@ export default class extends React.Component {
                             </Space>
                         </Col>
                     </Row>
-                </HasPerm>
+                </>
             }
         ]
 
 
-        return <Tabs items={items} destroyInactiveTabPane></Tabs>
+        return <Tabs items={items} ></Tabs>
     }
 
 }
