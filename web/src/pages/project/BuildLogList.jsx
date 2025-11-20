@@ -107,21 +107,11 @@ export default class extends React.Component {
       valueType: 'option',
       fixed: 'right',
       render: (_, row) => {
+        const logUrl = "admin/sys/log/" + row.id;
         return <Space>
-          <a onClick={() => {
-            let logUrl = row.logUrl;
-
-            Modal.info({
-              title: '构建日志' ,
-              width: 1024,
-              closable: true,
-              icon: null,
-              okText:'关闭',
-              content: <LogView url={logUrl} />
-            })
-          }}>日志</a>
-          <a onClick={() => this.stop(row)}>停止</a>
-          <a onClick={() => this.retry(row)}>重试</a>
+          <Button size='small' href={logUrl}>日志</Button>
+          <Button size='small' onClick={() => this.stop(row)}>停止</Button>
+          <Button size='small' onClick={() => this.retry(row)}>重试</Button>
         </Space>
       }
     },
