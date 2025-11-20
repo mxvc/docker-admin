@@ -3,7 +3,6 @@ import React from 'react';
 import ContainerStatus from "../../components/ContainerStatus";
 import {FieldOrgTreeSelect, FieldSelect, HttpUtil, PageUtil, ProTable} from "@jiangood/springboot-admin-starter";
 
-let api = 'app/';
 
 
 export default class extends React.Component {
