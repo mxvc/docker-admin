@@ -4,7 +4,6 @@ import ContainerStatus from "../../components/ContainerStatus";
 import {FieldOrgTreeSelect, FieldSelect, HttpUtil, PageUtil, ProTable} from "@jiangood/springboot-admin-starter";
 
 
-
 export default class extends React.Component {
 
 
@@ -68,7 +67,6 @@ export default class extends React.Component {
 
 
         imageList: [],
-        imageTagList: [],
 
         groupData: [],
         selectedKey: null,
@@ -87,7 +85,7 @@ export default class extends React.Component {
 
 
     handleSave = value => {
-        HttpUtil.post( 'admin/app/save', value).then(rs => {
+        HttpUtil.post('admin/app/save', value).then(rs => {
             this.reload()
             this.setState({deployVisible: false})
         })
@@ -97,25 +95,9 @@ export default class extends React.Component {
     tableRef = React.createRef()
     handleAdd = () => {
         this.setState({deployVisible: true})
-        this.loadImageList();
     }
 
-    loadImageList = (text) => {
-        HttpUtil.get('admin/image/options', {searchText: text}).then(rs => {
-            this.setState({imageList: rs})
-        })
-    };
-    loadImageTagList = (text) => {
-        const url = this.formRef.current.getFieldValue('imageUrl')
-        if (url) {
-            HttpUtil.get('admin/image/tagOptions', {url, searchText: text}).then(rs => {
-                this.setState({imageTagList: rs})
-            })
-        } else {
-            this.setState({imageTagList: []})
-        }
 
-    };
 
     render() {
         return (
@@ -125,21 +107,21 @@ export default class extends React.Component {
                     <div style={{padding: 12}}>
                         <Menu items={this.state.groupData} onSelect={({key}) => {
                             this.setState({selectedKey: key}, this.reload);
-                        }} />
+                        }}/>
                     </div>
                 </Splitter.Panel>
                 <Splitter.Panel style={{paddingLeft: 16}}>
                     <ProTable
                         actionRef={this.tableRef}
                         toolBarRender={(action, {selectedRows}) => [
-                            <Button  type="primary"
+                            <Button type="primary"
                                     onClick={this.handleAdd}>
                                 新增
                             </Button>,
                         ]}
                         request={(params) => {
                             params.groupId = this.state.selectedKey
-                            return HttpUtil.pageData( 'admin/app/list', params);
+                            return HttpUtil.pageData('admin/app/list', params);
                         }}
                         columns={this.columns}
                         showToolbarSearch
@@ -173,8 +155,7 @@ export default class extends React.Component {
 
 
                         <Form.Item name='imageTag' label='版本' required rules={[{required: true}]}>
-                            <AutoComplete options={this.state.imageTagList}
-                                          onSearch={this.loadImageTagList}></AutoComplete>
+                            <Input placeholder='请输入版本'></Input>
                         </Form.Item>
 
 
