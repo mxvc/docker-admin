@@ -251,7 +251,11 @@ public class AppController {
                 .exec(new ResultCallback.Adapter<>(){
                     @Override
                     public void onNext(Frame item) {
-                        String msg = new String(item.getPayload(), StandardCharsets.ISO_8859_1);
+                        byte[] data = item.getPayload();
+                        System.out.println("容器日志(默认编码):" + new String(data));
+                        System.out.println("容器日志(utf8):" + new String(data,StandardCharsets.UTF_8));
+
+                        String msg = new String(data, StandardCharsets.ISO_8859_1);
                         out.write(msg);
                         out.flush();
                         super.onNext(item);
