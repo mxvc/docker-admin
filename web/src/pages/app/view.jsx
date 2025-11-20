@@ -18,12 +18,9 @@ import React from 'react';
 import ConfigForm from "./ConfigForm";
 import {history} from "umi";
 
-import ContainerLog from "../../components/container/ContainerLog";
 import ContainerFile from "../../components/container/ContainerFile";
 import {FieldOrgTreeSelect, FieldSelect, HasPerm, HttpUtil, PageUtil} from "@jiangood/springboot-admin-starter";
-import LogView from "../../components/LogView";
 import PublishForm from "./PublishForm";
-import {SyncOutlined} from "@ant-design/icons";
 
 const Item = Descriptions.Item
 
