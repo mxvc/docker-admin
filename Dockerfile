@@ -21,7 +21,7 @@ ADD src src
 RUN mvn clean package -DskipTests -q
 
 # merge web and jar
-FROM amazoncorretto:17-alpine
+FROM amazoncorretto:17
 WORKDIR /home
 
 COPY --from=java /build/target/app.jar ./
