@@ -197,7 +197,6 @@ export default class extends React.Component {
                 <Gap></Gap>
                 <Space>
                     <Button size='small' target='_blank' href={'/admin/sys/log/' + app.id}>部署日志</Button>
-                    <Button size='small' target='_blank' href={'/admin/app/log/' + app.id}>运行日志</Button>
                 </Space>
 
             </Card>
@@ -261,12 +260,12 @@ export default class extends React.Component {
         const items = [
             {
                 key: 'containerLog',
-                label: '容器日志',
+                label: '日志',
                 children: <LogSse url={'/admin/app/log/' + app.id} />
             },
             {
                 key: 'config',
-                label: '容器',
+                label: '参数',
                 children:  <ConfigForm app={app} onChange={this.reload}/>
             },
             {
