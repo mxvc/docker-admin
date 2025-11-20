@@ -1,17 +1,5 @@
 import React from "react";
-import {
-    AutoComplete,
-    Button,
-    Divider,
-    Form,
-    Row,
-    Skeleton,
-    Switch,
-    Collapse,
-    message,
-    Typography,
-    Modal
-} from "antd";
+import {Button, Collapse, Divider, Form, Input, message, Modal, Skeleton, Switch, Typography} from "antd";
 import {FieldSelect, Gap, HttpUtil, PageUtil} from "@jiangood/springboot-admin-starter";
 
 /**
@@ -33,9 +21,6 @@ export default class extends React.Component {
         HttpUtil.get('admin/app/get', {id: this.id}).then(rs => {
             this.setState({app: rs})
 
-            HttpUtil.get('admin/image/tagOptions', {url: rs.imageUrl}).then(tagOptions => {
-                this.setState({tagOptions})
-            })
 
         }).finally(() => {
             this.setState({appLoading: false})
@@ -60,10 +45,10 @@ export default class extends React.Component {
             const newAppId = rs.id;
             Modal.confirm({
                 icon: null,
-                title:'复制完成',
-                content:'是否打开新的应用？',
-                onOk(){
-                    PageUtil.open('/app/view?id='+newAppId,'应用-' + rs.name)
+                title: '复制完成',
+                content: '是否打开新的应用？',
+                onOk() {
+                    PageUtil.open('/app/view?id=' + newAppId, '应用-' + rs.name)
                 }
             })
         }).finally(hide)
@@ -79,60 +64,41 @@ export default class extends React.Component {
 
 
         return <>
-            <Collapse defaultActiveKey={['1']} accordion   items={[
-                {
-                    key:'1',
-                    label:'手动发布',
-                    children:<Form onFinish={this.updateVersion}>
-                        <Form.Item  name='imageTag' help='用指定的镜像版本' rules={[{required: true}]}>
-                            <AutoComplete options={this.state.tagOptions}
-                                          style={{width: 150}}
-                                          placeholder={app.imageTag}
-                            />
-                        </Form.Item>
-                        <Form.Item label=' '>
-                            <Button type="primary" danger htmlType='submit'>更新应用</Button>
-                        </Form.Item>
-                    </Form>
-                },
-                {
-                    key: '2',
-                    label: '自动发布',
-                    children: <Form
-                                    onValuesChange={changedValues => this.setAutoDeploy(changedValues.autoDeploy)}
-                    >
-                        <Form.Item
-                                   name='autoDeploy'
-                                   help='当有镜像构建成功后，自动更新应用到最新构建的版本'
-                                   valuePropName="checked"
-                                   initialValue={app.autoDeploy}>
-                            <Switch/>
-                        </Form.Item>
-                    </Form>,
-                },
+            <Typography.Title level={5}>手动发布</Typography.Title>
+            <Form onFinish={this.updateVersion} layout={'inline'}>
+                <Form.Item name='imageTag' rules={[{required: true}]}>
+                    <Input style={{width: 150}} placeholder='请输入版本号'/>
+                </Form.Item>
+                <Form.Item label=' '>
+                    <Button type="primary" danger htmlType='submit'>更新应用</Button>
+                </Form.Item>
+            </Form>
 
-                {
-                    key:'3',
-                    label:'复制应用',
-                    children:<>
-                            <Form onFinish={this.copyApp}>
-                                <Form.Item name='hostId' rules={[{required:true}]} >
-                                    <FieldSelect url='admin/host/options' placeholder='请选择新主机' style={{width:300}} />
-                                </Form.Item>
-                                <div>
-                                <Typography.Text italic>注意：复制应用不会自动部署，也不会复制主机上的文件</Typography.Text>
-                                </div>
-                                <Gap />
-                                <Button type="primary" danger htmlType='submit'>确定复制</Button>
-                            </Form>
-                    </>
-                }
-            ]}>
+            <Divider />
 
-            </Collapse>
+            <Typography.Title level={5}>自动发布</Typography.Title>
+            <Form onValuesChange={changedValues => this.setAutoDeploy(changedValues.autoDeploy)}>
+                <Form.Item
+                    name='autoDeploy'
+                    valuePropName="checked"
+                    initialValue={app.autoDeploy}>
+                    <Switch/>
+                </Form.Item>
+            </Form>
+            <Typography.Text  italic >项目构建成功后，自动更新</Typography.Text>
 
+            <Divider  ></Divider>
+            <Typography.Title level={5}>复制应用</Typography.Title>
 
+            <Form onFinish={this.copyApp} layout='inline'>
+                <Form.Item name='hostId' rules={[{required: true}]}>
+                    <FieldSelect url='admin/host/options' placeholder='请选择新主机' style={{width: 300}}/>
+                </Form.Item>
 
+                <Button type="primary" danger htmlType='submit'>确定复制</Button>
+            </Form>
+            <Typography.Text
+                italic>注意：复制应用不会自动部署，也不会复制主机上的文件</Typography.Text>
 
         </>
     }
