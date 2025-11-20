@@ -23,28 +23,31 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.MediaType;
 import org.springframework.util.Assert;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 
 @RestController
 @Slf4j
-@RequestMapping( "admin/app")
+@RequestMapping("admin/app")
 public class AppController {
 
 
@@ -56,14 +59,15 @@ public class AppController {
 
     @Resource
     private DockerSdkManager sdk;
+
     @HasPermission("app:list")
     @RequestMapping("list")
     public Page<App> list(String groupId, String searchText, @PageableDefault(sort = {"updateTime", "createTime"}, direction = Sort.Direction.DESC) Pageable pageable, HttpSession session) {
         JpaQuery<App> q = new JpaQuery<>();
         q.searchText(searchText, "name", "remark", "host.name");
-        q.eq(App.Fields.appGroup +".id", groupId);
+        q.eq(App.Fields.appGroup + ".id", groupId);
 
-        q.addSubOr(qq->{
+        q.addSubOr(qq -> {
             qq.isNull("sysOrg.id");
             qq.in("sysOrg.id", LoginUtils.getOrgPermissions());
         });
@@ -221,8 +225,8 @@ public class AppController {
     @RequestMapping("options")
     public AjaxResult options(String searchText) {
         JpaQuery<App> q = new JpaQuery<>();
-        if(StrUtil.isNotBlank(searchText)){
-            q.like("name",searchText);
+        if (StrUtil.isNotBlank(searchText)) {
+            q.like("name", searchText);
         }
 
         List<App> list = service.findAll(q);
@@ -231,40 +235,66 @@ public class AppController {
         return AjaxResult.ok().data(options);
     }
 
-    // 查看日志流
-    @RequestMapping("log/{id}")
-    public void log(@PathVariable String id, HttpServletResponse response) throws Exception {
+    private final ExecutorService logExecutor = Executors.newFixedThreadPool(10);
+
+    @GetMapping("log/{id}")
+    public SseEmitter streamLog(@PathVariable String id, @RequestParam(required = false, defaultValue = "20") Integer lines,HttpServletResponse response) {
+        response.setContentType("text/event-stream;charset=UTF-8");
         App app = service.findOne(id);
         Host host = app.getHost();
-        DockerClient client = sdk.getClient(host);
         Container container = service.getContainer(app);
+        String containerId = container.getId();
+        DockerClient client = sdk.getClient(host);
+
+        SseEmitter emitter = new SseEmitter(3600000L);
+
+        // 1. 在专用线程池中执行 Docker API 调用
+        logExecutor.execute(() -> {
+            try {
+                // 发送初始信息
+                emitter.send(SseEmitter.event().name("message").data("开始查看日志 (Streaming via SSE)"));
 
 
-        PrintWriter out = response.getWriter();
-        out.println("=== 容器日志 ===");
+                // 执行 Docker 命令
+                client.logContainerCmd(containerId)
+                        .withStdOut(true)
+                        .withStdErr(true)
+                        .withTail(lines)
+                        .withFollowStream(true) // 优化 3: 启用实时日志跟踪 (live follow)
+                        .exec(new ResultCallback.Adapter<Frame>() {
+                            @Override
+                            @SneakyThrows
+                            public void onNext(Frame item) {
+                                String msg = new String(item.getPayload());
+                                emitter.send(SseEmitter.event().name("message").data(msg.trim()));
+                            }
 
-        client.logContainerCmd(container.getId())
-                .withStdOut(true)
-                .withStdErr(true)
-                .withFollowStream(true)
-                .withTail(500)
-                .exec(new ResultCallback.Adapter<>(){
-                    @Override
-                    public void onNext(Frame item) {
-                        byte[] data = item.getPayload();
-                        System.out.println("容器日志(默认编码):" + new String(data));
-                        System.out.println("容器日志(utf8):" + new String(data,StandardCharsets.UTF_8));
+                            @Override
+                            @SneakyThrows
+                            public void onComplete() {
+                                emitter.send(SseEmitter.event().name("complete").data("日志结束"));
+                            }
 
-                        String msg = new String(data, StandardCharsets.ISO_8859_1);
-                        out.write(msg);
-                        out.flush();
-                        super.onNext(item);
-                    }
-                })
-                .awaitCompletion();
+                            @SneakyThrows
+                            @Override
+                            public void onError(Throwable throwable) {
+                                emitter.send(SseEmitter.event().name("error").data("日志获取失败: " + throwable.getMessage()));
+                                emitter.completeWithError(throwable);
 
-        System.out.println("日志结束");
+                            }
+                        });
+
+            } catch (Exception e) {
+                // 处理初始化阶段的异常（如找不到应用、获取客户端失败等）
+                System.err.println("Error initializing log stream: " + e.getMessage());
+                emitter.completeWithError(e);
+            }
+        });
+
+        // 请求线程立即返回
+        return emitter;
     }
+
 
     @Data
     public static class MoveParam {
