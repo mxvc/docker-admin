@@ -247,7 +247,7 @@ export default class extends React.Component {
     }
 
     renderTabs = () => {
-        const {container, containerLoading} = this.state;
+        const {container} = this.state;
 
 
         const {app} = this.state
