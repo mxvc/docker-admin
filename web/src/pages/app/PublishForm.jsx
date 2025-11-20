@@ -76,7 +76,7 @@ export default class extends React.Component {
             </Card>
 
 
-            <Divider />
+            <Gap />
 
             <Card title='自动发布'>
                 <Form onValuesChange={changedValues => this.setAutoDeploy(changedValues.autoDeploy)}>
@@ -91,8 +91,7 @@ export default class extends React.Component {
             </Card>
 
 
-            <Divider  ></Divider>
-            <Typography.Title level={5}></Typography.Title>
+            <Gap />
 
             <Card title='复制应用'>
             <Form onFinish={this.copyApp} layout='inline'>
