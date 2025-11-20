@@ -10,11 +10,11 @@ public class GitRepo {
     /**
      * url, 支持前缀
      */
-    String url;
+    private String url;
 
-    String username;
+    private String username;
 
-    String password;
+    private String password;
 
 
 }

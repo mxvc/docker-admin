@@ -1,0 +1,21 @@
+cfg:
+  # 镜像注册中心
+  registry:
+    url: registry.cn-hangzhou.aliyuncs.com
+    namespace: 命名空间
+    username: 账号
+    password: 密码
+  # git仓库
+  git-repos:
+    - url: https://gitee.com
+      username: 账号
+      password: 密码
+
+server.port: 7001
+
+# 数据库
+db_ip: 127.0.0.1
+db_port: 3305
+db_database: docker-admin
+db_password: 12345678
+

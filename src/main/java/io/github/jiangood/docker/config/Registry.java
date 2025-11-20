@@ -1,25 +1,24 @@
 package io.github.jiangood.docker.config;
 
 
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter
-@Setter
-public class Registry  {
+@Data
+public class Registry {
 
 
-    String url;
+    private String url;
 
 
-    String namespace;
+    private String namespace;
 
 
-    String username;
+    private String username;
 
 
-    String password;
-
+    private String password;
 
 
     public String getFullUrl() {
