@@ -1,5 +1,7 @@
 package io.github.jiangood.docker.admin.controller;
 
+import io.admin.framework.config.argument.RequestBodyKeys;
+import io.admin.framework.config.security.HasPermission;
 import io.github.jiangood.docker.admin.entity.Host;
 import io.github.jiangood.docker.admin.service.HostService;
 import io.github.jiangood.docker.admin.dto.DockerInfo;
@@ -8,13 +10,16 @@ import com.github.dockerjava.api.model.Image;
 import com.github.dockerjava.api.model.Info;
 import io.admin.common.dto.AjaxResult;
 import io.admin.common.dto.antd.Option;
-import io.admin.framework.persistence.BaseController;
+
 import io.admin.framework.data.query.JpaQuery;
 import jakarta.annotation.Resource;
 import jakarta.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -23,12 +28,35 @@ import java.util.List;
 @RestController
 @Slf4j
 @RequestMapping("admin/host")
-public class HostController extends BaseController<Host> {
+public class HostController  {
 
 
     @Resource
     private HostService service;
 
+    @HasPermission("host:view")
+    @RequestMapping("page")
+    public AjaxResult page(Host request,@PageableDefault(direction = Sort.Direction.DESC, sort = "updateTime") Pageable pageable) throws Exception {
+        JpaQuery<Host> q = new JpaQuery<>();
+        // 视情况修改
+        q.likeExample(request);
+        Page<Host> page = service.pageByRequest(q, pageable);
+        return AjaxResult.ok().data(page);
+    }
+
+    @HasPermission("host:save")
+    @PostMapping("save")
+    public AjaxResult save(@RequestBody Host input, RequestBodyKeys updateFields) throws Exception {
+        service.saveOrUpdateByRequest(input, updateFields);
+        return AjaxResult.ok().msg("保存成功");
+    }
+
+    @HasPermission("host:delete")
+    @RequestMapping("delete")
+    public AjaxResult delete(String id) {
+        service.deleteByRequest(id);
+        return AjaxResult.ok().msg("删除成功");
+    }
 
     @RequestMapping("options")
     public List<Option> options(@RequestParam(defaultValue = "false") boolean onlyRunner, String searchText) {
