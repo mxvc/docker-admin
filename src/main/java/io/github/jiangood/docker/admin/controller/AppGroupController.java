@@ -31,7 +31,7 @@ public class AppGroupController  {
         JpaQuery<AppGroup> q = new JpaQuery<>();
         q.like(AppGroup.Fields.name, searchText);
 
-        Page<AppGroup> page = service.findAllByRequest(q, pageable);
+        Page<AppGroup> page = service.findPageByRequest(q, pageable);
 
         return AjaxResult.ok().data(page);
    }

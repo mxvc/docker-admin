@@ -72,13 +72,13 @@ public class AppController {
             qq.in("sysOrg.id", LoginUtils.getOrgPermissions());
         });
 
-        Page<App> list = service.findAllByRequest(q, pageable);
+        Page<App> list = service.findPageByRequest(q, pageable);
         return list;
     }
 
     @RequestMapping("get")
     public App view(String id) throws UnsupportedEncodingException {
-        App app = service.findOneByRequest(id);
+        App app = service.findByRequest(id);
 
         if (app.getImageUrl() == null) {
             String fullUrl = config.getRegistry().getFullUrl();
@@ -165,7 +165,7 @@ public class AppController {
     @RequestMapping("deploy/{id}")
     public AjaxResult deploy(@PathVariable String id) {
         log.info("开始部署");
-        App app = service.findOneByRequest(id);
+        App app = service.findOne(id);
 
         service.deploy(app);
         log.info("部署指令已发送");
@@ -177,7 +177,7 @@ public class AppController {
     @RequestMapping("autoDeploy")
     public AjaxResult autoDeploy(String id, boolean autoDeploy) {
 
-        App db = service.findOneByRequest(id);
+        App db = service.findByRequest(id);
         db.setAutoDeploy(autoDeploy);
 
         service.save(db);

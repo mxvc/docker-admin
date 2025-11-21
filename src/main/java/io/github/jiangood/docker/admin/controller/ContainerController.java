@@ -57,7 +57,7 @@ public class ContainerController {
 
     @RequestMapping("downloadLog")
     public void downloadLog(String hostId, String containerId, HttpServletResponse response) throws Exception {
-        Host host = hostService.findOneByRequest(hostId);
+        Host host = hostService.findByRequest(hostId);
 
         DockerClient client = sdk.getClient(host);
 

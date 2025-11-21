@@ -40,7 +40,7 @@ public class HostController  {
         JpaQuery<Host> q = new JpaQuery<>();
         // 视情况修改
         q.likeExample(request);
-        Page<Host> page = service.pageByRequest(q, pageable);
+        Page<Host> page = service.findPageByRequest(q, pageable);
         return AjaxResult.ok().data(page);
     }
 
